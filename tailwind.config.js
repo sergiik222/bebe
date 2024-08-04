@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,10 +6,20 @@ module.exports = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      fontFamily: {
+        playfair: ['"Playfair Display"', 'serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+        oswald: ['Oswald', 'sans-serif'],
+        'open-sans': ['Open Sans', 'sans-serif'],
+      },
+      colors: {
+        'gold-500': '#FFD700',
+        'green-500': '#1DB954',
+        'orange-600': '#FF4500',
+        'accent': '#e5e7eb',
+        'secondary': '#1a1a1a'
       },
     },
   },

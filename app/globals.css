@@ -2,32 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.fisheye {
+    transform: perspective(1000px) scale(1.2) rotateX(10deg) rotateY(10deg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.link {
+    @apply flex cursor-pointer text-gray-400 py-2 md:mr-4 border-none rounded-xl text-lg text-end align-baseline  bg-transparent hover:text-white transition ease-in-out duration-100 mt-1 md:mt-0;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.wave-transform {
+    transform: scale(1.2) translateY(-20px);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.neg-ml-32{margin-left:-8rem}
+
+html, body {
+    @apply bg-green-800;
+    height: 100%;
+    margin: 0;
+
+   /* Ensure no overflow from the body */
 }
+
