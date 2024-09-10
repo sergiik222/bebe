@@ -1,17 +1,19 @@
-import { Bars } from "react-loader-spinner";
+import { Bars } from 'react-loader-spinner'
 
 const Spinner = () => {
   return (
-    <Bars
-      height="80"
-      width="80"
-      color="rgb(31 41 55)"
-      ariaLabel="bars-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-  );
-};
+      <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+        <Bars
+            height="120"
+            width="150"
+            color="white"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+        />
+      </div>
+  )
+}
 
-export default Spinner;
+export default Spinner

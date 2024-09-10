@@ -4,33 +4,40 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useDrag } from '@use-gesture/react';
 import { animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
-import DateAxes from './DateAxes';
-import dayjs from "dayjs";
-import {medias} from "@/medias";
+import { useDispatch, useSelector } from 'react-redux'
+import {selectMainPhotosHome, selectMainPhotosIsLoading} from "@/store/photos/photos.selector";
+import {setMainPhotos} from "@/store/photos/photos.action";
+import Spinner from "@/components/Spinner";
+import {setMainVideos} from "@/store/videos/videos.action";
+import {selectMainVideosHome, selectMainVideosIsLoading, selectVideosInUse} from "@/store/videos/videos.selector";
+import Header from "@/components/Header";
 
-const generateMedias = (num) => {
-    const mediasGenerated = medias.map((media, index) => {
-        return {
-            ...media,
-            marginTop: index % 2 === 0 ? 0 : Math.floor(Math.random() * 100) + 50,
-            marginBottom: index % 2 === 0 ? Math.floor(Math.random() * 100) + 50 : 0,
-        }
-    })
-    console.log("exportMedias: ", mediasGenerated);
-    return mediasGenerated.sort((a, b) => dayjs(a.dateCreated, 'MMMM YYYY').diff(dayjs(b.dateCreated, 'MMMM YYYY')));
-};
-
-// Generate boxes only once
-const mediasArray = generateMedias(10);
-console.log("mediasArray", mediasArray);
 const MediaComponent = () => {
-    const mediaSize = 250; // Media width and height
+    const dispatch = useDispatch()
+    const mainPhotos = useSelector(selectMainPhotosHome)
+    const mainVideos = useSelector(selectMainVideosHome)
+    const mainPhotosAreLoading = useSelector(selectMainPhotosIsLoading)
+    const mainVideosAreLoading = useSelector(selectMainVideosIsLoading)
+    const videosInUse = useSelector(selectVideosInUse)
+    const [mediaSize, setMediaSize] = useState(350)
     const mediaMargin = 50; // Distance between medias
     const scrollRef = useRef(null);
     const [windowWidth, setWindowWidth] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [x, setX] = useState(0);
 
+    useEffect(() => {
+            dispatch(setMainVideos())
+            dispatch(setMainPhotos())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (videosInUse){
+            setMediaSize(450)
+        }else{
+            setMediaSize(350)
+        }
+    }, [dispatch, videosInUse])
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -45,7 +52,7 @@ const MediaComponent = () => {
     }, {
         axis: 'x',
         bounds: {
-            left: -(mediaSize * 10 + mediaMargin * 9 - windowWidth + windowWidth / 2),
+            left: -(mediaSize * 4 + mediaMargin * 3 - windowWidth + windowWidth / 2),
             right: windowWidth / 2 - mediaSize / 2,
         },
         rubberband: true,
@@ -59,26 +66,48 @@ const MediaComponent = () => {
     const middleBoxPosition = windowWidth / 2 - mediaSize / 2;
     const middleIndex = Math.round((middleBoxPosition - x) / (mediaSize + mediaMargin));
 
-    return (
-        <div className="relative w-full h-screen overflow-hidden" {...bind()} ref={scrollRef}>
-            <animated.div
-                className="flex items-center h-full cursor-grab"
-                style={{
-                    transform: `translateX(${x}px)`,
-                }}
-            >
-                <MediaContainer
-                    middleIndex={middleIndex}
-                    isDragging={isDragging}
-                    mediaSize={mediaSize}
-                    mediaMargin={mediaMargin}
-                    windowWidth={windowWidth}
-                    medias={mediasArray}
-                />
-            </animated.div>
-            <DateAxes medias={mediasArray} x={x} mediaSize={mediaSize} mediaMargin={mediaMargin} currentTitle={mediasArray[middleIndex]?.title} />
-        </div>
-    );
+    if (
+        mainPhotosAreLoading || mainVideosAreLoading
+    ) {
+        return <Spinner />
+    }else{
+        return (
+            <div className="relative w-full h-screen overflow-hidden " {...bind()} ref={scrollRef}>
+                <Header />
+                <animated.div
+                    className="flex items-center h-full cursor-grab "
+                    style={{
+                        transform: `translateX(${x}px)`,
+                    }}
+                >
+                    {videosInUse ?
+                        <MediaContainer
+                            middleIndex={middleIndex}
+                            isDragging={isDragging}
+                            mediaSize={mediaSize}
+                            mediaMargin={mediaMargin}
+                            windowWidth={windowWidth}
+                            medias={mainVideos}
+                        />
+                        :
+                        <MediaContainer
+                            middleIndex={middleIndex}
+                            isDragging={isDragging}
+                            mediaSize={mediaSize}
+                            mediaMargin={mediaMargin}
+                            windowWidth={windowWidth}
+                            medias={mainPhotos}
+                        />
+                    }
+
+                </animated.div>
+
+            </div>
+        );
+    }
 };
 
 export default MediaComponent;
+
+
+// <DateAxes medias={mediasArray} x={x} mediaSize={mediaSize} mediaMargin={mediaMargin} currentTitle={mediasArray[middleIndex]?.title} />
