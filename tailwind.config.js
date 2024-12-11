@@ -18,8 +18,16 @@ module.exports = {
         'gold-500': '#FFD700',
         'green-500': '#1DB954',
         'orange-600': '#FF4500',
-        'accent': '#e5e7eb',
-        'secondary': '#1a1a1a'
+        'secondary': '#1a1a1a',
+        'background': 'rgb(18, 18, 18)',
+        'top-grad': 'rgb(40, 40, 40)',
+        'bottom-grad': 'rgb(24, 24, 24)',
+        'primary-text': 'rgb(255, 255, 255)',
+        'secondary-text': 'rgb(179, 179, 179)',
+        'accent': 'rgb(64, 64, 64)'
+      },
+      backgroundImage: {
+        'background-gradient': 'linear-gradient(to bottom, rgb(40, 40, 40), rgb(24, 24, 24))',
       },
     },
   },

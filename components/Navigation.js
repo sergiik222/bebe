@@ -11,7 +11,7 @@ export default function Navigation() {
     return (
         <div className="">
             <nav
-                className={`h-full bg-secondary z-50 absolute transition-transform w-full md:w-1/4  shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                className={`h-full bg-bottom-grad z-50 absolute transition-transform duration-700 ease-in-out w-full md:w-1/4  ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <ul className="p-4 mt-12">
                     <li className="link p-2">Home</li>
                     <li className="link p-2">About</li>

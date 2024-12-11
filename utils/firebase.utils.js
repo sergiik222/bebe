@@ -24,6 +24,7 @@ export const getMainPhotos = async () => {
                 const url = await getDownloadURL(itemRef);
                 var photo = {
                     name: itemRef.name,
+                    alt: itemRef.name.split('.')[0],
                     dateCreated: "2015-01-01",
                     url: url,
                     mediaType: "img"
@@ -39,8 +40,6 @@ export const getMainPhotos = async () => {
 
 export const getMainVideos = async () => {
     const listRef = ref(storage, 'main/videos');
-    console.log("In get main videos")
-
     // Find all the prefixes and items.
     try {
         const res = await listAll(listRef);
@@ -51,6 +50,7 @@ export const getMainVideos = async () => {
                 console.log("Url: ", url);
                 var video = {
                     name: itemRef.name,
+                    alt: itemRef.name.split('.')[0],
                     dateCreated: "2015-01-01",
                     url: url,
                     mediaType: "video"

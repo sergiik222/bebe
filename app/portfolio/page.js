@@ -1,47 +1,72 @@
 'use client'
-import React, { useRef }  from 'react'
+import React, {useEffect} from 'react'
 import ReactPlayer from 'react-player';
+import Image from "next/image";
+import Divider from '@mui/material/Divider';
+import {useDispatch, useSelector} from "react-redux";
+import {selectMainPhotos, selectMainPhotosIsLoading} from "@/store/photos/photos.selector";
+import {selectMainVideos, selectMainVideosIsLoading} from "@/store/videos/videos.selector";
+import {setMainVideos} from "@/store/videos/videos.action";
+import {setMainPhotos} from "@/store/photos/photos.action";
+import Spinner from "@/components/Spinner";
 
 const Portfolio = () => {
-   const videoUrl = 'https://firebasestorage.googleapis.com/v0/b/bebe-41997.appspot.com/o/Advertising.mp4?alt=media&token=1d8b33da-8ccd-43ad-8f32-fefc1233a4ff';
-   const playerRef = useRef(null);
+/*
+    const dispatch = useDispatch()
+    const mainPhotos = useSelector(selectMainPhotos)
+    const mainVideos = useSelector(selectMainVideos)
+    const mainPhotosAreLoading = useSelector(selectMainPhotosIsLoading)
+    const mainVideosAreLoading = useSelector(selectMainVideosIsLoading)
 
-   const handleMouseOver = () => {
-      if (playerRef.current) {
-         playerRef.current.getInternalPlayer().play();
-      }
-   };
+    useEffect(() => {
+        dispatch(setMainVideos())
+        dispatch(setMainPhotos())
+    }, [dispatch])
 
-   const handleClick = (e) => {
-      e.preventDefault();
-      e.stopPropagation(); // Prevent default click behavior
-      if (playerRef.current) {
-         const player = playerRef.current.getInternalPlayer();
-         if (player.requestFullscreen) {
-            player.requestFullscreen();
-         } else if (player.webkitRequestFullscreen) { /* Safari */
-            player.webkitRequestFullscreen();
-         } else if (player.msRequestFullscreen) { /* IE11 */
-            player.msRequestFullscreen();
-         }
-         player.muted = false;
-         player.play();
-      }
-   };
+    if (mainPhotosAreLoading || mainVideosAreLoading){
+        return <Spinner />;
+    }else{
+        return (
+            <div className="flex">
+                <div>
+                    <h1>Photos</h1>
+                    <div className="flex justify-between">
+                        {mainPhotos.map((photo, index) => {
+                                return(
+                                    <Image key={index} src={photo.src} alt={photo.alt} fill style={{objectFit: "cover"}} draggable="false"/>
+                                )
+                            }
+                        )
+                        }
+                    </div>
+                </div>
+                <Divider orientation="vertical" flexItem />
+                <div >
+                    <h1>Videos</h1>
+                    <div className="flex justify-between">
+                        {mainVideos.map((video, index) => {
+                                return(
+                                    <ReactPlayer
+                                        key={index}
+                                        url={video.url}
+                                        playing={false}
+                                        muted={true}
+                                        width="100%"
+                                        height="100%"
 
-   return (
-       <div>
-          <ReactPlayer
-              ref={playerRef}
-              url={videoUrl}
-              playing={false}
-              muted={true}
-              controls={true}
-              onMouseOver={handleMouseOver}
-              onClick={handleClick}
-          />
-       </div>
-   );
+                                    />
+                                )
+                            }
+                        )
+                        }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+*/
+    return <></>
 };
 
 export default Portfolio;

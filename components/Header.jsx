@@ -18,8 +18,8 @@ const Header = () => {
     }
 
   return (
-      <div className='flex items-center justify-center mt-3'>
-          <button className={`btn ${videosInUse ? 'active' : ''}`} onClick={showVideos}>
+      <div className='flex items-center justify-center mt-3 '>
+          <button className={`btn ${videosInUse ? 'active' : ''} mt-48`} onClick={showVideos}>
               Videos
           </button>
           <NavLink href="/portfolio">

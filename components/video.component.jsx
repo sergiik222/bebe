@@ -1,11 +1,13 @@
 'use client';
 import React, { useRef, useEffect} from 'react';
 import ReactPlayer from 'react-player';
+import {useDispatch} from "react-redux";
+import {setChosenMediaName} from "@/store/media/media.action";
 
-const VideoComponent = ({ videoUrl, isDragging }) => {
+const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     const playerRef = useRef(null);
     const canOpenRef = useRef(false);  // Use ref for immediate value access
-
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (isDragging) {
@@ -19,19 +21,27 @@ const VideoComponent = ({ videoUrl, isDragging }) => {
             }, 300); // Delay to avoid accidental fullscreen on scroll stop
             return () => clearTimeout(timeoutId);
         }
-    }, [isDragging]);
+        if (isMiddle && isDragging){
+            dispatch(setChosenMediaName(alt))
+        }
+
+
+    }, [isDragging, isMiddle, alt, dispatch]);
+
 
 
     const handleMouseOver = () => {
         if (playerRef.current && !isDragging) {
             playerRef.current.getInternalPlayer().play();
         }
+        dispatch(setChosenMediaName(alt))
     };
 
     const handleMouseOut = () => {
         if (playerRef.current && !isDragging) {
             playerRef.current.getInternalPlayer().pause();
         }
+        dispatch(setChosenMediaName(""))
     };
 
 
@@ -72,18 +82,18 @@ const VideoComponent = ({ videoUrl, isDragging }) => {
     }, []);
 
     return (
-        <div>
+        <div >
             <ReactPlayer
                 ref={playerRef}
                 url={videoUrl}
                 playing={false}
                 muted={true}
-                controls={true}
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
                 onClick={handleClick}
                 width="100%"
                 height="100%"
+
             />
         </div>
     );
