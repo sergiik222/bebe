@@ -11,7 +11,7 @@ import {setMainPhotos} from "@/store/photos/photos.action";
 import Spinner from "@/components/Spinner";
 
 const Portfolio = () => {
-/*
+
     const dispatch = useDispatch()
     const mainPhotos = useSelector(selectMainPhotos)
     const mainVideos = useSelector(selectMainVideos)
@@ -65,8 +65,6 @@ const Portfolio = () => {
         );
     }
 
-*/
-    return <></>
 };
 
 export default Portfolio;

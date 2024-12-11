@@ -34,7 +34,8 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "reselect": "^5.1.1"
+    "reselect": "^5.1.1",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "eslint": "^8",

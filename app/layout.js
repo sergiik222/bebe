@@ -1,5 +1,7 @@
+
 import "./globals.css";
 import Navigation from '../components/Navigation';
+import Providers from "@/utils/providers";
 
 
 
@@ -13,13 +15,13 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
         <body>
-
+        <Providers>
                 <Navigation />
                 {children}
                 <footer className="py-16 bg-bottom-grad">
                     <p className="text-center text-secondary-text">&copy; 2024 My Portfolio</p>
                 </footer>
-
+        </Providers>
         </body>
         </html>
     );
