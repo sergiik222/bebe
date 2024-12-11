@@ -21,7 +21,7 @@ export const selectCategoryVideos = createSelector(
 
 export const selectCategoryVideosIsLoading = createSelector(
     [selectVideosReducer],
-    (videosSlice) => videosSlice.isLoadingMainVideos,
+    (videosSlice) => videosSlice.isLoadingCategoryVideos,
 )
 
 export const selectVideosInUse = createSelector(

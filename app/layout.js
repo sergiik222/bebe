@@ -1,8 +1,5 @@
 import "./globals.css";
 import Navigation from '../components/Navigation';
-import {Provider} from "react-redux";
-import {persistor, store} from "@/store/store";
-import {PersistGate} from "redux-persist/integration/react";
 
 
 
@@ -16,15 +13,13 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
         <body>
-        <Provider store={store}>
-            <PersistGate persistor={persistor}>
+
                 <Navigation />
                 {children}
                 <footer className="py-16 bg-bottom-grad">
                     <p className="text-center text-secondary-text">&copy; 2024 My Portfolio</p>
                 </footer>
-            </PersistGate>
-        </Provider>
+
         </body>
         </html>
     );
