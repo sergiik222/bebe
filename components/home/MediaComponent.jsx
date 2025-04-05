@@ -6,8 +6,8 @@ import {selectMainPhotosHome, selectMainPhotosIsLoading} from "@/store/photos/ph
 import {setMainPhotos} from "@/store/photos/photos.action";
 import {setMainVideos} from "@/store/videos/videos.action";
 import {selectMainVideosHome, selectMainVideosIsLoading, selectVideosInUse} from "@/store/videos/videos.selector";
-import Header from "@/components/Header";
-import MediaContainerAnimated from "@/components/MediaContainerAnimated";
+import Header from "@/components/home/Header";
+import MediaContainerAnimated from "@/components/home/MediaContainerAnimated";
 import {setChosenMediaName} from "@/store/media/media.action";
 
 const MediaComponent = () => {
@@ -35,7 +35,7 @@ const MediaComponent = () => {
 
         return (
             <div>
-                <Header/>
+                <Header  />
                 {videosInUse ? (
                     <MediaContainerAnimated medias={mainVideos} mediaSize={mediaSize} mediasAreLoading={mainVideosAreLoading}  key="videos"/>
                 ) : (

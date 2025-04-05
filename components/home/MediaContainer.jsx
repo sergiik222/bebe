@@ -3,6 +3,10 @@ import Media from './Media';
 
 const MediaContainer = ({  middleIndex, isDragging, mediaSize, mediaMargin, windowWidth, medias }) => {
 
+    if (!Array.isArray(medias) || medias.length === 0) {
+       return <div></div>
+    }
+
     return (
         <div className="flex items-center h-full">
             {medias.map((media, index) => {

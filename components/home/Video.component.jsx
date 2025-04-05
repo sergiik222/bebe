@@ -82,7 +82,7 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     }, []);
 
     return (
-        <div >
+        <div className="relative w-full h-full overflow-hidden">
             <ReactPlayer
                 ref={playerRef}
                 url={videoUrl}
@@ -91,11 +91,11 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
                 onClick={handleClick}
-                width="100%"
-                height="100%"
-
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover"
+                style={{ objectFit: "cover" }}
             />
         </div>
+
     );
 };
 

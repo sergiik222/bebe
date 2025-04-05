@@ -1,6 +1,6 @@
 import { VIDEOS_ACTION_TYPES } from './videos.types'
 import { createAction } from '@/utils/reducer/reducer.utils'
-import {getCategoryVideos, getMainVideos} from "@/utils/firebase.utils";
+import {getCategoryVideos, getMainVideos, getVideoCategories} from "@/utils/firebase.utils";
 
 export const fetchMainVideosStart = () =>
   createAction(VIDEOS_ACTION_TYPES.FETCH_MAIN_VIDEOS_START)
@@ -10,6 +10,15 @@ export const fetchMainVideosSuccess = (videos) =>
 
 export const fetchMainVideosFailed = (error) =>
   createAction(VIDEOS_ACTION_TYPES.FETCH_MAIN_VIDEOS_FAILED, error)
+
+export const fetchVideoCategoriesStart = () =>
+    createAction(VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_START)
+
+export const fetchVideoCategoriesSuccess = (videos) =>
+    createAction(VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_SUCCESS, videos)
+
+export const fetchVideoCategoriesFailed = (error) =>
+    createAction(VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_FAILED, error)
 
 export const fetchCategoryVideosStart = () =>
     createAction(VIDEOS_ACTION_TYPES.FETCH_CATEGORY_VIDEOS_START)
@@ -27,6 +36,16 @@ export const setMainVideos = () => async (dispatch) => {
     dispatch(fetchMainVideosSuccess(videosData))
   } catch (error) {
     dispatch(fetchMainVideosFailed(error))
+  }
+}
+
+export const setVideoCategories = () => async (dispatch) => {
+  dispatch(fetchVideoCategoriesStart())
+  try {
+    const videosData = await getVideoCategories()
+    dispatch(fetchVideoCategoriesSuccess(videosData))
+  } catch (error) {
+    dispatch(fetchVideoCategoriesFailed(error))
   }
 }
 

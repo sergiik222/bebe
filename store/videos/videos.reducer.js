@@ -3,8 +3,10 @@ import { VIDEOS_ACTION_TYPES } from './videos.types'
 const VIDEOS_INITIAL_STATE = {
   mainVideos: [],
   categoryVideos: [],
+  videoCategories: [],
   isLoadingMainVideos: false,
   isLoadingCategoryVideos: false,
+  isLoadingVideoCategories: false,
   error: null,
   videosInUse: false
 }
@@ -37,6 +39,29 @@ export const videosReducer = (
       return {
         ...state,
         isLoadingMainVideos: payload,
+      }
+    case VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_START:
+      return {
+        ...state,
+        isLoadingVideoCategories: true,
+      }
+    case VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        isLoadingVideoCategories: false,
+        videoCategories: payload,
+      }
+    case VIDEOS_ACTION_TYPES.FETCH_VIDEO_CATEGORIES_FAILED:
+      return {
+        ...state,
+        isLoadingVideoCategories: false,
+        error: payload,
+        videoCategories: [],
+      }
+    case VIDEOS_ACTION_TYPES.SET_IS_LOADING_VIDEO_CATEGORIES:
+      return {
+        ...state,
+        isLoadingVideoCategories: payload,
       }
     case VIDEOS_ACTION_TYPES.FETCH_CATEGORY_VIDEOS_START:
       return {

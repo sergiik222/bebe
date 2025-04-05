@@ -2,8 +2,8 @@
 
 import {useDispatch, useSelector} from "react-redux";
 import {setVideosInUse} from "@/store/videos/videos.action";
-import NavLink from "@/components/NavLink";
 import {selectVideosInUse} from "@/store/videos/videos.selector";
+import Link from "next/link";
 
 
 
@@ -19,14 +19,14 @@ const Header = () => {
 
   return (
       <div className='flex items-center justify-center mt-3 '>
-          <button className={`btn ${videosInUse ? 'active' : ''} mt-48`} onClick={showVideos}>
-              Videos
-          </button>
-          <NavLink href="/portfolio">
-              Portfolio
-          </NavLink>
-          <button className={`btn ${videosInUse ? '' : 'active'}`} onClick={showPhotos}>
+          <button className={`btn ${videosInUse ? '' : 'active'} text-2xl `} onClick={showPhotos}>
               Photos
+          </button>
+          <Link className='btn text-2xl' href="/portfolio">
+              Portfolio
+          </Link>
+          <button className={`btn ${videosInUse ? 'active' : ''} mt-48 text-2xl`} onClick={showVideos}>
+              Videos
           </button>
       </div>
   )

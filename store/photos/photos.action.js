@@ -34,8 +34,9 @@ export const fetchCategoryPhotosFailed = (error) =>
     createAction(PHOTOS_ACTION_TYPES.FETCH_CATEGORY_PHOTOS_FAILED, error)
 
 export const setCategoryPhotos = ({category}) => async (dispatch) => {
-  dispatch(fetchMainPhotosStart())
+  dispatch(fetchCategoryPhotosStart())
   try {
+    console.log("Here category: ", category)
     const photosData = await getCategoryPhotos(category)
     dispatch(fetchCategoryPhotosSuccess(photosData))
   } catch (error) {

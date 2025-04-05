@@ -1,14 +1,12 @@
 import React from 'react';
-import VideoComponent from "@/components/video.component";
-import ImageComponent from "@/components/ImageComponent";
+import VideoComponent from "@/components/home/Video.component";
+import ImageComponent from "@/components/home/ImageComponent";
 
 const Media = ({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth}) => {
     const url = "https://firebasestorage.googleapis.com/v0/b/bebe-41997.appspot.com/o/main%2Fvideos%2FDancing.mp4?alt=media&token=c0e85283-ac4a-40e1-a49c-da05109d6161"
     const mediaType = media.mediaType
     var height = mediaSize
-
-        height = mediaSize*0.5625
-
+    height = mediaSize*0.5625
     return (
         <div
             className={`relative noselect transition-all duration-700 ease-in-out  ${!isDragging ? 'hover:scale-150 hover:z-50' : 'hover:scale-100'} ${isMiddle && isDragging ? 'scale-125' : 'scale-100'} ${isDragging || windowWidth < 640 ? 'mt-0 mb-0' : ''}`}

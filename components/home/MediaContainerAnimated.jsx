@@ -4,8 +4,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
-import Spinner from "@/components/Spinner";
-import MediaNameComponent from "@/components/MediaNameComponent";
+import Spinner from "@/components/helpers/Spinner";
+import MediaNameComponent from "@/components/home/MediaNameComponent";
 
 const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const mediaMargin = 50; // Distance between medias

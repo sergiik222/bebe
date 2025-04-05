@@ -9,6 +9,11 @@ export const selectMainVideos = createSelector(
   (videosSlice) => videosSlice.mainVideos,
 )
 
+export const selectVideoCategories = createSelector(
+    [selectVideosReducer],
+    (videosSlice) => videosSlice.videoCategories,
+)
+
 export const selectMainVideosIsLoading = createSelector(
   [selectVideosReducer],
   (videosSlice) => videosSlice.isLoadingMainVideos,
@@ -32,6 +37,9 @@ export const selectVideosInUse = createSelector(
 export const selectMainVideosHome = createSelector(
     [selectMainVideos],
     (videosSlice) =>  {
+        if (!Array.isArray(videosSlice) || videosSlice.length === 0) {
+            return [];
+        }
         return videosSlice.map((media, index) => {
             return {
                 ...media,

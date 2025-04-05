@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import Navigation from '../components/Navigation';
+import Navigation from '../components/navigation/Navigation';
 import Providers from "@/utils/providers";
 
 
@@ -16,13 +16,19 @@ export default function RootLayout({ children }) {
         <html lang="en">
         <body>
         <Providers>
-                <Navigation />
-                {children}
-                <footer className="py-16 bg-bottom-grad">
-                    <p className="text-center text-secondary-text">&copy; 2024 My Portfolio</p>
-                </footer>
+            <Navigation/>
+            <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full h-screen">
+                <main>
+                    <section>
+                        {children}
+                    </section>
+                </main>
+            </div>
+            <footer className="py-16 bg-bottom-grad">
+                <p className="text-center text-secondary-text">&copy; 2024 My Portfolio</p>
+            </footer>
         </Providers>
         </body>
         </html>
-    );
+);
 }

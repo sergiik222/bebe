@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'
+import React from "react";
 
 const selectPhotosReducer = (state) => state.photos
 
@@ -28,6 +29,10 @@ export const selectCategoryPhotosIsLoading = createSelector(
 export const selectMainPhotosHome = createSelector(
     [selectMainPhotos],
     (photosSlice) =>  {
+        if (!Array.isArray(photosSlice) || photosSlice.length === 0) {
+            return []
+        }
+
         return photosSlice.map((media, index) => {
             return {
                 ...media,

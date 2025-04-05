@@ -19,7 +19,8 @@ export const getMainPhotos = async () => {
     const listRef = ref(storage, 'main/fotos');
     try {
         const res = await listAll(listRef);
-        const photos = await Promise.all(
+        let photos = []
+        photos = await Promise.all(
             res.items.map(async (itemRef) => {
                 const url = await getDownloadURL(itemRef);
                 var photo = {
@@ -35,6 +36,37 @@ export const getMainPhotos = async () => {
         return photos;
     } catch (error) {
         console.error("Error fetching URLs:", error);
+        return []
+    }
+};
+
+
+export const getVideoCategories = async () => {
+    const listRef = ref(storage, 'main/video_categories');
+    console.log("In getVideoCategories")
+    // Find all the prefixes and items.
+    try {
+        const res = await listAll(listRef);
+        let photos = []
+        photos = await Promise.all(
+            res.items.map(async (itemRef) => {
+                const url = await getDownloadURL(itemRef);
+                console.log("Res name: ", itemRef.name);
+                console.log("Url: ", url);
+                var photo = {
+                    name: itemRef.name,
+                    alt: itemRef.name.split('.')[0],
+                    dateCreated: "2015-01-01",
+                    url: url,
+                    mediaType: "img"
+                }
+                return photo;
+            })
+        );
+        return photos;
+    } catch (error) {
+        console.error("Error fetching URLs:", error);
+        return []
     }
 };
 
@@ -43,7 +75,8 @@ export const getMainVideos = async () => {
     // Find all the prefixes and items.
     try {
         const res = await listAll(listRef);
-        const videos = await Promise.all(
+        let videos = []
+        videos = await Promise.all(
             res.items.map(async (itemRef) => {
                 const url = await getDownloadURL(itemRef);
                 console.log("Res name: ", itemRef.name);
@@ -61,28 +94,34 @@ export const getMainVideos = async () => {
         return videos;
     } catch (error) {
         console.error("Error fetching URLs:", error);
+        return []
     }
 };
 
 
 export const getCategoryPhotos = async (category) => {
-    console.log("In get category photos")
+    console.log("In get category photos: ", category)
     const listRef = ref(storage, `fotos/${category}`);
-
-    // Find all the prefixes and items.
     try {
         const res = await listAll(listRef);
-        const urls = await Promise.all(
+        let photos = []
+        photos = await Promise.all(
             res.items.map(async (itemRef) => {
                 const url = await getDownloadURL(itemRef);
-                console.log("Res name: ", itemRef.name);
-                console.log("Url: ", url);
-                return url;
+                var photo = {
+                    name: itemRef.name,
+                    alt: itemRef.name.split('.')[0],
+                    dateCreated: "2015-01-01",
+                    url: url,
+                    mediaType: "img"
+                }
+                return photo;
             })
         );
-        return urls;
+        return photos;
     } catch (error) {
         console.error("Error fetching URLs:", error);
+        return []
     }
 };
 
@@ -94,7 +133,8 @@ export const getCategoryVideos = async (category) => {
     // Find all the prefixes and items.
     try {
         const res = await listAll(listRef);
-        const urls = await Promise.all(
+        let urls = []
+        urls = await Promise.all(
             res.items.map(async (itemRef) => {
                 const url = await getDownloadURL(itemRef);
                 console.log("Res name: ", itemRef.name);
@@ -105,5 +145,6 @@ export const getCategoryVideos = async (category) => {
         return urls;
     } catch (error) {
         console.error("Error fetching URLs:", error);
+        return []
     }
 };
