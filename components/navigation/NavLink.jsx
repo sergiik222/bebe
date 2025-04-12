@@ -1,11 +1,14 @@
 "use client";
-import Link from "next/link";
+import { Link } from "react-scroll";
 
 const NavLink = ({ href, children, onClick }) => {
   return (
     <Link className='btn text-xl'
-      href={href}
-      onClick={onClick}
+          to={href}
+          onClick={onClick}
+          smooth={true}
+          duration={600}
+          offset={-50}
     >
       {children}
     </Link>

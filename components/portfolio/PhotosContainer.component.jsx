@@ -6,8 +6,7 @@ import CategoryPhoto from "@/components/portfolio/CategoryPhoto";
 
 const PhotosContainer = ({photos}) => {
     const categoryPhotos = useSelector(selectCategoryPhotos)
-    console.log("categoryPhotos: ", categoryPhotos)
-    console.log("photos", photos);
+    console.log("photos in PhotosContainer", photos);
 
     if (!Array.isArray(photos) || photos.length === 0) {
         return <div></div>

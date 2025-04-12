@@ -13,7 +13,7 @@ const PortfolioHeader = ({showPhotos, showVideos, setShowPhotos, setShowVideos, 
           <button
               className='btn text-2xl'
               onClick={resetPhotosVideos}>
-              Portfolio
+              All
           </button>
           <button
               className={`btn ${showVideos ? 'active' : ''} mt-48 text-2xl absolute left-[26rem]  `}
