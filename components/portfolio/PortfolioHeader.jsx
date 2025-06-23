@@ -1,22 +1,17 @@
 'use client'
 
 
-const PortfolioHeader = ({showPhotos, showVideos, setShowPhotos, setShowVideos, resetPhotosVideos}) => {
+const PortfolioHeader = ({showPhotos, showVideos, setShowPhotos, setShowVideos}) => {
 
   return (
-      <div className='flex items-center justify-center mt-3 '>
+      <div className='flex items-center justify-center mt-12 '>
           <button
-              className={`btn ${showPhotos ? 'active' : ''} text-2xl absolute right-[26rem] `}
+              className={`btn ${showPhotos ? 'active' : ''} text-2xl  `}
               onClick={setShowPhotos}>
               Photos
           </button>
           <button
-              className='btn text-2xl'
-              onClick={resetPhotosVideos}>
-              All
-          </button>
-          <button
-              className={`btn ${showVideos ? 'active' : ''} mt-48 text-2xl absolute left-[26rem]  `}
+              className={`btn ${showVideos ? 'active' : ''} mt-48 text-2xl    `}
               onClick={setShowVideos}>
               Videos
           </button>

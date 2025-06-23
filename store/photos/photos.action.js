@@ -33,8 +33,12 @@ export const fetchCategoryPhotosSuccess = (photos) =>
 export const fetchCategoryPhotosFailed = (error) =>
     createAction(PHOTOS_ACTION_TYPES.FETCH_CATEGORY_PHOTOS_FAILED, error)
 
+export const setCategorySelected = (selected) =>
+    createAction(PHOTOS_ACTION_TYPES.CATEGORY_SELECTED, selected)
+
 export const setCategoryPhotos = ({category}) => async (dispatch) => {
   dispatch(fetchCategoryPhotosStart())
+  dispatch(setCategorySelected(true))
   try {
     console.log("Here category: ", category)
     const photosData = await getCategoryPhotos(category)

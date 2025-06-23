@@ -3,7 +3,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {setVideosInUse} from "@/store/videos/videos.action";
 import {selectVideosInUse} from "@/store/videos/videos.selector";
-import { Link } from "react-scroll";
+import Link from "next/link";
 
 
 
@@ -22,11 +22,7 @@ const Header = () => {
           <button className={`btn ${videosInUse ? '' : 'active'} text-2xl `} onClick={showPhotos}>
               Photos
           </button>
-          <Link className='btn text-2xl'
-                to="portfolio"
-                smooth={true}
-                duration={600}
-                offset={-50}>
+          <Link className='btn text-2xl' href="/portfolio">
               Portfolio
           </Link>
           <button className={`btn ${videosInUse ? 'active' : ''} mt-48 text-2xl`} onClick={showVideos}>

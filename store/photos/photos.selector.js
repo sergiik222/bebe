@@ -19,6 +19,11 @@ export const selectCategoryPhotos = createSelector(
     (photosSlice) => photosSlice.categoryPhotos,
 )
 
+export const selectIsCategorySelected = createSelector(
+    [selectPhotosReducer],
+    (photosSlice) => photosSlice.categorySelected,
+)
+
 export const selectCategoryPhotosIsLoading = createSelector(
     [selectPhotosReducer],
     (photosSlice) => photosSlice.isLoadingCategoryPhotos,

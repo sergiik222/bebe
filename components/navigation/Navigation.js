@@ -14,12 +14,12 @@ export default function Navigation() {
             <nav
                 className={`h-full bg-bottom-grad z-50 fixed transition-transform duration-700 ease-in-out w-full md:w-1/4  ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <ul className="p-4 mt-12">
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} className="text-lg" href="home">Home</NavLink></li>
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} href="about">About</NavLink></li>
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} href="portfolio">Portfolio</NavLink></li>
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} href="cost">Cost estimator</NavLink></li>
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} href="book">Book</NavLink></li>
-                    <li className="link p-2"><NavLink onClick={toggleIsOpened} href="contact">Contact</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={true} onClick={toggleIsOpened} className="text-lg" href="home">Home</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={true} onClick={toggleIsOpened} href="about">About</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={false} onClick={toggleIsOpened} href="/portfolio">Portfolio</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={true} onClick={toggleIsOpened} href="cost">Cost estimator</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={true} onClick={toggleIsOpened} href="book">Book</NavLink></li>
+                    <li className="link p-2"><NavLink isAnker={true} onClick={toggleIsOpened} href="contact">Contact</NavLink></li>
                 </ul>
             </nav>
             <div className="fixed top-4 left-4 z-50 flex flex-col space-y-2">
