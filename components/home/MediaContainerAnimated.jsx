@@ -8,11 +8,28 @@ import Spinner from "@/components/helpers/Spinner";
 import MediaNameComponent from "@/components/home/MediaNameComponent";
 
 const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
-    const mediaMargin = 50; // Distance between medias
     const scrollRef = useRef(null);
     const [windowWidth, setWindowWidth] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [middleIndex, setMiddleIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+    const [mediaMargin, setMediaMargin] = useState(70);
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 767);
+        };
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile){
+            setMediaMargin(50)
+        }else{
+            setMediaMargin(70)
+        }
+    }, [isMobile]);
 
     // useSpring for smoother mediaX transitions
     const [{ mediaX }, api] = useSpring(() => ({ mediaX: 0 }));

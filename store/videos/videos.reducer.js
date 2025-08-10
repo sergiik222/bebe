@@ -1,8 +1,10 @@
 import { VIDEOS_ACTION_TYPES } from './videos.types'
+import {PHOTOS_ACTION_TYPES} from "@/store/photos/photos.types";
 
 const VIDEOS_INITIAL_STATE = {
   mainVideos: [],
   categoryVideos: [],
+  categorySelected: false,
   videoCategories: [],
   isLoadingMainVideos: false,
   isLoadingCategoryVideos: false,
@@ -21,6 +23,11 @@ export const videosReducer = (
       return {
         ...state,
         isLoadingMainVideos: true,
+      }
+    case VIDEOS_ACTION_TYPES.CATEGORY_SELECTED:
+      return {
+        ...state,
+        categorySelected: payload,
       }
     case VIDEOS_ACTION_TYPES.FETCH_MAIN_VIDEOS_SUCCESS:
       return {

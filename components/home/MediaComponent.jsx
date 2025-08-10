@@ -17,7 +17,16 @@ const MediaComponent = () => {
     const mainPhotosAreLoading = useSelector(selectMainPhotosIsLoading)
     const mainVideosAreLoading = useSelector(selectMainVideosIsLoading)
     const videosInUse = useSelector(selectVideosInUse)
-    const [mediaSize, setMediaSize] = useState(350)
+    const [mediaSize, setMediaSize] = useState(150)
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 767);
+        };
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
     useEffect(() => {
         dispatch(setMainVideos())
@@ -27,11 +36,17 @@ const MediaComponent = () => {
     useEffect(() => {
         dispatch(setChosenMediaName(""))
         if (videosInUse){
-            setMediaSize(350)
+            setMediaSize(450)
+            if (isMobile){
+                setMediaSize(250)
+            }
         }else{
-            setMediaSize(350)
+            setMediaSize(450)
+            if (isMobile){
+                setMediaSize(250)
+            }
         }
-    }, [dispatch, videosInUse])
+    }, [dispatch, videosInUse, isMobile])
 
         return (
             <div>

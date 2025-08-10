@@ -13,6 +13,10 @@ export const selectVideoCategories = createSelector(
     [selectVideosReducer],
     (videosSlice) => videosSlice.videoCategories,
 )
+export const selectVideoIsCategorySelected = createSelector(
+    [selectVideosReducer],
+    (videosSlice) => videosSlice.categorySelected,
+)
 
 export const selectMainVideosIsLoading = createSelector(
   [selectVideosReducer],
@@ -45,6 +49,8 @@ export const selectMainVideosHome = createSelector(
                 ...media,
                 marginTop: index % 2 === 0 ? 0 : Math.floor(Math.random() * 100) + 200,
                 marginBottom: index % 2 === 0 ? Math.floor(Math.random() * 100) + 200 : 0,
+                marginTopMobile: index % 2 === 0 ? 0 : Math.floor(Math.random() * 50) + 100,
+                marginBottomMobile: index % 2 === 0 ? Math.floor(Math.random() * 50) + 100 : 0,
             }
         })
     }

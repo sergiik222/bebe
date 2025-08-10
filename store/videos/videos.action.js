@@ -1,6 +1,7 @@
 import { VIDEOS_ACTION_TYPES } from './videos.types'
 import { createAction } from '@/utils/reducer/reducer.utils'
 import {getCategoryVideos, getMainVideos, getVideoCategories} from "@/utils/firebase.utils";
+import {setCategorySelected} from "@/store/photos/photos.action";
 
 export const fetchMainVideosStart = () =>
   createAction(VIDEOS_ACTION_TYPES.FETCH_MAIN_VIDEOS_START)
@@ -51,6 +52,7 @@ export const setVideoCategories = () => async (dispatch) => {
 
 export const setCategoryVideos = ({category}) => async (dispatch) => {
   dispatch(fetchCategoryVideosStart())
+  dispatch(setCategorySelected(true))
   try {
     const videosData = await getCategoryVideos(category)
     dispatch(fetchCategoryVideosSuccess(videosData))

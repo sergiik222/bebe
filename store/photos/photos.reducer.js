@@ -4,6 +4,7 @@ const PHOTOS_INITIAL_STATE = {
   mainPhotos: [],
   categoryPhotos: [],
   isLoadingMainPhotos: false,
+  categorySelected: false,
   isLoadingCategoryPhotos: false,
   error: null,
 }
@@ -18,6 +19,11 @@ export const photosReducer = (
       return {
         ...state,
         isLoadingMainPhotos: true,
+      }
+    case PHOTOS_ACTION_TYPES.CATEGORY_SELECTED:
+      return {
+        ...state,
+        categorySelected: payload,
       }
     case PHOTOS_ACTION_TYPES.FETCH_MAIN_PHOTOS_SUCCESS:
       return {

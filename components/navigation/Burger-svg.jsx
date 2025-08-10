@@ -14,7 +14,7 @@ const Burger = (props) => {
         viewBox="0 0 24 24"
         strokeWidth="2"
         stroke="currentColor"
-        className="w-10 h-10"
+        className="mt-1  w-8 h-8"
       >
         <path
           strokeLinecap="round"
