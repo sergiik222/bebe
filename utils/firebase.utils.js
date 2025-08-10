@@ -127,22 +127,27 @@ export const getCategoryPhotos = async (category) => {
 
 
 export const getCategoryVideos = async (category) => {
-    console.log("In get category videos")
-    const listRef = ref(storage, `video/${category}`);
+    console.log("In get category videos: ", category)
+    const listRef = ref(storage, `videos/${category}`);
 
     // Find all the prefixes and items.
     try {
         const res = await listAll(listRef);
-        let urls = []
-        urls = await Promise.all(
+        let videos = []
+        videos = await Promise.all(
             res.items.map(async (itemRef) => {
                 const url = await getDownloadURL(itemRef);
-                console.log("Res name: ", itemRef.name);
-                console.log("Url: ", url);
-                return url;
+                var video = {
+                    name: itemRef.name,
+                    alt: itemRef.name.split('.')[0],
+                    dateCreated: "2015-01-01",
+                    url: url,
+                    mediaType: "video"
+                }
+                return video;
             })
         );
-        return urls;
+        return videos;
     } catch (error) {
         console.error("Error fetching URLs:", error);
         return []

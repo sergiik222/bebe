@@ -28,7 +28,7 @@ const CategoryPhoto = ({ src, alt  }) => {
                 />
             </div>
             <div className="absolute inset-0 bg-black opacity-80 lg:opacity-0 group-hover:opacity-50 flex items-center justify-center transition-opacity">
-                <h2 className="font-bold text-[28px] sm:text-[36px]  text-primary-text text-center">{alt}</h2>
+                <h2 className="font_regular text-[24px] sm:text-[28px]  text-primary-text text-center">{alt}</h2>
             </div>
         </div>
     );

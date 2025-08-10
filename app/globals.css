@@ -7,11 +7,11 @@
 }
 
 .link {
-    @apply flex cursor-pointer text-secondary-text py-2 md:mr-4 border-none rounded-xl text-lg text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mt-1 md:mt-0;
+    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl text-lg text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mt-1 md:mt-0;
 }
 
 .btn {
-    @apply flex cursor-pointer text-secondary-text py-2 md:mr-4 border-none rounded-xl  text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mx-3 mt-1 md:mt-0;
+    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl  text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mx-3 mt-1 md:mt-0;
 }
 
 .active{
@@ -33,6 +33,15 @@ html, body {
     margin: 0;
 }
 
+.font_regular {
+    font-family: var(--font-exo2), sans-serif;
+    font-weight: 400;
+}
+
+.font_bold {
+    font-family: var(--font-exo2), sans-serif;
+    font-weight: 700;
+}
 
 .noselect {
     -webkit-user-select: none; /* Safari */

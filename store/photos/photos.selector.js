@@ -43,6 +43,8 @@ export const selectMainPhotosHome = createSelector(
                 ...media,
                 marginTop: index % 2 === 0 ? 0 : Math.floor(Math.random() * 100) + 200,
                 marginBottom: index % 2 === 0 ? Math.floor(Math.random() * 100) + 200 : 0,
+                marginTopMobile: index % 2 === 0 ? 0 : Math.floor(Math.random() * 50) + 100,
+                marginBottomMobile: index % 2 === 0 ? Math.floor(Math.random() * 50) + 100 : 0,
             }
         })
     }

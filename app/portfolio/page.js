@@ -48,6 +48,18 @@ const Portfolio = () => {
         setPhotosToShow(mainPhotos)
     }, [mainPhotos]);
 
+    useEffect(() => {
+
+        const url = new URL(window.location.href);
+        const from = url.searchParams.get('from');
+        if (from) {
+            if (from === "videoGallery"){
+                clickSetShowVideos()
+            }
+            url.searchParams.delete('from');
+            window.history.replaceState({}, '', url.toString());
+        }
+    }, []);
 
     if (mainPhotosAreLoading || mainVideosAreLoading){
         return <Spinner />;

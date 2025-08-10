@@ -19,14 +19,14 @@ const Header = () => {
 
   return (
       <div className='flex items-center justify-center mt-3 '>
-          <button className={`btn ${videosInUse ? '' : 'active'} text-2xl `} onClick={showPhotos}>
-              Photos
+          <button className={`btn ${videosInUse ? '' : 'active'} text-2xl`} onClick={showPhotos}>
+              Photo
           </button>
           <Link className='btn text-2xl' href="/portfolio">
               Portfolio
           </Link>
           <button className={`btn ${videosInUse ? 'active' : ''} mt-48 text-2xl`} onClick={showVideos}>
-              Videos
+              Video
           </button>
       </div>
   )

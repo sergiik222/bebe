@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useDispatch} from "react-redux";
 import { setCategoryVideos } from "@/store/videos/videos.action";
+import {useRouter} from "next/navigation";
+import {setCategoryPhotos} from "@/store/photos/photos.action";
 
 const useIsDesktop = () => {
     const [isDesktop, setIsDesktop] = useState(false);
@@ -24,6 +26,7 @@ const VideoComponentPortfolio = ({
     const dispatch = useDispatch();
     const isDesktop = useIsDesktop();
     const playing = isPlaying;
+    const router = useRouter();
 
     const handleMouseOver = () => {
         if (isDesktop && !playing) {
@@ -60,7 +63,9 @@ const VideoComponentPortfolio = ({
         e.preventDefault();
         e.stopPropagation();
         dispatch(setCategoryVideos({ category: alt }));
+        router.push("/video_gallery");
     };
+
 
     return (
         <div
@@ -88,7 +93,7 @@ const VideoComponentPortfolio = ({
                 }
         `}
             >
-                <h2 className="font-bold text-[28px] sm:text-[36px] text-primary-text text-center px-2">
+                <h2 className="font_regular text-[24px] sm:text-[28px] text-primary-text text-center px-2">
                     {alt}
                 </h2>
             </div>
