@@ -11,6 +11,10 @@ const WHEEL_MULTIPLIER = 1.05;
 const DECAY = 0.93;
 const MIN_VELOCITY = 0.18;
 
+const FOCUS_MARKS = [0.7, 1, 1.4, 2, 2.8, 4, 5.6, 8, 11, 16]; // example f-stop-like values
+const FOCUS_MIN = FOCUS_MARKS[0];
+const FOCUS_MAX = FOCUS_MARKS[FOCUS_MARKS.length - 1];
+
 const rafThrottle = (fn) => {
   let raf = null;
   return (...args) => {
@@ -23,6 +27,7 @@ const rafThrottle = (fn) => {
 };
 
 const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
+    const containerRef = useRef(null);
     const scrollRef = useRef(null);
     const [windowWidth, setWindowWidth] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -52,6 +57,20 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         return Math.max(leftBound, Math.min(rightBound, x));
     }, [getBounds]);
 
+    const progressFromX = useCallback((x) => {
+        const { leftBound, rightBound } = getBounds();
+        const span = rightBound - leftBound;
+        if (span === 0) return 0.5; // centered when only one item or empty
+        let p = (rightBound - x) / span; // 0 at start, 1 at end
+        return Math.max(0, Math.min(1, p));
+    }, [getBounds]);
+
+    const progressFromValue = useCallback((val) => {
+        const span = FOCUS_MAX - FOCUS_MIN;
+        if (span <= 0) return 0;
+        return Math.max(0, Math.min(1, (val - FOCUS_MIN) / span));
+    }, []);
+
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth <= 767);
         checkMobile();
@@ -67,6 +86,28 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         if (typeof window !== 'undefined') {
             setWindowWidth(window.innerWidth);
         }
+    }, []);
+
+    useEffect(() => {
+      // lock page vertical scroll while this view is active
+      const html = document.documentElement;
+      const body = document.body;
+      const prevHtmlOverflow = html.style.overflow;
+      const prevBodyOverflow = body.style.overflow;
+      const prevHtmlOverscroll = html.style.overscrollBehavior;
+      const prevBodyOverscroll = body.style.overscrollBehavior;
+
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
+      html.style.overscrollBehavior = 'none';
+      body.style.overscrollBehavior = 'none';
+
+      return () => {
+        html.style.overflow = prevHtmlOverflow;
+        body.style.overflow = prevBodyOverflow;
+        html.style.overscrollBehavior = prevHtmlOverscroll;
+        body.style.overscrollBehavior = prevBodyOverscroll;
+      };
     }, []);
 
     const [{ mediaX }, api] = useSpring(() => ({ mediaX: 0, config: { mass: 0.9, tension: 220, friction: 26 } }));
@@ -145,8 +186,11 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
 
     const onWheel = useCallback((e) => {
         if (prefersReducedMotion()) return;
-        if (!scrollRef.current) return;
+        if (!containerRef.current) return;
+
+        // Always treat wheel as horizontal scroll in this view
         e.preventDefault();
+
         const delta = e.deltaY * WHEEL_MULTIPLIER;
         wheelVelocity.current = (wheelVelocity.current + delta) / 2;
         inertiaActive.current = true;
@@ -159,7 +203,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     }, [api, mediaX, clampX, stepInertia, updateMiddleIndexThrottled]);
 
     useEffect(() => {
-        const el = scrollRef.current;
+        const el = containerRef.current;
         if (!el) return;
         const opts = { passive: false }; // we call preventDefault
         el.addEventListener('wheel', onWheel, opts);
@@ -172,7 +216,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         return <Spinner />;
     } else {
         return (
-            <div className="relative w-full h-screen overflow-hidden">
+            <div ref={containerRef} className="relative w-full h-screen overflow-hidden touch-none">
                 <animated.div
                     ref={scrollRef}
                     {...bindMedias()}
@@ -189,6 +233,36 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                     />
                 </animated.div>
                 <MediaNameComponent />
+                {/* Progress bar (full-width) */}
+                <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40">
+                  <div className="relative mx-auto h-px bg-white/40" style={{ width: '100%' }}>
+                    {/* Fill to current position */}
+                    <animated.div
+                      className="absolute inset-y-0 left-0 bg-white/70"
+                      style={{ width: mediaX.to(x => `${progressFromX(x) * 100}%`) }}
+                    />
+                    {FOCUS_MARKS.map((v) => (
+                      <div
+                        key={`tick-${v}`}
+                        className="absolute -top-4"
+                        style={{ left: `${progressFromValue(v) * 100}%`, transform: 'translateX(-50%)' }}
+                      >
+                        <div className="w-px h-4 bg-white/90"></div>
+                        {!isMobile && (
+                          <div className="mt-1 text-xs leading-none text-white select-none whitespace-nowrap">
+                            {`f/${v}`}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <animated.div
+                  className="pointer-events-none fixed top-0 bottom-0 w-px bg-white z-40"
+                  style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`) }}
+                />
+
             </div>
         );
     }
