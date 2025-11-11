@@ -1,6 +1,6 @@
 import { PHOTOS_ACTION_TYPES } from './photos.types'
 import { createAction } from '@/utils/reducer/reducer.utils'
-import {getMainPhotos, getCategoryPhotos} from "@/utils/firebase.utils";
+import {getMainPhotos, getCategoryPhotos} from "@/utils/bunny.utils";
 
 export const fetchMainPhotosStart = () =>
   createAction(PHOTOS_ACTION_TYPES.FETCH_MAIN_PHOTOS_START)

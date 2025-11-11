@@ -1,6 +1,6 @@
 import { VIDEOS_ACTION_TYPES } from './videos.types'
 import { createAction } from '@/utils/reducer/reducer.utils'
-import {getCategoryVideos, getMainVideos, getVideoCategories} from "@/utils/firebase.utils";
+import {getCategoryVideos, getMainVideos, getVideoCategories} from "@/utils/bunny.utils";
 import {setCategorySelected} from "@/store/photos/photos.action";
 
 export const fetchMainVideosStart = () =>

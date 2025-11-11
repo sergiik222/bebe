@@ -23,7 +23,7 @@ const CategoryPhoto = ({ src, alt  }) => {
                     src={src}
                     alt={alt}
                     fill
-                    style={{ objectFit: "cover", position: "relative" }}
+                    className="object-cover"
                     draggable="false"
                 />
             </div>

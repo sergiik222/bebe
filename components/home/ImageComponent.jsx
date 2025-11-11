@@ -20,7 +20,15 @@ const ImageComponent = ({src, alt, isMiddle, isDragging} ) => {
     };
 
     return (
-        <Image onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} className='' src={src} alt={alt} fill style={{objectFit: "cover"}} draggable="false"/>
+        <Image
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            className='object-cover'
+            src={src}
+            alt={alt}
+            fill
+            draggable="false"
+        />
     )
 }
 
