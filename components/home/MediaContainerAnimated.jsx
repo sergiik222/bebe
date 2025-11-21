@@ -5,7 +5,6 @@ import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
 import Spinner from "@/components/helpers/Spinner";
-import MediaNameComponent from "@/components/home/MediaNameComponent";
 
 const WHEEL_MULTIPLIER = 1.05;
 const DECAY = 0.93;
@@ -79,7 +78,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     }, []);
 
     useEffect(() => {
-        setMediaMargin(isMobile ? 50 : 70);
+        setMediaMargin(isMobile ? 70 : 100);
     }, [isMobile]);
 
     useEffect(() => {
@@ -232,7 +231,6 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         medias={medias}
                     />
                 </animated.div>
-                <MediaNameComponent />
                 {/* Progress bar (full-width) */}
                 <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40">
                   <div className="relative mx-auto h-px bg-white/40" style={{ width: '100%' }}>

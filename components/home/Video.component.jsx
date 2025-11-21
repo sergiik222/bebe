@@ -3,12 +3,16 @@ import React, {useRef, useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useDispatch} from "react-redux";
 import {setChosenMediaName} from "@/store/media/media.action";
+import VideoBrackets from "@/components/home/VideoBrackets";
 
 const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     const playerRef = useRef(null);
     const canOpenRef = useRef(false);  // Use ref for immediate value access
     const dispatch = useDispatch()
     const [playing, setPlaying] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const [duration, setDuration] = useState(0);
+
     useEffect(() => {
         if (isDragging) {
             canOpenRef.current = false;
@@ -31,13 +35,17 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
 
 
     const handleMouseOver = () => {
-        if (playerRef.current && !isDragging) {
-            playerRef.current.getInternalPlayer().play();
+        if (!isDragging) {
+            setIsHovered(true);
+            if (playerRef.current) {
+                playerRef.current.getInternalPlayer().play();
+            }
         }
         dispatch(setChosenMediaName(alt))
     };
 
     const handleMouseOut = () => {
+        setIsHovered(false);
         if (playerRef.current && !isDragging) {
             playerRef.current.getInternalPlayer().pause();
         }
@@ -63,15 +71,22 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     };
 
     const handleFullscreenChange = () => {
-        const player = playerRef.current.getInternalPlayer();
-        if (!document.fullscreenElement) {
-            player.pause();
+        if (!document.fullscreenElement && playerRef.current) {
+            const player = playerRef.current.getInternalPlayer();
+            if (player) {
+                player.pause();
+                player.muted = true;
+            }
             setTimeout(() => {
-                player.seekTo(0); // Ensure seek happens after pause
-            }, 100); // Short delay to ensure both actions are executed correctly
-            player.muted = true;
-
+                if (playerRef.current) {
+                    playerRef.current.seekTo(0);
+                }
+            }, 100);
         }
+    };
+
+    const handleDuration = (dur) => {
+        setDuration(dur);
     };
     const handlePlayPauseButtonClick = (e) => {
         e.stopPropagation();
@@ -98,33 +113,25 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
         >
-            <ReactPlayer
-                ref={playerRef}
-                url={videoUrl}
-                playing={playing}
-                muted
-                width="100%"
-                height="100%"
-                className="absolute top-0 left-0"
-            />
-
-            <div
-                className={`absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center transition-opacity
-          ${
-                    playing
-                        ? 'opacity-80'
-                        : 'opacity-50 lg:opacity-0 group-hover:opacity-80'
-                }
-        `}
-            >
-                <h2 className="font_regular text-[24px] sm:text-[28px] text-primary-text text-center px-2">
-                    {alt}
-                </h2>
+            <div className="absolute inset-0 overflow-hidden">
+                <ReactPlayer
+                    ref={playerRef}
+                    url={videoUrl}
+                    playing={playing}
+                    muted
+                    width="100%"
+                    height="100%"
+                    className="absolute top-0 left-0"
+                    onDuration={handleDuration}
+                />
             </div>
+
+            {/* Animated brackets on hover */}
+            <VideoBrackets show={isHovered && !isDragging} duration={duration} title={alt} />
 
             <button
                 onClick={handlePlayPauseButtonClick}
-                className="absolute bottom-4 left-4 z-10 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
+                className="absolute bottom-4 left-4 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
                 aria-label={playing ? "Pause Video" : "Play Video"}
             >
                 {playing ? (

@@ -8,7 +8,7 @@ const Media = ({media, isMiddle, isDragging, mediaSize, mediaMargin, index, wind
     height = mediaSize*0.5625
     return (
         <div
-            className={`relative noselect transition-all duration-700 ease-in-out  ${!isDragging ? 'hover:scale-150 hover:z-50' : 'hover:scale-100'} ${isMiddle && isDragging ? 'scale-125' : 'scale-100'} ${isDragging || windowWidth < 640 ? 'mt-0 mb-0' : ''}`}
+            className={`relative noselect transition-all duration-700 ease-in-out ${!isDragging ? 'hover:z-50' : ''} ${isDragging || windowWidth < 640 ? 'mt-0 mb-0' : ''}`}
             style={{
                 marginTop: isDragging ? `${-100}px` : windowWidth < 640 ? `${media.marginTopMobile - 100}px` : `${media.marginTop}px`,
                 marginBottom: isDragging ? 0 : windowWidth < 640 ? `${media.marginBottomMobile - 100}px` : `${media.marginBottom}px`,
@@ -17,7 +17,7 @@ const Media = ({media, isMiddle, isDragging, mediaSize, mediaMargin, index, wind
                 flexShrink: 0,
                 marginLeft: index === 0 ? 0 : `${mediaMargin}px`,
             }}>
-            {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging}/>}
+            {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} date={media.date} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging}/>}
         </div>
     );
 };
