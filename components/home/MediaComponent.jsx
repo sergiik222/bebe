@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import {selectMainPhotosHome, selectMainPhotosIsLoading} from "@/store/photos/photos.selector";
 import {setMainPhotos} from "@/store/photos/photos.action";
 import {setMainVideos} from "@/store/videos/videos.action";
-import {selectMainVideosHome, selectMainVideosIsLoading, selectVideosInUse} from "@/store/videos/videos.selector";
+import {selectMainVideosHome, selectMainVideosIsLoading} from "@/store/videos/videos.selector";
 import Header from "@/components/home/Header";
 import MediaContainerAnimated from "@/components/home/MediaContainerAnimated";
 import {setChosenMediaName} from "@/store/media/media.action";
@@ -16,9 +16,9 @@ const MediaComponent = () => {
     const mainVideos = useSelector(selectMainVideosHome)
     const mainPhotosAreLoading = useSelector(selectMainPhotosIsLoading)
     const mainVideosAreLoading = useSelector(selectMainVideosIsLoading)
-    const videosInUse = useSelector(selectVideosInUse)
     const [mediaSize, setMediaSize] = useState(150)
     const [isMobile, setIsMobile] = useState(false);
+
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth <= 767);
@@ -35,29 +35,50 @@ const MediaComponent = () => {
 
     useEffect(() => {
         dispatch(setChosenMediaName(""))
-        if (videosInUse){
-            setMediaSize(450)
-            if (isMobile){
-                setMediaSize(250)
+        setMediaSize(450)
+        if (isMobile){
+            setMediaSize(250)
+        }
+    }, [dispatch, isMobile])
+
+    // Interleave photos and videos in alternating pattern
+    const mergedMedia = useMemo(() => {
+        const result = [];
+        const maxLength = Math.max(mainPhotos.length, mainVideos.length);
+
+        for (let i = 0; i < maxLength; i++) {
+            // Add photo first (if available)
+            if (i < mainPhotos.length) {
+                result.push(mainPhotos[i]);
             }
-        }else{
-            setMediaSize(450)
-            if (isMobile){
-                setMediaSize(250)
+            // Then add video (if available)
+            if (i < mainVideos.length) {
+                result.push(mainVideos[i]);
             }
         }
-    }, [dispatch, videosInUse, isMobile])
 
-        return (
-            <div>
-                <Header  />
-                {videosInUse ? (
-                    <MediaContainerAnimated medias={mainVideos} mediaSize={mediaSize} mediasAreLoading={mainVideosAreLoading}  key="videos"/>
-                ) : (
-                    <MediaContainerAnimated medias={mainPhotos} mediaSize={mediaSize} mediasAreLoading={mainPhotosAreLoading}  key="photos"/>
-                )}
-            </div>
-        );
+        // Recalculate margins based on merged array index for consistent alternating pattern
+        return result.map((media, index) => ({
+            ...media,
+            marginTop: index % 2 === 0 ? 0 : Math.floor(Math.random() * 100) + 200,
+            marginBottom: index % 2 === 0 ? Math.floor(Math.random() * 100) + 200 : 0,
+            marginTopMobile: index % 2 === 0 ? 0 : Math.floor(Math.random() * 50) + 100,
+            marginBottomMobile: index % 2 === 0 ? Math.floor(Math.random() * 50) + 100 : 0,
+        }));
+    }, [mainPhotos, mainVideos]);
+
+    const isLoading = mainPhotosAreLoading || mainVideosAreLoading;
+
+    return (
+        <div>
+            <Header  />
+            <MediaContainerAnimated
+                medias={mergedMedia}
+                mediaSize={mediaSize}
+                mediasAreLoading={isLoading}
+            />
+        </div>
+    );
 };
 
 export default MediaComponent;

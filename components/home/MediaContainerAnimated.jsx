@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
@@ -34,35 +34,45 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const [isMobile, setIsMobile] = useState(false);
     const [mediaMargin, setMediaMargin] = useState(70);
 
-    const prefersReducedMotion = () =>
-        typeof window !== 'undefined' &&
-        window.matchMedia &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const realMediaCount = medias?.length || 0;
 
     const getStride = useCallback(() => mediaSize + mediaMargin, [mediaSize, mediaMargin]);
 
-    const getBounds = useCallback(() => {
-        const rightBound = (windowWidth ?? 0) / 2 - mediaSize / 2;
-        if (!medias || medias.length <= 0) {
-            return { leftBound: rightBound, rightBound };
-        }
-        const totalWidth = medias.length * mediaSize + Math.max(0, medias.length - 1) * mediaMargin;
-        const leftBound = rightBound - (totalWidth - mediaSize);
-        return { leftBound, rightBound };
-    }, [medias, mediaSize, mediaMargin, windowWidth]);
+    // Wrap position for infinite scrolling - continuously normalize to middle set
+    const wrapX = useCallback((x) => {
+        if (realMediaCount === 0) return x;
+        const stride = mediaSize + mediaMargin;
+        const middleBox = (windowWidth ?? 0) / 2 - mediaSize / 2;
+        const singleSetWidth = realMediaCount * stride;
 
-    const clampX = useCallback((x) => {
-        const { leftBound, rightBound } = getBounds();
-        return Math.max(leftBound, Math.min(rightBound, x));
-    }, [getBounds]);
+        // Check if we need to wrap
+        const secondSetStart = middleBox - realMediaCount * stride;
+        const secondSetEnd = middleBox - 2 * realMediaCount * stride;
+
+        // If scrolled past middle set boundaries, wrap back to middle set
+        if (x > secondSetStart + stride * 0.5) {
+            // Went too far right, wrap back
+            return x - singleSetWidth;
+        }
+        if (x < secondSetEnd - stride * 0.5) {
+            // Went too far left, wrap back
+            return x + singleSetWidth;
+        }
+        return x;
+    }, [realMediaCount, mediaSize, mediaMargin, windowWidth]);
 
     const progressFromX = useCallback((x) => {
-        const { leftBound, rightBound } = getBounds();
-        const span = rightBound - leftBound;
-        if (span === 0) return 0.5; // centered when only one item or empty
-        let p = (rightBound - x) / span; // 0 at start, 1 at end
-        return Math.max(0, Math.min(1, p));
-    }, [getBounds]);
+        if (realMediaCount === 0) return 0.5;
+        const middleBox = (windowWidth ?? 0) / 2 - mediaSize / 2;
+        const stride = mediaSize + mediaMargin;
+        const totalIdx = Math.round((middleBox - x) / stride);
+        const actualIdx = ((totalIdx % realMediaCount) + realMediaCount) % realMediaCount;
+        // Calculate fractional position between snapped items for smooth progress
+        const exactIdx = (middleBox - x) / stride;
+        const fractionalPart = exactIdx - Math.round(exactIdx);
+        const smoothIdx = actualIdx + fractionalPart;
+        return (smoothIdx % realMediaCount) / Math.max(1, realMediaCount - 1);
+    }, [realMediaCount, windowWidth, mediaSize, mediaMargin]);
 
     const progressFromValue = useCallback((val) => {
         const span = FOCUS_MAX - FOCUS_MIN;
@@ -109,25 +119,35 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
       };
     }, []);
 
+    // Create infinite loop by cloning items
+    const loopedMedias = useMemo(() => {
+        if (!medias || medias.length === 0) return [];
+        // Clone the array 3 times for smooth infinite scrolling
+        return [...medias, ...medias, ...medias];
+    }, [medias]);
+
     const [{ mediaX }, api] = useSpring(() => ({ mediaX: 0, config: { mass: 0.9, tension: 220, friction: 26 } }));
 
     useEffect(() => {
-        api.start({ mediaX: 0 });
-    }, [medias, api]);
-
-    useEffect(() => {
         if (!medias || medias.length === 0) return;
+        // Start at the middle set (second copy)
         const middleBox = (windowWidth ?? 0) / 2 - mediaSize / 2;
-        api.start({ mediaX: clampX(middleBox) });
+        const startIndex = realMediaCount; // Start of second set
+        const stride = mediaSize + mediaMargin;
+        const startX = middleBox - startIndex * stride;
+        api.start({ mediaX: startX, immediate: true });
         setMiddleIndex(0);
-    }, [medias, windowWidth, mediaSize, clampX, api]);
+    }, [medias, windowWidth, mediaSize, mediaMargin, realMediaCount, api]);
 
     const updateMiddleIndex = useCallback((currentX) => {
+        if (realMediaCount === 0) return;
         const middleBox = (windowWidth ?? 0) / 2 - mediaSize / 2;
         const stride = getStride();
-        const idx = Math.round((middleBox - currentX) / stride);
-        setMiddleIndex(idx);
-    }, [windowWidth, mediaSize, getStride]);
+        const totalIdx = Math.round((middleBox - currentX) / stride);
+        // Map to actual index within the original media array
+        const actualIdx = ((totalIdx % realMediaCount) + realMediaCount) % realMediaCount;
+        setMiddleIndex(actualIdx);
+    }, [windowWidth, mediaSize, getStride, realMediaCount]);
 
     const updateMiddleIndexThrottled = useCallback(rafThrottle(updateMiddleIndex), [updateMiddleIndex]);
 
@@ -136,10 +156,10 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         const stride = getStride();
         const targetIndex = Math.round((middleBox - currentX) / stride);
         const targetX = middleBox - targetIndex * stride;
-        const clamped = clampX(targetX);
-        api.start({ mediaX: clamped });
-        setMiddleIndex(targetIndex);
-    }, [api, windowWidth, mediaSize, getStride, clampX]);
+        const wrappedX = wrapX(targetX);
+        api.start({ mediaX: wrappedX });
+        updateMiddleIndex(wrappedX);
+    }, [api, windowWidth, mediaSize, getStride, wrapX, updateMiddleIndex]);
 
     const inertiaActive = useRef(false);
     const wheelVelocity = useRef(0);
@@ -150,13 +170,20 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         setIsDragging(active);
         const next = mx + memo;
         if (active) {
+            const wrapped = wrapX(next);
+            // If we wrapped, update memo to the new wrapped position
+            if (wrapped !== next) {
+                api.start({ mediaX: wrapped, immediate: true });
+                updateMiddleIndexThrottled(wrapped);
+                return wrapped;
+            }
             api.start({ mediaX: next, immediate: true });
             updateMiddleIndexThrottled(next);
         } else {
-            const clamped = clampX(next);
-            api.start({ mediaX: clamped, immediate: false });
-            updateMiddleIndex(clamped);
-            snapToNearest(clamped);
+            const wrapped = wrapX(next);
+            api.start({ mediaX: wrapped, immediate: false });
+            updateMiddleIndex(wrapped);
+            snapToNearest(wrapped);
         }
 
         return memo;
@@ -177,39 +204,40 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         }
 
         const current = mediaX.get();
-        const next = clampX(current + wheelVelocity.current);
-        api.start({ mediaX: next, immediate: true });
-        updateMiddleIndexThrottled(next);
+        const next = current + wheelVelocity.current;
+        const wrapped = wrapX(next);
+        api.start({ mediaX: wrapped, immediate: true });
+        updateMiddleIndexThrottled(wrapped);
         requestAnimationFrame(stepInertia);
-    }, [api, mediaX, snapToNearest, clampX, updateMiddleIndexThrottled]);
-
-    const onWheel = useCallback((e) => {
-        if (prefersReducedMotion()) return;
-        if (!containerRef.current) return;
-
-        // Always treat wheel as horizontal scroll in this view
-        e.preventDefault();
-
-        const delta = e.deltaY * WHEEL_MULTIPLIER;
-        wheelVelocity.current = (wheelVelocity.current + delta) / 2;
-        inertiaActive.current = true;
-
-        const current = mediaX.get();
-        const next = clampX(current + delta);
-        api.start({ mediaX: next, immediate: true });
-        updateMiddleIndexThrottled(next);
-        requestAnimationFrame(stepInertia);
-    }, [api, mediaX, clampX, stepInertia, updateMiddleIndexThrottled]);
+    }, [api, mediaX, snapToNearest, wrapX, updateMiddleIndexThrottled]);
 
     useEffect(() => {
-        const el = containerRef.current;
-        if (!el) return;
-        const opts = { passive: false }; // we call preventDefault
-        el.addEventListener('wheel', onWheel, opts);
-        return () => {
-            el.removeEventListener('wheel', onWheel, opts);
+        const handleWheel = (e) => {
+            // Only handle wheel events if container exists
+            if (!containerRef.current) return;
+
+            // Always treat wheel as horizontal scroll in this view
+            e.preventDefault();
+            e.stopPropagation();
+
+            const delta = -e.deltaY * WHEEL_MULTIPLIER;
+            wheelVelocity.current = delta;
+            inertiaActive.current = true;
+
+            const current = mediaX.get();
+            const next = current + delta;
+            const wrapped = wrapX(next);
+            api.start({ mediaX: wrapped, immediate: true });
+            updateMiddleIndexThrottled(wrapped);
+            requestAnimationFrame(stepInertia);
         };
-    }, [onWheel]);
+
+        const opts = { passive: false }; // we call preventDefault
+        window.addEventListener('wheel', handleWheel, opts);
+        return () => {
+            window.removeEventListener('wheel', handleWheel, opts);
+        };
+    }, [api, mediaX, wrapX, stepInertia, updateMiddleIndexThrottled]);
 
     if (mediasAreLoading) {
         return <Spinner />;
@@ -228,7 +256,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         mediaSize={mediaSize}
                         mediaMargin={mediaMargin}
                         windowWidth={windowWidth}
-                        medias={medias}
+                        medias={loopedMedias}
                     />
                 </animated.div>
                 {/* Progress bar (full-width) */}

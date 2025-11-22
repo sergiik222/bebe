@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {setChosenMediaName} from "@/store/media/media.action";
 import {useDispatch} from "react-redux";
 import VideoBrackets from "@/components/home/VideoBrackets";
@@ -11,6 +11,7 @@ const ImageComponent = ({src, alt, isMiddle, isDragging, date} ) => {
     const dispatch = useDispatch()
     const [isHovered, setIsHovered] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
+    const dragStartRef = useRef({ x: 0, y: 0, wasDragging: false })
 
     const handleMouseOver = () => {
         if (!isDragging) {
@@ -33,10 +34,29 @@ const ImageComponent = ({src, alt, isMiddle, isDragging, date} ) => {
         dispatch(setChosenMediaName(""))
     };
 
+    const handleMouseDown = (e) => {
+        dragStartRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            wasDragging: false
+        }
+    };
+
+    const handleMouseMove = (e) => {
+        if (dragStartRef.current.x !== 0 || dragStartRef.current.y !== 0) {
+            const deltaX = Math.abs(e.clientX - dragStartRef.current.x)
+            const deltaY = Math.abs(e.clientY - dragStartRef.current.y)
+            if (deltaX > 5 || deltaY > 5) {
+                dragStartRef.current.wasDragging = true
+            }
+        }
+    };
+
     const handleClick = () => {
-        if (!isDragging) {
+        if (!isDragging && !dragStartRef.current.wasDragging) {
             setIsFullscreen(true)
         }
+        dragStartRef.current = { x: 0, y: 0, wasDragging: false }
     };
 
     const handleCloseFullscreen = () => {
@@ -49,6 +69,8 @@ const ImageComponent = ({src, alt, isMiddle, isDragging, date} ) => {
                 className="relative w-full h-full hover:cursor-pointer"
                 onMouseOver={handleMouseOver}
                 onMouseOut={handleMouseOut}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
                 onClick={handleClick}
             >
                 <div className="absolute inset-0 overflow-hidden">
