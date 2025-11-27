@@ -5,6 +5,8 @@ import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
 import Spinner from "@/components/helpers/Spinner";
+import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import { useMediaSize } from "@/hooks/useMediaSize";
 
 const WHEEL_MULTIPLIER = 1.05;
 const DECAY = 0.93;
@@ -16,23 +18,31 @@ const FOCUS_MAX = FOCUS_MARKS[FOCUS_MARKS.length - 1];
 
 const rafThrottle = (fn) => {
   let raf = null;
-  return (...args) => {
+  const throttled = (...args) => {
     if (raf) return;
     raf = requestAnimationFrame(() => {
       fn(...args);
       raf = null;
     });
   };
+  throttled.cancel = () => {
+    if (raf) {
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+  };
+  return throttled;
 };
 
 const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const containerRef = useRef(null);
     const scrollRef = useRef(null);
-    const [windowWidth, setWindowWidth] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [middleIndex, setMiddleIndex] = useState(0);
-    const [isMobile, setIsMobile] = useState(false);
-    const [mediaMargin, setMediaMargin] = useState(70);
+
+    // Use custom hooks for window dimensions and media sizing
+    const { width: windowWidth, isMobile } = useWindowDimensions();
+    const { margin: mediaMargin } = useMediaSize(isMobile);
 
     const realMediaCount = medias?.length || 0;
 
@@ -78,23 +88,6 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         const span = FOCUS_MAX - FOCUS_MIN;
         if (span <= 0) return 0;
         return Math.max(0, Math.min(1, (val - FOCUS_MIN) / span));
-    }, []);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 767);
-        checkMobile();
-        window.addEventListener("resize", checkMobile);
-        return () => window.removeEventListener("resize", checkMobile);
-    }, []);
-
-    useEffect(() => {
-        setMediaMargin(isMobile ? 70 : 100);
-    }, [isMobile]);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setWindowWidth(window.innerWidth);
-        }
     }, []);
 
     useEffect(() => {
@@ -149,7 +142,20 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         setMiddleIndex(actualIdx);
     }, [windowWidth, mediaSize, getStride, realMediaCount]);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateMiddleIndexThrottled = useCallback(rafThrottle(updateMiddleIndex), [updateMiddleIndex]);
+
+    // Cleanup effect for component unmount
+    useEffect(() => {
+        return () => {
+            // Cancel all pending RAF on component unmount
+            if (inertiaRafId.current) {
+                cancelAnimationFrame(inertiaRafId.current);
+                inertiaRafId.current = null;
+            }
+            updateMiddleIndexThrottled.cancel?.();
+        };
+    }, [updateMiddleIndexThrottled]);
 
     const snapToNearest = useCallback((currentX) => {
         const middleBox = (windowWidth ?? 0) / 2 - mediaSize / 2;
@@ -163,10 +169,16 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
 
     const inertiaActive = useRef(false);
     const wheelVelocity = useRef(0);
+    const inertiaRafId = useRef(null);
 
     const bindMedias = useDrag(({ active, movement: [mx], memo = mediaX.get() }) => {
         inertiaActive.current = false;
         wheelVelocity.current = 0;
+        // Cancel any pending animation frame when starting drag
+        if (inertiaRafId.current) {
+            cancelAnimationFrame(inertiaRafId.current);
+            inertiaRafId.current = null;
+        }
         setIsDragging(active);
         const next = mx + memo;
         if (active) {
@@ -199,6 +211,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         wheelVelocity.current *= DECAY;
         if (Math.abs(wheelVelocity.current) < MIN_VELOCITY) {
             inertiaActive.current = false;
+            inertiaRafId.current = null;
             snapToNearest(mediaX.get());
             return;
         }
@@ -208,7 +221,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         const wrapped = wrapX(next);
         api.start({ mediaX: wrapped, immediate: true });
         updateMiddleIndexThrottled(wrapped);
-        requestAnimationFrame(stepInertia);
+        inertiaRafId.current = requestAnimationFrame(stepInertia);
     }, [api, mediaX, snapToNearest, wrapX, updateMiddleIndexThrottled]);
 
     useEffect(() => {
@@ -229,13 +242,20 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
             const wrapped = wrapX(next);
             api.start({ mediaX: wrapped, immediate: true });
             updateMiddleIndexThrottled(wrapped);
-            requestAnimationFrame(stepInertia);
+            inertiaRafId.current = requestAnimationFrame(stepInertia);
         };
 
         const opts = { passive: false }; // we call preventDefault
         window.addEventListener('wheel', handleWheel, opts);
         return () => {
             window.removeEventListener('wheel', handleWheel, opts);
+            // Cancel any pending animation frame on cleanup
+            if (inertiaRafId.current) {
+                cancelAnimationFrame(inertiaRafId.current);
+                inertiaRafId.current = null;
+            }
+            // Cancel any pending throttled updates
+            updateMiddleIndexThrottled.cancel?.();
         };
     }, [api, mediaX, wrapX, stepInertia, updateMiddleIndexThrottled]);
 
@@ -261,33 +281,61 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                 </animated.div>
                 {/* Progress bar (full-width) */}
                 <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40">
-                  <div className="relative mx-auto h-px bg-white/40" style={{ width: '100%' }}>
+                  <div className="relative mx-auto h-px bg-white/30" style={{ width: '100%' }}>
                     {/* Fill to current position */}
                     <animated.div
-                      className="absolute inset-y-0 left-0 bg-white/70"
+                      className="absolute inset-y-0 left-0 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"
                       style={{ width: mediaX.to(x => `${progressFromX(x) * 100}%`) }}
                     />
-                    {FOCUS_MARKS.map((v) => (
-                      <div
-                        key={`tick-${v}`}
-                        className="absolute -top-4"
-                        style={{ left: `${progressFromValue(v) * 100}%`, transform: 'translateX(-50%)' }}
-                      >
-                        <div className="w-px h-4 bg-white/90"></div>
-                        {!isMobile && (
-                          <div className="mt-1 text-xs leading-none text-white select-none whitespace-nowrap">
-                            {`f/${v}`}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {FOCUS_MARKS.map((v) => {
+                      const markPosition = progressFromValue(v);
+                      return (
+                        <animated.div
+                          key={`tick-${v}`}
+                          className="absolute -top-4"
+                          style={{
+                            left: `${markPosition * 100}%`,
+                            transform: 'translateX(-50%)'
+                          }}
+                        >
+                          <animated.div
+                            className="w-px h-4"
+                            style={{
+                              backgroundColor: mediaX.to(x =>
+                                progressFromX(x) >= markPosition ? '#10b981' : 'rgba(255,255,255,0.7)'
+                              )
+                            }}
+                          />
+                          {!isMobile && (
+                            <animated.div
+                              className="mt-1 text-xs leading-none select-none whitespace-nowrap font-medium"
+                              style={{
+                                color: mediaX.to(x =>
+                                  progressFromX(x) >= markPosition ? '#10b981' : 'rgba(255,255,255,0.8)'
+                                ),
+                                textShadow: mediaX.to(x =>
+                                  progressFromX(x) >= markPosition ? '0 0 8px rgba(16,185,129,0.6)' : 'none'
+                                )
+                              }}
+                            >
+                              {`f/${v}`}
+                            </animated.div>
+                          )}
+                        </animated.div>
+                      );
+                    })}
                   </div>
                 </div>
 
+                {/* Navigation arrow - on the progress bar line */}
                 <animated.div
-                  className="pointer-events-none fixed top-0 bottom-0 w-px bg-white z-40"
-                  style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`) }}
-                />
+                  className="pointer-events-none fixed bottom-6 z-40"
+                  style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`), transform: 'translateX(-50%) translateY(30%)' }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#10b981" className="drop-shadow-[0_0_8px_rgba(16,185,129,0.7)]">
+                    <path d="M12 4 L4 16 C4 16 6 16 8 16 L16 16 C16 16 18 16 20 16 Z" />
+                  </svg>
+                </animated.div>
 
             </div>
         );

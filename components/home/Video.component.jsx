@@ -1,17 +1,33 @@
 'use client';
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useCallback, memo} from 'react';
 import ReactPlayer from 'react-player';
 import {useDispatch} from "react-redux";
 import {setChosenMediaName} from "@/store/media/media.action";
 import VideoBrackets from "@/components/home/VideoBrackets";
+import { useMediaHover } from "@/hooks/useMediaHover";
 
-const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
+const VideoComponent = memo(({ videoUrl, isDragging, alt, isMiddle }) => {
     const playerRef = useRef(null);
     const canOpenRef = useRef(false);  // Use ref for immediate value access
     const dispatch = useDispatch()
     const [playing, setPlaying] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
     const [duration, setDuration] = useState(0);
+
+    // Handle hover changes - dispatch to Redux and control video playback
+    const handleHoverChange = useCallback((hovering) => {
+        dispatch(setChosenMediaName(hovering ? alt : ""));
+        if (hovering && !isDragging && playerRef.current) {
+            playerRef.current.getInternalPlayer().play();
+        } else if (!hovering && playerRef.current) {
+            playerRef.current.getInternalPlayer().pause();
+        }
+    }, [dispatch, alt, isDragging]);
+
+    // Use custom hook for hover and drag detection
+    const { isHovered, handlers, handleClick: hookHandleClick } = useMediaHover(
+        isDragging,
+        handleHoverChange
+    );
 
     useEffect(() => {
         if (isDragging) {
@@ -21,42 +37,21 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
             }
         } else {
             const timeoutId = setTimeout(() => {
-                canOpenRef.current = true;  // Update ref immediately
-            }, 300); // Delay to avoid accidental fullscreen on scroll stop
+                canOpenRef.current = true;
+            }, 300);
             return () => clearTimeout(timeoutId);
         }
-        if (isMiddle && isDragging){
-            dispatch(setChosenMediaName(alt))
+    }, [isDragging]);
+
+    // Update chosen media when middle and dragging
+    useEffect(() => {
+        if (isMiddle && isDragging) {
+            dispatch(setChosenMediaName(alt));
         }
+    }, [isMiddle, isDragging, alt, dispatch]);
 
-
-    }, [isDragging, isMiddle, alt, dispatch]);
-
-
-
-    const handleMouseOver = () => {
-        if (!isDragging) {
-            setIsHovered(true);
-            if (playerRef.current) {
-                playerRef.current.getInternalPlayer().play();
-            }
-        }
-        dispatch(setChosenMediaName(alt))
-    };
-
-    const handleMouseOut = () => {
-        setIsHovered(false);
-        if (playerRef.current && !isDragging) {
-            playerRef.current.getInternalPlayer().pause();
-        }
-        dispatch(setChosenMediaName(""))
-    };
-
-
-    const handleClick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (canOpenRef.current) {
+    const openFullscreen = useCallback(() => {
+        if (canOpenRef.current && playerRef.current) {
             const player = playerRef.current.getInternalPlayer();
             if (player.requestFullscreen) {
                 player.requestFullscreen();
@@ -68,7 +63,13 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
             player.muted = false;
             player.play();
         }
-    };
+    }, []);
+
+    const handleClick = useCallback((e) => {
+        e?.preventDefault();
+        e?.stopPropagation();
+        hookHandleClick(openFullscreen);
+    }, [hookHandleClick, openFullscreen]);
 
     const handleFullscreenChange = () => {
         if (!document.fullscreenElement && playerRef.current) {
@@ -109,9 +110,8 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     return (
         <div
             className="relative w-full aspect-[16/9] group hover:cursor-pointer"
+            {...handlers}
             onClick={handleClick}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
         >
             <div className="absolute inset-0 overflow-hidden">
                 <ReactPlayer
@@ -158,6 +158,16 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
         </div>
 
     );
-};
+}, (prevProps, nextProps) => {
+    // Custom comparison - only re-render if these specific props change
+    return (
+        prevProps.videoUrl === nextProps.videoUrl &&
+        prevProps.alt === nextProps.alt &&
+        prevProps.isMiddle === nextProps.isMiddle &&
+        prevProps.isDragging === nextProps.isDragging
+    );
+});
+
+VideoComponent.displayName = 'VideoComponent';
 
 export default VideoComponent;

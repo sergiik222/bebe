@@ -1,76 +1,52 @@
 import Image from "next/image";
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useCallback, memo} from "react";
 import {setChosenMediaName} from "@/store/media/media.action";
 import {useDispatch} from "react-redux";
 import VideoBrackets from "@/components/home/VideoBrackets";
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import { useMediaHover } from "@/hooks/useMediaHover";
 import 'yet-another-react-lightbox/styles.css';
 
-const ImageComponent = ({src, alt, isMiddle, isDragging, date} ) => {
+const ImageComponent = memo(({src, alt, isMiddle, isDragging, date} ) => {
     const dispatch = useDispatch()
-    const [isHovered, setIsHovered] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
-    const dragStartRef = useRef({ x: 0, y: 0, wasDragging: false })
 
-    const handleMouseOver = () => {
-        if (!isDragging) {
-            setIsHovered(true)
-        }
-        dispatch(setChosenMediaName(alt))
-    };
+    // Handle hover changes - dispatch to Redux
+    const handleHoverChange = useCallback((hovering) => {
+        dispatch(setChosenMediaName(hovering ? alt : ""));
+    }, [dispatch, alt]);
 
+    // Update chosen media when middle and dragging
     useEffect(() => {
-        if (isDragging) {
-            setIsHovered(false)
-        }
-        if (isMiddle && isDragging){
-            dispatch(setChosenMediaName(alt))
+        if (isMiddle && isDragging) {
+            dispatch(setChosenMediaName(alt));
         }
     }, [isMiddle, isDragging, dispatch, alt]);
 
-    const handleMouseOut = () => {
-        setIsHovered(false)
-        dispatch(setChosenMediaName(""))
-    };
+    // Use custom hook for hover and drag detection
+    const { isHovered, handlers, handleClick: hookHandleClick } = useMediaHover(
+        isDragging,
+        handleHoverChange
+    );
 
-    const handleMouseDown = (e) => {
-        dragStartRef.current = {
-            x: e.clientX,
-            y: e.clientY,
-            wasDragging: false
-        }
-    };
+    const openFullscreen = useCallback(() => {
+        setIsFullscreen(true);
+    }, []);
 
-    const handleMouseMove = (e) => {
-        if (dragStartRef.current.x !== 0 || dragStartRef.current.y !== 0) {
-            const deltaX = Math.abs(e.clientX - dragStartRef.current.x)
-            const deltaY = Math.abs(e.clientY - dragStartRef.current.y)
-            if (deltaX > 5 || deltaY > 5) {
-                dragStartRef.current.wasDragging = true
-            }
-        }
-    };
+    const handleCloseFullscreen = useCallback(() => {
+        setIsFullscreen(false);
+    }, []);
 
-    const handleClick = () => {
-        if (!isDragging && !dragStartRef.current.wasDragging) {
-            setIsFullscreen(true)
-        }
-        dragStartRef.current = { x: 0, y: 0, wasDragging: false }
-    };
-
-    const handleCloseFullscreen = () => {
-        setIsFullscreen(false)
-    };
+    const handleClick = useCallback(() => {
+        hookHandleClick(openFullscreen);
+    }, [hookHandleClick, openFullscreen]);
 
     return (
         <>
             <div
                 className="relative w-full h-full hover:cursor-pointer"
-                onMouseOver={handleMouseOver}
-                onMouseOut={handleMouseOut}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
+                {...handlers}
                 onClick={handleClick}
             >
                 <div className="absolute inset-0 overflow-hidden">
@@ -104,7 +80,17 @@ const ImageComponent = ({src, alt, isMiddle, isDragging, date} ) => {
             )}
         </>
     )
-}
+}, (prevProps, nextProps) => {
+    // Custom comparison - only re-render if these specific props change
+    return (
+        prevProps.src === nextProps.src &&
+        prevProps.alt === nextProps.alt &&
+        prevProps.isMiddle === nextProps.isMiddle &&
+        prevProps.isDragging === nextProps.isDragging &&
+        prevProps.date === nextProps.date
+    );
+});
 
+ImageComponent.displayName = 'ImageComponent';
 
-export default ImageComponent
+export default ImageComponent;

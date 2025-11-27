@@ -7,18 +7,18 @@
 }
 
 .link {
-    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl text-lg text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mt-1 md:mt-0;
+    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl text-lg text-end align-baseline bg-transparent hover:text-emerald-500 transition-all ease-in-out duration-200 mt-1 md:mt-0;
 }
 
 .btn {
-    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl  text-end align-baseline  bg-transparent hover:text-primary-text transition ease-in-out duration-100 mx-3 mt-1 md:mt-0;
+    @apply flex cursor-pointer text-secondary-text font_regular py-2 md:mr-4 border-none rounded-xl text-end align-baseline bg-transparent hover:text-emerald-500 hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] transition-all ease-in-out duration-200 mx-3 mt-1 md:mt-0;
 }
 
 .active{
-    @apply text-primary-text
+    @apply text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]
 }
 .scroll-to-top {
-    @apply fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg cursor-pointer transition-all ease-in-out transform hover:bg-gold-500 hover:scale-110;
+    @apply fixed bottom-4 right-4 bg-emerald-500 text-white p-4 rounded-full shadow-lg cursor-pointer transition-all ease-in-out transform hover:bg-emerald-400 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)];
 }
 
 .wave-transform {
@@ -28,7 +28,13 @@
 .neg-ml-32{margin-left:-8rem}
 
 html, body {
-    @apply bg-background;
+    background: rgb(18, 20, 24);
+    background-image:
+        radial-gradient(circle at 30% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        linear-gradient(135deg, rgba(20, 24, 30, 0.8) 0%, rgba(16, 18, 22, 0.9) 25%, rgba(18, 20, 24, 0.8) 50%, rgba(14, 16, 20, 0.9) 75%, rgba(16, 18, 22, 0.8) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%2306b6d4' stroke-opacity='0.15'%3E%3Ccircle cx='50' cy='50' r='45' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='35' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='25' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='15' stroke-width='1'/%3E%3Ccircle cx='50' cy='50' r='5' stroke-width='1'/%3E%3Cline x1='50' y1='5' x2='50' y2='95' stroke-width='0.5' stroke-opacity='0.1'/%3E%3Cline x1='5' y1='50' x2='95' y2='50' stroke-width='0.5' stroke-opacity='0.1'/%3E%3Cline x1='14.6' y1='14.6' x2='85.4' y2='85.4' stroke-width='0.5' stroke-opacity='0.1'/%3E%3Cline x1='85.4' y1='14.6' x2='14.6' y2='85.4' stroke-width='0.5' stroke-opacity='0.1'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
     height: 100%;
     margin: 0;
 }

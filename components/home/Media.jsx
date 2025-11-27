@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import VideoComponent from "@/components/home/Video.component";
 import ImageComponent from "@/components/home/ImageComponent";
 
-const Media = ({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth}) => {
+const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth}) => {
      const mediaType = media.mediaType
     var height = mediaSize
     height = mediaSize*0.5625
@@ -20,6 +20,24 @@ const Media = ({media, isMiddle, isDragging, mediaSize, mediaMargin, index, wind
             {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} date={media.date} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging}/>}
         </div>
     );
-};
+}, (prevProps, nextProps) => {
+    // Custom comparison - only re-render if these specific props change
+    return (
+        prevProps.media.url === nextProps.media.url &&
+        prevProps.media.mediaType === nextProps.media.mediaType &&
+        prevProps.media.marginTop === nextProps.media.marginTop &&
+        prevProps.media.marginBottom === nextProps.media.marginBottom &&
+        prevProps.media.marginTopMobile === nextProps.media.marginTopMobile &&
+        prevProps.media.marginBottomMobile === nextProps.media.marginBottomMobile &&
+        prevProps.isMiddle === nextProps.isMiddle &&
+        prevProps.isDragging === nextProps.isDragging &&
+        prevProps.mediaSize === nextProps.mediaSize &&
+        prevProps.mediaMargin === nextProps.mediaMargin &&
+        prevProps.index === nextProps.index &&
+        prevProps.windowWidth === nextProps.windowWidth
+    );
+});
+
+Media.displayName = 'Media';
 
 export default Media;
