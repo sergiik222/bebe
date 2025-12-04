@@ -3,7 +3,7 @@
 import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const NavLink = ({ href, children, onClick, className = "", activeClassName = "" }) => {
+const NavLink = ({ href, children, onClick, className = "", activeClassName = "", style = {}, activeStyle = {} }) => {
     const pathname = usePathname()
     const isActive = pathname === href
 
@@ -11,6 +11,7 @@ const NavLink = ({ href, children, onClick, className = "", activeClassName = ""
         <NextLink href={href}>
             <span
                 className={`cursor-pointer ${className} ${isActive ? activeClassName : ''}`}
+                style={isActive ? { ...style, ...activeStyle } : style}
                 onClick={onClick}
             >
                 {children}

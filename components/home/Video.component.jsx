@@ -1,33 +1,19 @@
 'use client';
-import React, {useRef, useEffect, useState, useCallback, memo} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import {useDispatch} from "react-redux";
 import {setChosenMediaName} from "@/store/media/media.action";
 import VideoBrackets from "@/components/home/VideoBrackets";
-import { useMediaHover } from "@/hooks/useMediaHover";
+import CustomVideoPlayer from "@/components/home/CustomVideoPlayer";
 
-const VideoComponent = memo(({ videoUrl, isDragging, alt, isMiddle }) => {
+const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
     const playerRef = useRef(null);
-    const canOpenRef = useRef(false);  // Use ref for immediate value access
-    const dispatch = useDispatch()
+    const canOpenRef = useRef(false);
+    const dispatch = useDispatch();
     const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
-
-    // Handle hover changes - dispatch to Redux and control video playback
-    const handleHoverChange = useCallback((hovering) => {
-        dispatch(setChosenMediaName(hovering ? alt : ""));
-        if (hovering && !isDragging && playerRef.current) {
-            playerRef.current.getInternalPlayer().play();
-        } else if (!hovering && playerRef.current) {
-            playerRef.current.getInternalPlayer().pause();
-        }
-    }, [dispatch, alt, isDragging]);
-
-    // Use custom hook for hover and drag detection
-    const { isHovered, handlers, handleClick: hookHandleClick } = useMediaHover(
-        isDragging,
-        handleHoverChange
-    );
+    const [isHovered, setIsHovered] = useState(false);
+    const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
 
     useEffect(() => {
         if (isDragging) {
@@ -41,77 +27,67 @@ const VideoComponent = memo(({ videoUrl, isDragging, alt, isMiddle }) => {
             }, 300);
             return () => clearTimeout(timeoutId);
         }
-    }, [isDragging]);
-
-    // Update chosen media when middle and dragging
-    useEffect(() => {
-        if (isMiddle && isDragging) {
+        if (isMiddle && isDragging){
             dispatch(setChosenMediaName(alt));
         }
-    }, [isMiddle, isDragging, alt, dispatch]);
+    }, [isDragging, isMiddle, alt, dispatch]);
 
-    const openFullscreen = useCallback(() => {
-        if (canOpenRef.current && playerRef.current) {
-            const player = playerRef.current.getInternalPlayer();
-            if (player.requestFullscreen) {
-                player.requestFullscreen();
-            } else if (player.webkitRequestFullscreen) {
-                player.webkitRequestFullscreen();
-            } else if (player.msRequestFullscreen) {
-                player.msRequestFullscreen();
-            }
-            player.muted = false;
-            player.play();
+    const handleMouseOver = () => {
+        setIsHovered(true);
+        if (playerRef.current && !isDragging) {
+            playerRef.current.getInternalPlayer().play();
         }
-    }, []);
+        dispatch(setChosenMediaName(alt));
+    };
 
-    const handleClick = useCallback((e) => {
-        e?.preventDefault();
-        e?.stopPropagation();
-        hookHandleClick(openFullscreen);
-    }, [hookHandleClick, openFullscreen]);
+    const handleMouseOut = () => {
+        setIsHovered(false);
+        if (playerRef.current && !isDragging) {
+            playerRef.current.getInternalPlayer().pause();
+        }
+        dispatch(setChosenMediaName(""));
+    };
 
-    const handleFullscreenChange = () => {
-        if (!document.fullscreenElement && playerRef.current) {
-            const player = playerRef.current.getInternalPlayer();
-            if (player) {
-                player.pause();
-                player.muted = true;
+    const handleClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (canOpenRef.current) {
+            if (playerRef.current) {
+                playerRef.current.getInternalPlayer().pause();
             }
-            setTimeout(() => {
-                if (playerRef.current) {
-                    playerRef.current.seekTo(0);
-                }
-            }, 100);
+            setPlaying(false);
+            setIsFullscreenOpen(true);
+        }
+    };
+
+    const closeFullscreen = () => {
+        setIsFullscreenOpen(false);
+        if (playerRef.current) {
+            playerRef.current.seekTo(0);
         }
     };
 
     const handleDuration = (dur) => {
         setDuration(dur);
     };
+
     const handlePlayPauseButtonClick = (e) => {
         e.stopPropagation();
         if (playing) {
-            setPlaying(false)
+            setPlaying(false);
             playerRef.current.getInternalPlayer().pause();
         } else {
-            setPlaying(true)
+            setPlaying(true);
             playerRef.current.getInternalPlayer().play();
         }
     };
 
-    useEffect(() => {
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        return () => {
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
-        };
-    }, []);
-
     return (
         <div
             className="relative w-full aspect-[16/9] group hover:cursor-pointer"
-            {...handlers}
             onClick={handleClick}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
         >
             <div className="absolute inset-0 overflow-hidden">
                 <ReactPlayer
@@ -126,7 +102,6 @@ const VideoComponent = memo(({ videoUrl, isDragging, alt, isMiddle }) => {
                 />
             </div>
 
-            {/* Animated brackets on hover */}
             <VideoBrackets show={isHovered && !isDragging} duration={duration} title={alt} />
 
             <button
@@ -155,19 +130,17 @@ const VideoComponent = memo(({ videoUrl, isDragging, alt, isMiddle }) => {
                     </svg>
                 )}
             </button>
+
+            {isFullscreenOpen && (
+                <CustomVideoPlayer
+                    videoUrl={videoUrl}
+                    title={alt}
+                    isOpen={isFullscreenOpen}
+                    onClose={closeFullscreen}
+                />
+            )}
         </div>
-
     );
-}, (prevProps, nextProps) => {
-    // Custom comparison - only re-render if these specific props change
-    return (
-        prevProps.videoUrl === nextProps.videoUrl &&
-        prevProps.alt === nextProps.alt &&
-        prevProps.isMiddle === nextProps.isMiddle &&
-        prevProps.isDragging === nextProps.isDragging
-    );
-});
-
-VideoComponent.displayName = 'VideoComponent';
+};
 
 export default VideoComponent;

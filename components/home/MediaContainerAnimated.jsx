@@ -284,8 +284,12 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                   <div className="relative mx-auto h-px bg-white/30" style={{ width: '100%' }}>
                     {/* Fill to current position */}
                     <animated.div
-                      className="absolute inset-y-0 left-0 bg-lime-500 shadow-[0_0_8px_rgba(132,204,22,0.6)]"
-                      style={{ width: mediaX.to(x => `${progressFromX(x) * 100}%`) }}
+                      className="absolute inset-y-0 left-0"
+                      style={{
+                        width: mediaX.to(x => `${progressFromX(x) * 100}%`),
+                        backgroundColor: 'var(--accent-color)',
+                        boxShadow: '0 0 8px var(--accent-glow)'
+                      }}
                     />
                     {FOCUS_MARKS.map((v) => {
                       const markPosition = progressFromValue(v);
@@ -302,7 +306,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                             className="w-px h-4"
                             style={{
                               backgroundColor: mediaX.to(x =>
-                                progressFromX(x) >= markPosition ? '#84cc16' : 'rgba(255,255,255,0.7)'
+                                progressFromX(x) >= markPosition ? 'var(--accent-color)' : 'rgba(255,255,255,0.7)'
                               )
                             }}
                           />
@@ -311,10 +315,10 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                               className="mt-1 text-xs leading-none select-none whitespace-nowrap font-medium"
                               style={{
                                 color: mediaX.to(x =>
-                                  progressFromX(x) >= markPosition ? '#84cc16' : 'rgba(255,255,255,0.8)'
+                                  progressFromX(x) >= markPosition ? 'var(--accent-color)' : 'rgba(255,255,255,0.8)'
                                 ),
                                 textShadow: mediaX.to(x =>
-                                  progressFromX(x) >= markPosition ? '0 0 8px rgba(132,204,22,0.6)' : 'none'
+                                  progressFromX(x) >= markPosition ? '0 0 8px var(--accent-glow)' : 'none'
                                 )
                               }}
                             >
@@ -332,7 +336,13 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                   className="pointer-events-none fixed bottom-6 z-40"
                   style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`), transform: 'translateX(-50%) translateY(30%)' }}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#84cc16" className="drop-shadow-[0_0_8px_rgba(132,204,22,0.7)]">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="var(--accent-color)"
+                    style={{ filter: 'drop-shadow(0 0 8px var(--accent-glow))' }}
+                  >
                     <path d="M12 4 L4 16 C4 16 6 16 8 16 L16 16 C16 16 18 16 20 16 Z" />
                   </svg>
                 </animated.div>

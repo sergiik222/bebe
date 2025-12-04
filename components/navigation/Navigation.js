@@ -45,12 +45,15 @@ export default function Navigation() {
                     background: 'rgba(16, 18, 22, 0.85)',
                     backdropFilter: 'blur(24px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                    borderRight: '1px solid rgba(132, 204, 22, 0.15)',
-                    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(132, 204, 22, 0.03)'
+                    borderRight: '1px solid rgba(var(--accent-color-rgb), 0.15)',
+                    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(var(--accent-color-rgb), 0.03)'
                 }}
             >
                 {/* Header Section */}
-                <div className="px-6 pt-20 pb-6 border-b border-lime-500/10">
+                <div
+                    className="px-6 pt-20 pb-6"
+                    style={{ borderBottom: '1px solid rgba(var(--accent-color-rgb), 0.1)' }}
+                >
                     <h2 className="text-xl font-bold text-primary-text font_bold">
                         Portfolio
                     </h2>
@@ -73,12 +76,18 @@ export default function Navigation() {
                             <NavLink
                                 onClick={toggleIsOpened}
                                 href={item.href}
-                                className={`${item.size} font_regular block py-4 px-6 rounded-xl transition-all duration-300 ease-out
-                                    text-secondary-text hover:text-primary-text
-                                    hover:bg-lime-500/8 hover:translate-x-2
-                                    hover:shadow-[inset_0_0_20px_rgba(132,204,22,0.05)]
-                                    active:bg-lime-500/12`}
-                                activeClassName="!text-lime-400 !bg-gradient-to-r from-lime-500/15 to-lime-500/5 font-semibold shadow-[0_0_20px_rgba(132,204,22,0.15),inset_0_0_30px_rgba(132,204,22,0.08)]"
+                                className={`${item.size} font_regular block py-4 px-6 rounded-xl transition-all duration-300 ease-out text-secondary-text hover:text-primary-text hover:translate-x-2`}
+                                style={{
+                                    '--hover-bg': 'rgba(var(--accent-color-rgb), 0.08)',
+                                    '--hover-shadow': 'inset 0 0 20px rgba(var(--accent-color-rgb), 0.05)',
+                                    '--active-bg': 'rgba(var(--accent-color-rgb), 0.12)'
+                                }}
+                                activeStyle={{
+                                    color: 'var(--accent-color)',
+                                    background: 'linear-gradient(to right, rgba(var(--accent-color-rgb), 0.15), rgba(var(--accent-color-rgb), 0.05))',
+                                    fontWeight: '600',
+                                    boxShadow: '0 0 20px rgba(var(--accent-color-rgb), 0.15), inset 0 0 30px rgba(var(--accent-color-rgb), 0.08)'
+                                }}
                             >
                                 {item.label}
                             </NavLink>
@@ -87,7 +96,10 @@ export default function Navigation() {
                 </ul>
 
                 {/* Footer Section */}
-                <div className="absolute bottom-0 left-0 right-0 px-6 py-6 border-t border-lime-500/10">
+                <div
+                    className="absolute bottom-0 left-0 right-0 px-6 py-6"
+                    style={{ borderTop: '1px solid rgba(var(--accent-color-rgb), 0.1)' }}
+                >
                     <p className="text-xs text-secondary-text/50 font_regular text-center">
                         © 2024 Portfolio
                     </p>
@@ -97,14 +109,14 @@ export default function Navigation() {
             {/* Toggle Button */}
             <button
                 onClick={toggleIsOpened}
-                className={`fixed top-6 z-50 w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-300 ${isOpen ? 'left-[250px] md:left-[250px]' : 'left-6'}`}
+                className={`fixed top-6 z-50 w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-500 ease-out ${isOpen ? 'left-[250px] md:left-[250px]' : 'left-6'}`}
                 style={{
-                    background: isOpen ? 'rgba(132, 204, 22, 0.12)' : 'rgba(24, 26, 30, 0.8)',
+                    background: isOpen ? 'rgba(var(--accent-color-rgb), 0.12)' : 'rgba(24, 26, 30, 0.8)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
-                    border: `1px solid ${isOpen ? 'rgba(132, 204, 22, 0.5)' : 'rgba(132, 204, 22, 0.2)'}`,
+                    border: `1px solid rgba(var(--accent-color-rgb), ${isOpen ? '0.5' : '0.2'})`,
                     boxShadow: isOpen
-                        ? '0 4px 16px rgba(132, 204, 22, 0.3), 0 0 24px rgba(132, 204, 22, 0.2)'
+                        ? '0 4px 16px rgba(var(--accent-color-rgb), 0.3), 0 0 24px rgba(var(--accent-color-rgb), 0.2)'
                         : '0 4px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03)'
                 }}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -115,7 +127,7 @@ export default function Navigation() {
                     <svg
                         className={`absolute inset-0 w-6 h-6 transition-all duration-400 ease-in-out ${isOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'}`}
                         fill="none"
-                        stroke={isOpen ? "#84cc16" : "#9ca3af"}
+                        stroke={isOpen ? "var(--accent-color)" : "#9ca3af"}
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         viewBox="0 0 24 24"
@@ -126,7 +138,7 @@ export default function Navigation() {
                     <svg
                         className={`absolute inset-0 w-6 h-6 transition-all duration-400 ease-in-out ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'}`}
                         fill="none"
-                        stroke="#84cc16"
+                        stroke="var(--accent-color)"
                         strokeWidth="2.5"
                         strokeLinecap="round"
                         viewBox="0 0 24 24"

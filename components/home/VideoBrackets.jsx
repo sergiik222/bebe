@@ -37,7 +37,7 @@ const VideoBrackets = ({ show, duration, title, showLens }) => {
           height="100%"
           viewBox="0 0 30 100"
           preserveAspectRatio="none"
-          className="text-white"
+          style={{ color: 'var(--accent-color)' }}
         >
           <path
             d="M 25 100 L 5 100 L 5 0 L 25 0"
@@ -62,7 +62,7 @@ const VideoBrackets = ({ show, duration, title, showLens }) => {
           height="100%"
           viewBox="0 0 30 100"
           preserveAspectRatio="none"
-          className="text-white"
+          style={{ color: 'var(--accent-color)' }}
         >
           <path
             d="M 5 0 L 25 0 L 25 100 L 5 100"
@@ -82,10 +82,11 @@ const VideoBrackets = ({ show, duration, title, showLens }) => {
 
       {/* Title text in upper left corner */}
       <div
-        className="absolute left-0 top-0 pl-10 pt-0 text-white text-sm font-medium transition-all duration-500 ease-out"
+        className="absolute left-0 top-0 pl-10 pt-0 text-sm font-medium transition-all duration-500 ease-out"
         style={{
           opacity: showDuration ? 1 : 0,
-          transform: showDuration ? 'translateY(0)' : 'translateY(20px)'
+          transform: showDuration ? 'translateY(0)' : 'translateY(20px)',
+          color: 'var(--accent-color)'
         }}
       >
         {title}
@@ -94,10 +95,11 @@ const VideoBrackets = ({ show, duration, title, showLens }) => {
       {/* Duration text in lower right corner - only show if duration exists */}
       {duration > 0 && (
         <div
-          className="absolute right-0 bottom-0 pr-10 pb-0 text-white text-sm font-medium transition-all duration-500 ease-out"
+          className="absolute right-0 bottom-0 pr-10 pb-0 text-sm font-medium transition-all duration-500 ease-out"
           style={{
             opacity: showDuration ? 1 : 0,
-            transform: showDuration ? 'translateY(0)' : 'translateY(-20px)'
+            transform: showDuration ? 'translateY(0)' : 'translateY(-20px)',
+            color: 'var(--accent-color)'
           }}
         >
           {formatDuration(duration)}
@@ -117,9 +119,8 @@ const VideoBrackets = ({ show, duration, title, showLens }) => {
             width="120"
             height="120"
             viewBox="0 0 463 463"
-            className="text-white"
             fill="none"
-            stroke="currentColor"
+            stroke="var(--accent-color)"
             strokeWidth="1"
           >
             <g>

@@ -30,7 +30,11 @@ module.exports = {
         'accent-cyan-light': '#22d3ee',
         'accent-amber': '#f59e0b',
         'accent-purple': '#8b5cf6',
-        'accent-teal': '#14b8a6'
+        'accent-teal': '#14b8a6',
+        // Centralized accent color - uses CSS variable from globals.css
+        'accent-main': 'var(--accent-color)',
+        'accent-main-light': 'var(--accent-light)',
+        'accent-main-dark': 'var(--accent-dark)',
       },
       backgroundImage: {
         'lines-overlay-old': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.05'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E\")",
