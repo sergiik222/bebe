@@ -91,6 +91,7 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
           break
         case 'Escape':
           e.preventDefault()
+          setPlaying(false)
           onClose()
           break
         case 'ArrowLeft':

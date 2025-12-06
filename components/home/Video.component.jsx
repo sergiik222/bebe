@@ -62,7 +62,10 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
 
     const closeFullscreen = () => {
         setIsFullscreenOpen(false);
+        setIsHovered(false);
+        setPlaying(false);
         if (playerRef.current) {
+            playerRef.current.getInternalPlayer().pause();
             playerRef.current.seekTo(0);
         }
     };
