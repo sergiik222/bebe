@@ -1,10 +1,10 @@
 # --- build stage ---
 FROM golang:1.24 AS build
 WORKDIR /app
-COPY go.mod go.sum ./
+COPY backend/go.mod backend/go.sum ./
 ENV GOPROXY=https://proxy.golang.org,direct
 RUN go mod download
-COPY . .
+COPY backend/ .
 # build static linux binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /bebe-api .
 
