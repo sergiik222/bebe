@@ -26,6 +26,7 @@ Welcome to the Bebe Portfolio project documentation. This is an interactive phot
 - [Technology Recommendations](TECH_RECOMMENDATIONS.md) - Technology stack decisions
 
 ### Infrastructure
+- [Google Calendar Setup](GOOGLE_CALENDAR_SETUP.md) - Google Calendar API configuration
 - [Bunny CDN Setup Guide](BUNNY_SETUP_GUIDE.md) - Bunny CDN/Storage configuration
 - [Media Storage Analysis](MEDIA_STORAGE_ANALYSIS.md) - Storage solution comparison
 - [Post Migration Checklist](POST_MIGRATION_CHECKLIST.md) - Firebase to Bunny migration
