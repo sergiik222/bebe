@@ -3,6 +3,8 @@ package handlers
 import (
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"bebe-backend/internal/models"
 	"bebe-backend/internal/services"
@@ -32,8 +34,27 @@ func (h *BookingHandler) GetAvailability(c *gin.Context) {
 		return
 	}
 
-	// Get availability for the next 30 days
-	availability, err := h.bookingService.GetAvailability(30)
+	// Check for month/year query parameters
+	monthStr := c.Query("month")
+	yearStr := c.Query("year")
+
+	var availability *models.AvailabilityResponse
+	var err error
+
+	if monthStr != "" && yearStr != "" {
+		month, errM := strconv.Atoi(monthStr)
+		year, errY := strconv.Atoi(yearStr)
+		if errM != nil || errY != nil || month < 1 || month > 12 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid month or year"})
+			return
+		}
+		availability, err = h.bookingService.GetAvailabilityForMonth(year, time.Month(month))
+	} else {
+		// Default: get availability for current month
+		now := time.Now()
+		availability, err = h.bookingService.GetAvailabilityForMonth(now.Year(), now.Month())
+	}
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -74,9 +95,17 @@ func (h *BookingHandler) ConfirmBooking(c *gin.Context) {
 
 	booking, err := h.bookingService.ConfirmBooking(token)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "", gin.H{"error": err.Error()})
-		// Fallback to JSON if no template
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errorHTML := `
+			<!DOCTYPE html>
+			<html>
+			<head><title>Error</title></head>
+			<body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+				<h1 style="color: #ef4444;">Error</h1>
+				<p>` + err.Error() + `</p>
+			</body>
+			</html>
+		`
+		c.Data(http.StatusBadRequest, "text/html; charset=utf-8", []byte(errorHTML))
 		return
 	}
 

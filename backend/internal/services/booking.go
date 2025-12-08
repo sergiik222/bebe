@@ -95,6 +95,87 @@ func (bs *BookingService) GetAvailability(days int) (*models.AvailabilityRespons
 	return response, nil
 }
 
+// GetAvailabilityForMonth returns available time slots for a specific month
+func (bs *BookingService) GetAvailabilityForMonth(year int, month time.Month) (*models.AvailabilityResponse, error) {
+	if bs.calendar == nil || !bs.calendar.IsAuthorized() {
+		return nil, fmt.Errorf("calendar not authorized")
+	}
+
+	now := time.Now()
+	location := now.Location()
+
+	// Start of the requested month
+	startDate := time.Date(year, month, 1, 0, 0, 0, 0, location)
+
+	// End of the requested month (start of next month)
+	endDate := startDate.AddDate(0, 1, 0)
+
+	// If requesting current month, start from today
+	if year == now.Year() && month == now.Month() {
+		startDate = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, location)
+	}
+
+	// Don't allow past months
+	if endDate.Before(now) {
+		return &models.AvailabilityResponse{Days: []models.DayAvailability{}}, nil
+	}
+
+	busySlots, err := bs.calendar.GetBusySlots(startDate, endDate)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &models.AvailabilityResponse{
+		Days: make([]models.DayAvailability, 0),
+	}
+
+	// 24/7 availability
+	workStart := 0
+	workEnd := 24
+	slotDuration := 1 * time.Hour
+
+	// Iterate through each day of the month
+	for date := startDate; date.Before(endDate); date = date.AddDate(0, 0, 1) {
+		dayAvail := models.DayAvailability{
+			Date:  date.Format("2006-01-02"),
+			Slots: make([]models.TimeSlot, 0),
+		}
+
+		// Generate time slots for the day (24 hours)
+		for hour := workStart; hour < workEnd; hour++ {
+			slotStart := time.Date(date.Year(), date.Month(), date.Day(), hour, 0, 0, 0, location)
+			slotEnd := slotStart.Add(slotDuration)
+
+			// Skip past slots
+			if slotStart.Before(now) {
+				continue
+			}
+
+			// Check if slot conflicts with busy times
+			isAvailable := true
+			for _, busy := range busySlots {
+				if slotStart.Before(busy.End) && slotEnd.After(busy.Start) {
+					isAvailable = false
+					break
+				}
+			}
+
+			if isAvailable {
+				dayAvail.Slots = append(dayAvail.Slots, models.TimeSlot{
+					Start: slotStart,
+					End:   slotEnd,
+				})
+			}
+		}
+
+		if len(dayAvail.Slots) > 0 {
+			response.Days = append(response.Days, dayAvail)
+		}
+	}
+
+	return response, nil
+}
+
 // CreateBooking creates a new booking request
 func (bs *BookingService) CreateBooking(req *models.BookingRequest, baseURL string) (*models.Booking, error) {
 	// Generate unique token

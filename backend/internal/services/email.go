@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"bebe-backend/internal/models"
@@ -45,10 +46,18 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
 		<p><strong>Time:</strong> %s - %s</p>
 		%s
 		<hr>
-		<p>
-			<a href="%s" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-right: 10px;">✓ Confirm Booking</a>
-			<a href="%s" style="background-color: #ef4444; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">✗ Cancel Booking</a>
-		</p>
+		<table cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
+			<tr>
+				<td style="padding-bottom: 12px;">
+					<a href="%s" style="display: block; background-color: #10b981; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; text-align: center; font-weight: bold;">Confirm Booking</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href="%s" style="display: block; background-color: #ef4444; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; text-align: center; font-weight: bold;">Cancel Booking</a>
+				</td>
+			</tr>
+		</table>
 	`, booking.Name, booking.Email, booking.Phone, booking.Date, booking.StartTime, booking.EndTime,
 		func() string {
 			if booking.Message != "" {
@@ -122,7 +131,8 @@ func (es *EmailService) sendEmail(to, subject, html string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
-		return fmt.Errorf("resend API error: status %d", resp.StatusCode)
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("resend API error: status %d, body: %s", resp.StatusCode, string(body))
 	}
 
 	return nil
