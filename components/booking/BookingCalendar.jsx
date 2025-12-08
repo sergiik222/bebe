@@ -120,6 +120,13 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
             date: date,
             duration: duration
         });
+        // Auto-scroll to booking form on mobile
+        setTimeout(() => {
+            const formElement = document.getElementById('booking-form');
+            if (formElement) {
+                formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
     };
 
     const goToPrevMonth = () => {
@@ -177,7 +184,25 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
             {/* Duration Selection */}
             <div>
                 <h3 className="text-lg font-medium mb-3 text-gray-200">Session Duration</h3>
-                <div className="flex flex-wrap gap-2">
+                {/* Mobile: Select dropdown */}
+                <div className="sm:hidden">
+                    <select
+                        value={duration}
+                        onChange={(e) => {
+                            setDuration(Number(e.target.value));
+                            onSlotSelect(null);
+                        }}
+                        className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+                    >
+                        {DURATION_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {/* Desktop: Button grid */}
+                <div className="hidden sm:flex flex-wrap gap-2">
                     {DURATION_OPTIONS.map((option) => (
                         <button
                             key={option.value}

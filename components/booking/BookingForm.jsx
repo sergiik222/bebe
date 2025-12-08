@@ -71,7 +71,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
     }
 
     return (
-        <div className="mt-8 p-6 bg-zinc-900/50 border border-zinc-700 rounded-xl">
+        <div id="booking-form" className="mt-8 p-6 bg-zinc-900/50 border border-zinc-700 rounded-xl">
             <h3 className="text-xl font-medium mb-6 text-gray-200">Your Details</h3>
 
             {error && (
