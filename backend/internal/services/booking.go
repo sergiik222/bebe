@@ -184,6 +184,12 @@ func (bs *BookingService) CreateBooking(req *models.BookingRequest, baseURL stri
 		return nil, err
 	}
 
+	// Default to English if no language specified
+	language := req.Language
+	if language == "" {
+		language = "en"
+	}
+
 	booking := &models.Booking{
 		ID:        generateID(),
 		Name:      req.Name,
@@ -193,6 +199,7 @@ func (bs *BookingService) CreateBooking(req *models.BookingRequest, baseURL stri
 		StartTime: req.StartTime,
 		EndTime:   req.EndTime,
 		Message:   req.Message,
+		Language:  language,
 		Token:     token,
 		Status:    "pending",
 		CreatedAt: time.Now(),

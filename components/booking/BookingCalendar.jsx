@@ -4,19 +4,25 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
-const DURATION_OPTIONS = [
-    { value: 1, label: '1 hour' },
-    { value: 2, label: '2 hours' },
-    { value: 3, label: '3 hours' },
-    { value: 4, label: '4 hours' },
-    { value: 5, label: '5 hours' },
-    { value: 6, label: '6 hours' },
-    { value: 7, label: '7 hours' },
-    { value: 8, label: '8 hours' },
-    { value: 24, label: 'Full day' },
-];
+const getLocale = (language) => {
+    const locales = { en: 'en-US', de: 'de-DE', ru: 'ru-RU' };
+    return locales[language] || 'en-US';
+};
 
-const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
+const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
+    const locale = getLocale(language);
+
+    const durationOptions = useMemo(() => [
+        { value: 1, label: `1 ${t.book.hour}` },
+        { value: 2, label: `2 ${t.book.hours}` },
+        { value: 3, label: `3 ${t.book.hours}` },
+        { value: 4, label: `4 ${t.book.hours}` },
+        { value: 5, label: `5 ${t.book.hours}` },
+        { value: 6, label: `6 ${t.book.hours}` },
+        { value: 7, label: `7 ${t.book.hours}` },
+        { value: 8, label: `8 ${t.book.hours}` },
+        { value: 24, label: t.book.fullDay },
+    ], [t]);
     const [availability, setAvailability] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -85,7 +91,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
 
     const formatDate = (dateStr) => {
         const date = new Date(dateStr);
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString(locale, {
             weekday: 'short',
             day: 'numeric'
         });
@@ -93,7 +99,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
 
     const formatMonthYear = (month, year) => {
         const date = new Date(year, month);
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString(locale, {
             month: 'long',
             year: 'numeric'
         });
@@ -101,7 +107,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
 
     const formatTime = (isoString) => {
         const date = new Date(isoString);
-        return date.toLocaleTimeString('en-US', {
+        return date.toLocaleTimeString(locale, {
             hour: '2-digit',
             minute: '2-digit',
             hour12: false
@@ -168,12 +174,12 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
     if (error) {
         return (
             <div className="text-center py-8 text-red-400">
-                <p>Error loading availability: {error}</p>
+                <p>{t.common.error}: {error}</p>
                 <button
                     onClick={() => fetchAvailabilityForMonth(currentYear, currentMonth)}
                     className="mt-4 px-4 py-2 bg-[var(--accent-color)] text-black rounded-lg hover:opacity-80 transition-opacity"
                 >
-                    Try Again
+                    {t.common.tryAgain}
                 </button>
             </div>
         );
@@ -183,7 +189,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
         <div className="space-y-6">
             {/* Duration Selection */}
             <div>
-                <h3 className="text-lg font-medium mb-3 text-gray-200">Session Duration</h3>
+                <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.duration}</h3>
                 {/* Mobile: Select dropdown */}
                 <div className="sm:hidden">
                     <select
@@ -194,7 +200,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
                         }}
                         className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
                     >
-                        {DURATION_OPTIONS.map((option) => (
+                        {durationOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
                             </option>
@@ -203,7 +209,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
                 </div>
                 {/* Desktop: Button grid */}
                 <div className="hidden sm:flex flex-wrap gap-2">
-                    {DURATION_OPTIONS.map((option) => (
+                    {durationOptions.map((option) => (
                         <button
                             key={option.value}
                             onClick={() => {
@@ -254,9 +260,9 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
 
             {/* Date Selection */}
             <div>
-                <h3 className="text-lg font-medium mb-3 text-gray-200">Select a Date</h3>
+                <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.selectDate}</h3>
                 {availability.length === 0 ? (
-                    <p className="text-gray-400 text-center py-4">No available dates in this month.</p>
+                    <p className="text-gray-400 text-center py-4">{t.book.noDatesInMonth}</p>
                 ) : (
                     <div className="flex items-center gap-2">
                         <button
@@ -285,7 +291,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
                                     }`}
                                 >
                                     <div className="text-sm font-medium">{formatDate(day.date)}</div>
-                                    <div className="text-xs opacity-70">{day.slots.length} slots</div>
+                                    <div className="text-xs opacity-70">{day.slots.length} {t.book.slots}</div>
                                 </button>
                             ))}
                         </div>
@@ -310,10 +316,10 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
             {/* Time Slots */}
             {selectedDate && (
                 <div>
-                    <h3 className="text-lg font-medium mb-3 text-gray-200">Select a Time</h3>
+                    <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.selectTime}</h3>
                     {availableStartSlots.length === 0 ? (
                         <p className="text-gray-400 text-center py-4">
-                            No {duration}-hour slots available on this date. Try a shorter duration or different date.
+                            {t.book.noSlotsForDuration.replace('{duration}', duration)}
                         </p>
                     ) : (
                         <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
@@ -339,12 +345,12 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot }) => {
             {selectedSlot && (
                 <div className="mt-4 p-4 bg-zinc-900/50 border border-[var(--accent-color)]/30 rounded-lg">
                     <p className="text-[var(--accent-color)]">
-                        Selected: {new Date(selectedSlot.date).toLocaleDateString('en-US', {
+                        {t.book.selected}: {new Date(selectedSlot.date).toLocaleDateString(locale, {
                             weekday: 'long',
                             month: 'long',
                             day: 'numeric',
                             year: 'numeric'
-                        })} at {formatTime(selectedSlot.start)} - {formatTime(selectedSlot.end)} ({duration} hour{duration > 1 ? 's' : ''})
+                        })} - {formatTime(selectedSlot.start)} - {formatTime(selectedSlot.end)} ({duration} {duration > 1 ? t.book.hours : t.book.hour})
                     </p>
                 </div>
             )}

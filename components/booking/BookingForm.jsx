@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
-const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
+const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -49,6 +49,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                     date: selectedSlot.date,
                     startTime: formatTime(selectedSlot.start),
                     endTime: formatTime(selectedSlot.end),
+                    language: language,
                 }),
             });
 
@@ -72,7 +73,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
 
     return (
         <div id="booking-form" className="mt-8 p-6 bg-zinc-900/50 border border-zinc-700 rounded-xl">
-            <h3 className="text-xl font-medium mb-6 text-gray-200">Your Details</h3>
+            <h3 className="text-xl font-medium mb-6 text-gray-200">{t.book.yourDetails}</h3>
 
             {error && (
                 <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
@@ -83,7 +84,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
-                        Name *
+                        {t.common.name} *
                     </label>
                     <input
                         type="text"
@@ -93,13 +94,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         value={formData.name}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
-                        placeholder="Your full name"
+                        placeholder={t.book.namePlaceholder}
                     />
                 </div>
 
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                        Email *
+                        {t.common.email} *
                     </label>
                     <input
                         type="email"
@@ -109,13 +110,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
-                        placeholder="your@email.com"
+                        placeholder={t.book.emailPlaceholder}
                     />
                 </div>
 
                 <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
-                        Phone *
+                        {t.common.phone} *
                     </label>
                     <input
                         type="tel"
@@ -125,13 +126,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         value={formData.phone}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
-                        placeholder="+49 123 456 7890"
+                        placeholder={t.book.phonePlaceholder}
                     />
                 </div>
 
                 <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
-                        Message (optional)
+                        {t.common.message} ({t.common.optional})
                     </label>
                     <textarea
                         id="message"
@@ -140,7 +141,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         value={formData.message}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors resize-none"
-                        placeholder="Tell us about your project or any special requests..."
+                        placeholder={t.book.messagePlaceholder}
                     />
                 </div>
 
@@ -150,7 +151,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         onClick={onCancel}
                         className="w-full sm:flex-1 px-6 py-3 border border-zinc-700 rounded-lg text-gray-300 hover:bg-zinc-800 transition-colors"
                     >
-                        Cancel
+                        {t.common.cancel}
                     </button>
                     <button
                         type="submit"
@@ -160,10 +161,10 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel }) => {
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">
                                 <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></span>
-                                Booking...
+                                {t.book.booking}
                             </span>
                         ) : (
-                            'Book Appointment'
+                            t.book.bookAppointment
                         )}
                     </button>
                 </div>

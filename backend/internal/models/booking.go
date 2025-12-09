@@ -4,29 +4,31 @@ import "time"
 
 // BookingRequest represents a booking request from a user
 type BookingRequest struct {
-	Name      string    `json:"name" binding:"required"`
-	Email     string    `json:"email" binding:"required,email"`
-	Phone     string    `json:"phone" binding:"required"`
-	Date      string    `json:"date" binding:"required"`      // Format: 2006-01-02
-	StartTime string    `json:"startTime" binding:"required"` // Format: 15:04
-	EndTime   string    `json:"endTime" binding:"required"`   // Format: 15:04
-	Message   string    `json:"message"`                      // Optional message
+	Name      string `json:"name" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Phone     string `json:"phone" binding:"required"`
+	Date      string `json:"date" binding:"required"`      // Format: 2006-01-02
+	StartTime string `json:"startTime" binding:"required"` // Format: 15:04
+	EndTime   string `json:"endTime" binding:"required"`   // Format: 15:04
+	Message   string `json:"message"`                      // Optional message
+	Language  string `json:"language"`                     // Language code: en, de, ru
 }
 
 // Booking represents a stored booking with confirmation token
 type Booking struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	Email        string    `json:"email"`
-	Phone        string    `json:"phone"`
-	Date         string    `json:"date"`
-	StartTime    string    `json:"startTime"`
-	EndTime      string    `json:"endTime"`
-	Message      string    `json:"message"`
-	Token        string    `json:"token"`
-	Status       string    `json:"status"` // pending, confirmed, cancelled
-	CreatedAt    time.Time `json:"createdAt"`
-	CalendarEventID string `json:"calendarEventId,omitempty"`
+	ID              string    `json:"id"`
+	Name            string    `json:"name"`
+	Email           string    `json:"email"`
+	Phone           string    `json:"phone"`
+	Date            string    `json:"date"`
+	StartTime       string    `json:"startTime"`
+	EndTime         string    `json:"endTime"`
+	Message         string    `json:"message"`
+	Language        string    `json:"language"`
+	Token           string    `json:"token"`
+	Status          string    `json:"status"` // pending, confirmed, cancelled
+	CreatedAt       time.Time `json:"createdAt"`
+	CalendarEventID string    `json:"calendarEventId,omitempty"`
 }
 
 // TimeSlot represents an available time slot

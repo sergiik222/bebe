@@ -4,6 +4,7 @@ import { Exo_2 } from 'next/font/google';
 import Navigation from '@/components/navigation/Navigation'
 import Providers from '@/utils/providers'
 import ScrollToTopButton from '@/components/navigation/scrollToTheTop'
+import LanguageSelector from '@/components/LanguageSelector'
 
 export const metadata = {
     title: 'My Portfolio',
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
         <body className="scroll-smooth">
         <Providers>
             <Navigation />
+            <LanguageSelector />
             {children}
             <footer className="py-16 bg-background-gradient-footer">
                 <p className="text-center font_regular">&copy; 2024 My Portfolio</p>

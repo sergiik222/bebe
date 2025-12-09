@@ -1,9 +1,11 @@
 'use client'
 import {useState, useEffect} from "react";
 import NavLink from "@/components/navigation/NavLink";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useLanguage();
 
     const toggleIsOpened = () => {
         setIsOpen(!isOpen);
@@ -22,12 +24,11 @@ export default function Navigation() {
     }, [isOpen]);
 
     const menuItems = [
-        { href: "/", label: "Home", size: "text-lg" },
-        { href: "/about", label: "About", size: "text-base" },
-        { href: "/portfolio", label: "Portfolio", size: "text-lg" },
-        { href: "/cost", label: "Cost", size: "text-base" },
-        { href: "/book", label: "Book", size: "text-base" },
-        { href: "/contact", label: "Contact", size: "text-base" }
+        { href: "/", label: t.nav.home, size: "text-lg" },
+        { href: "/about", label: t.nav.about, size: "text-base" },
+        { href: "/portfolio", label: t.nav.portfolio, size: "text-lg" },
+        { href: "/book", label: t.nav.book, size: "text-base" },
+        { href: "/contact", label: t.nav.contact, size: "text-base" }
     ];
 
     return (

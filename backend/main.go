@@ -33,6 +33,7 @@ func main() {
 	// Initialize handlers
 	bookingHandler := handlers.NewBookingHandler(bookingService, calendarService)
 	authHandler := handlers.NewAuthHandler()
+	contactHandler := handlers.NewContactHandler(emailService)
 
 	// Setup router
 	router := gin.Default()
@@ -62,6 +63,9 @@ func main() {
 		api.POST("/booking", bookingHandler.CreateBooking)
 		api.GET("/booking/confirm/:token", bookingHandler.ConfirmBooking)
 		api.GET("/booking/cancel/:token", bookingHandler.CancelBooking)
+
+		// Contact route
+		api.POST("/contact", contactHandler.SendContactMessage)
 	}
 
 	// Start server

@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import BookingCalendar from '@/components/booking/BookingCalendar';
 import BookingForm from '@/components/booking/BookingForm';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const Book = () => {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [bookingSuccess, setBookingSuccess] = useState(false);
+    const { t, language } = useLanguage();
 
     const handleSlotSelect = (slot) => {
         setSelectedSlot(slot);
@@ -38,15 +40,15 @@ const Book = () => {
                                 </svg>
                             </div>
                         </div>
-                        <h1 className="text-2xl font-medium mb-4">Booking Request Sent!</h1>
+                        <h1 className="text-2xl font-medium mb-4">{t.book.successTitle}</h1>
                         <p className="text-gray-400 mb-8">
-                            Thank you for your booking request. You will receive a confirmation email shortly once your appointment is confirmed.
+                            {t.book.successMessage}
                         </p>
                         <button
                             onClick={handleBookAnother}
                             className="px-6 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity"
                         >
-                            Book Another Appointment
+                            {t.book.bookAnother}
                         </button>
                     </div>
                 </div>
@@ -60,8 +62,8 @@ const Book = () => {
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 text-center">
-                        <h1 className="text-3xl md:text-4xl font-medium mb-2">Book a Session</h1>
-                        <p className="text-gray-400">Select a date and time that works for you</p>
+                        <h1 className="text-3xl md:text-4xl font-medium mb-2">{t.book.title}</h1>
+                        <p className="text-gray-400">{t.book.subtitle}</p>
                     </div>
 
                     {/* Calendar */}
@@ -69,6 +71,8 @@ const Book = () => {
                         <BookingCalendar
                             onSlotSelect={handleSlotSelect}
                             selectedSlot={selectedSlot}
+                            t={t}
+                            language={language}
                         />
 
                         {/* Booking Form */}
@@ -77,6 +81,8 @@ const Book = () => {
                                 selectedSlot={selectedSlot}
                                 onSuccess={handleBookingSuccess}
                                 onCancel={handleCancel}
+                                t={t}
+                                language={language}
                             />
                         )}
                     </div>

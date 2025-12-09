@@ -23,6 +23,94 @@ type resendRequest struct {
 	HTML    string   `json:"html"`
 }
 
+// Email translations for different languages
+type emailTranslations struct {
+	confirmSubject    string
+	confirmTitle      string
+	confirmDear       string
+	confirmBody       string
+	confirmDate       string
+	confirmTime       string
+	confirmLookingFwd string
+	confirmQuestions  string
+	confirmRegards    string
+	cancelSubject     string
+	cancelTitle       string
+	cancelDear        string
+	cancelBody        string
+	cancelDate        string
+	cancelTime        string
+	cancelApology     string
+	cancelRegards     string
+}
+
+var translations = map[string]emailTranslations{
+	"en": {
+		confirmSubject:    "Your Booking is Confirmed!",
+		confirmTitle:      "Booking Confirmed!",
+		confirmDear:       "Dear",
+		confirmBody:       "Your booking has been confirmed:",
+		confirmDate:       "Date",
+		confirmTime:       "Time",
+		confirmLookingFwd: "We look forward to seeing you!",
+		confirmQuestions:  "If you have any questions, please don't hesitate to contact us.",
+		confirmRegards:    "Best regards",
+		cancelSubject:     "Booking Update",
+		cancelTitle:       "Booking Update",
+		cancelDear:        "Dear",
+		cancelBody:        "Unfortunately, we are unable to confirm your booking for:",
+		cancelDate:        "Date",
+		cancelTime:        "Time",
+		cancelApology:     "We apologize for any inconvenience. We will contact you shortly to discuss alternative options.",
+		cancelRegards:     "Best regards",
+	},
+	"de": {
+		confirmSubject:    "Ihre Buchung ist bestätigt!",
+		confirmTitle:      "Buchung bestätigt!",
+		confirmDear:       "Liebe/r",
+		confirmBody:       "Ihre Buchung wurde bestätigt:",
+		confirmDate:       "Datum",
+		confirmTime:       "Uhrzeit",
+		confirmLookingFwd: "Wir freuen uns auf Sie!",
+		confirmQuestions:  "Bei Fragen können Sie uns jederzeit kontaktieren.",
+		confirmRegards:    "Mit freundlichen Grüßen",
+		cancelSubject:     "Buchungs-Update",
+		cancelTitle:       "Buchungs-Update",
+		cancelDear:        "Liebe/r",
+		cancelBody:        "Leider können wir Ihre Buchung nicht bestätigen für:",
+		cancelDate:        "Datum",
+		cancelTime:        "Uhrzeit",
+		cancelApology:     "Wir entschuldigen uns für die Unannehmlichkeiten. Wir werden uns in Kürze bei Ihnen melden, um alternative Optionen zu besprechen.",
+		cancelRegards:     "Mit freundlichen Grüßen",
+	},
+	"ru": {
+		confirmSubject:    "Ваша запись подтверждена!",
+		confirmTitle:      "Запись подтверждена!",
+		confirmDear:       "Уважаемый(ая)",
+		confirmBody:       "Ваша запись подтверждена:",
+		confirmDate:       "Дата",
+		confirmTime:       "Время",
+		confirmLookingFwd: "Ждём вас!",
+		confirmQuestions:  "Если у вас есть вопросы, пожалуйста, свяжитесь с нами.",
+		confirmRegards:    "С уважением",
+		cancelSubject:     "Обновление записи",
+		cancelTitle:       "Обновление записи",
+		cancelDear:        "Уважаемый(ая)",
+		cancelBody:        "К сожалению, мы не можем подтвердить вашу запись на:",
+		cancelDate:        "Дата",
+		cancelTime:        "Время",
+		cancelApology:     "Приносим извинения за неудобства. Мы свяжемся с вами в ближайшее время, чтобы обсудить альтернативные варианты.",
+		cancelRegards:     "С уважением",
+	},
+}
+
+func getTranslation(lang string) emailTranslations {
+	if t, ok := translations[lang]; ok {
+		return t
+	}
+	return translations["en"] // Default to English
+}
+
 // NewEmailService creates a new email service
 func NewEmailService(apiKey, ownerEmail string) *EmailService {
 	return &EmailService{
@@ -44,6 +132,7 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
 		<p><strong>Phone:</strong> %s</p>
 		<p><strong>Date:</strong> %s</p>
 		<p><strong>Time:</strong> %s - %s</p>
+		<p><strong>Language:</strong> %s</p>
 		%s
 		<hr>
 		<table cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
@@ -58,7 +147,7 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
 				</td>
 			</tr>
 		</table>
-	`, booking.Name, booking.Email, booking.Phone, booking.Date, booking.StartTime, booking.EndTime,
+	`, booking.Name, booking.Email, booking.Phone, booking.Date, booking.StartTime, booking.EndTime, booking.Language,
 		func() string {
 			if booking.Message != "" {
 				return fmt.Sprintf("<p><strong>Message:</strong> %s</p>", booking.Message)
@@ -70,35 +159,66 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
 	return es.sendEmail(es.ownerEmail, "New Booking Request: "+booking.Name, html)
 }
 
-// SendConfirmationToUser sends confirmation email to the user
+// SendConfirmationToUser sends confirmation email to the user in their preferred language
 func (es *EmailService) SendConfirmationToUser(booking *models.Booking) error {
-	html := fmt.Sprintf(`
-		<h2>Booking Confirmed!</h2>
-		<p>Dear %s,</p>
-		<p>Your booking has been confirmed:</p>
-		<p><strong>Date:</strong> %s</p>
-		<p><strong>Time:</strong> %s - %s</p>
-		<p>We look forward to seeing you!</p>
-		<p>If you have any questions, please don't hesitate to contact us.</p>
-		<p>Best regards,<br>Bebe</p>
-	`, booking.Name, booking.Date, booking.StartTime, booking.EndTime)
+	t := getTranslation(booking.Language)
 
-	return es.sendEmail(booking.Email, "Your Booking is Confirmed!", html)
+	html := fmt.Sprintf(`
+		<h2>%s</h2>
+		<p>%s %s,</p>
+		<p>%s</p>
+		<p><strong>%s:</strong> %s</p>
+		<p><strong>%s:</strong> %s - %s</p>
+		<p>%s</p>
+		<p>%s</p>
+		<p>%s,<br>Bebe</p>
+	`, t.confirmTitle, t.confirmDear, booking.Name, t.confirmBody,
+		t.confirmDate, booking.Date, t.confirmTime, booking.StartTime, booking.EndTime,
+		t.confirmLookingFwd, t.confirmQuestions, t.confirmRegards)
+
+	return es.sendEmail(booking.Email, t.confirmSubject, html)
 }
 
-// SendCancellationToUser sends cancellation email to the user
+// SendCancellationToUser sends cancellation email to the user in their preferred language
 func (es *EmailService) SendCancellationToUser(booking *models.Booking) error {
-	html := fmt.Sprintf(`
-		<h2>Booking Update</h2>
-		<p>Dear %s,</p>
-		<p>Unfortunately, we are unable to confirm your booking for:</p>
-		<p><strong>Date:</strong> %s</p>
-		<p><strong>Time:</strong> %s - %s</p>
-		<p>We apologize for any inconvenience. We will contact you shortly to discuss alternative options.</p>
-		<p>Best regards,<br>Bebe</p>
-	`, booking.Name, booking.Date, booking.StartTime, booking.EndTime)
+	t := getTranslation(booking.Language)
 
-	return es.sendEmail(booking.Email, "Booking Update", html)
+	html := fmt.Sprintf(`
+		<h2>%s</h2>
+		<p>%s %s,</p>
+		<p>%s</p>
+		<p><strong>%s:</strong> %s</p>
+		<p><strong>%s:</strong> %s - %s</p>
+		<p>%s</p>
+		<p>%s,<br>Bebe</p>
+	`, t.cancelTitle, t.cancelDear, booking.Name, t.cancelBody,
+		t.cancelDate, booking.Date, t.cancelTime, booking.StartTime, booking.EndTime,
+		t.cancelApology, t.cancelRegards)
+
+	return es.sendEmail(booking.Email, t.cancelSubject, html)
+}
+
+// SendContactMessage sends a contact form message to the owner
+func (es *EmailService) SendContactMessage(name, email, phone, subject, message string) error {
+	phoneInfo := ""
+	if phone != "" {
+		phoneInfo = fmt.Sprintf("<p><strong>Phone:</strong> %s</p>", phone)
+	}
+
+	html := fmt.Sprintf(`
+		<h2>New Contact Message</h2>
+		<p><strong>From:</strong> %s</p>
+		<p><strong>Email:</strong> <a href="mailto:%s">%s</a></p>
+		%s
+		<p><strong>Subject:</strong> %s</p>
+		<hr>
+		<h3>Message:</h3>
+		<p style="white-space: pre-wrap;">%s</p>
+		<hr>
+		<p style="color: #666; font-size: 12px;">Reply directly to this email to respond to %s</p>
+	`, name, email, email, phoneInfo, subject, message, name)
+
+	return es.sendEmail(es.ownerEmail, "Contact: "+subject, html)
 }
 
 // sendEmail sends an email via Resend API
