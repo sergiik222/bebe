@@ -110,26 +110,25 @@ export default function Navigation() {
             {/* Toggle Button */}
             <button
                 onClick={toggleIsOpened}
-                className={`fixed top-6 z-50 w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-500 ease-out ${isOpen ? 'left-[250px] md:left-[250px]' : 'left-6'}`}
+                className={`fixed top-6 z-50 h-10 flex items-center justify-center rounded-lg transition-all duration-500 ease-out group ${isOpen ? 'left-[250px] md:left-[250px] w-10' : 'left-6 w-10'}`}
                 style={{
-                    background: isOpen ? 'rgba(var(--accent-color-rgb), 0.12)' : 'rgba(24, 26, 30, 0.8)',
+                    background: 'rgba(24, 27, 32, 0.8)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
-                    border: `1px solid rgba(var(--accent-color-rgb), ${isOpen ? '0.5' : '0.2'})`,
-                    boxShadow: isOpen
-                        ? '0 4px 16px rgba(var(--accent-color-rgb), 0.3), 0 0 24px rgba(var(--accent-color-rgb), 0.2)'
-                        : '0 4px 16px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03)'
                 }}
                 aria-label={isOpen ? "Close menu" : "Open menu"}
                 aria-expanded={isOpen}
             >
-                <div className="relative w-6 h-6">
+                <div
+                    className={`absolute inset-0 rounded-lg border transition-colors duration-500 ease-out ${isOpen ? 'border-[var(--accent-color)]' : 'border-zinc-700 group-hover:border-[var(--accent-color)]'}`}
+                />
+                <div className="relative w-5 h-5">
                     {/* Burger Icon */}
                     <svg
-                        className={`absolute inset-0 w-6 h-6 transition-all duration-400 ease-in-out ${isOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'}`}
+                        className={`absolute inset-0 w-5 h-5 transition-all duration-500 ease-out ${isOpen ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'} text-gray-300 group-hover:text-[var(--accent-color)]`}
                         fill="none"
-                        stroke={isOpen ? "var(--accent-color)" : "#9ca3af"}
-                        strokeWidth="2.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
                         strokeLinecap="round"
                         viewBox="0 0 24 24"
                     >
@@ -137,10 +136,10 @@ export default function Navigation() {
                     </svg>
                     {/* Close Icon */}
                     <svg
-                        className={`absolute inset-0 w-6 h-6 transition-all duration-400 ease-in-out ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'}`}
+                        className={`absolute inset-0 w-5 h-5 transition-all duration-500 ease-out ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'} text-[var(--accent-color)]`}
                         fill="none"
-                        stroke="var(--accent-color)"
-                        strokeWidth="2.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
                         strokeLinecap="round"
                         viewBox="0 0 24 24"
                     >

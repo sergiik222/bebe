@@ -22,11 +22,9 @@ export async function GET() {
     });
 
     const categories = response.data
-      .filter(f => !f.IsDirectory && /\.(jpg|jpeg|png|webp)$/i.test(f.ObjectName))
+      .filter(f => !f.IsDirectory && /\.(mp4|webm|mov)$/i.test(f.ObjectName))
       .map(file => {
-        // Build clean URL: remove storage zone prefix and ensure proper path
         let cleanPath = file.Path.replace(`/${STORAGE_ZONE}/`, '/').replace(`/${STORAGE_ZONE}`, '/');
-        // Ensure the filename is included
         if (!cleanPath.endsWith(file.ObjectName)) {
           cleanPath = cleanPath.replace(/\/$/, '') + '/' + file.ObjectName;
         }
@@ -34,7 +32,7 @@ export async function GET() {
           name: file.ObjectName,
           alt: file.ObjectName.split('.')[0],
           url: `${CDN_URL}${cleanPath}`,
-          mediaType: 'img',
+          mediaType: 'video',
           dateCreated: file.DateCreated,
         };
       })

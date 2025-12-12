@@ -5,6 +5,7 @@ import Navigation from '@/components/navigation/Navigation'
 import Providers from '@/utils/providers'
 import ScrollToTopButton from '@/components/navigation/scrollToTheTop'
 import LanguageSelector from '@/components/LanguageSelector'
+import PortfolioButton from '@/components/PortfolioButton'
 
 export const metadata = {
     title: 'My Portfolio',
@@ -23,10 +24,11 @@ export default function RootLayout({ children }) {
         <body className="scroll-smooth">
         <Providers>
             <Navigation />
+            <PortfolioButton />
             <LanguageSelector />
             {children}
-            <footer className="py-16 bg-background-gradient-footer">
-                <p className="text-center font_regular">&copy; 2024 My Portfolio</p>
+            <footer className="py-8 border-t border-zinc-800/50">
+                <p className="text-center text-sm text-gray-500 font_regular">&copy; 2025 Portfolio</p>
             </footer>
         </Providers>
         <ScrollToTopButton />

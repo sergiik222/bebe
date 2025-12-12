@@ -17,9 +17,8 @@ const About = () => {
             <div className="flex-1 p-4 md:p-8">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
-                    <div className="mb-12 text-center">
-                        <h1 className="text-3xl md:text-5xl font-medium mb-4">{t.about.title}</h1>
-                        <p className="text-gray-400 text-lg">{t.about.subtitle}</p>
+                    <div className="mb-8 text-center">
+                        <h1 className="text-2xl md:text-3xl font-medium">{t.about.title}</h1>
                     </div>
 
                     {/* Main Content */}

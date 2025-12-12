@@ -98,8 +98,7 @@ const Contact = () => {
                 <div className="max-w-2xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 text-center">
-                        <h1 className="text-3xl md:text-4xl font-medium mb-2">{t.contact.title}</h1>
-                        <p className="text-gray-400">{t.contact.subtitle}</p>
+                        <h1 className="text-2xl md:text-3xl font-medium">{t.contact.title}</h1>
                     </div>
 
                     {/* Contact Form */}

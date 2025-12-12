@@ -62,8 +62,7 @@ const Book = () => {
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 text-center">
-                        <h1 className="text-3xl md:text-4xl font-medium mb-2">{t.book.title}</h1>
-                        <p className="text-gray-400">{t.book.subtitle}</p>
+                        <h1 className="text-2xl md:text-3xl font-medium">{t.book.title}</h1>
                     </div>
 
                     {/* Calendar */}
