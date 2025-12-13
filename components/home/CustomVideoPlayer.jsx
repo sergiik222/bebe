@@ -3,8 +3,10 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import ReactPlayer from 'react-player'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
+  const { t } = useLanguage()
   const playerRef = useRef(null)
   const progressRef = useRef(null)
   const [playing, setPlaying] = useState(false)
@@ -186,7 +188,7 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
           className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase"
           style={{ color: 'var(--accent-color)' }}
         >
-          CLOSE
+          {t.videoPlayer.close}
         </button>
       </div>
 
@@ -247,11 +249,10 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
               e.stopPropagation()
               togglePlay()
             }}
-            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[50px] md:min-w-[60px] text-left"
+            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[50px] md:min-w-[80px] text-left overflow-hidden"
             style={{ color: 'var(--accent-color)' }}
           >
-            <span className={playing ? 'inline' : 'hidden'}>PAUSE</span>
-            <span className={playing ? 'hidden' : 'inline'}>PLAY</span>
+            {playing ? t.videoPlayer.pause : t.videoPlayer.play}
           </button>
 
           {/* Sound Toggle - Bottom Right */}
@@ -261,9 +262,9 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
               toggleMute()
             }}
             className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase overflow-hidden"
-            style={{ color: 'var(--accent-color)', minWidth: '90px' }}
+            style={{ color: 'var(--accent-color)', minWidth: '100px' }}
           >
-            {muted ? 'SOUND ON' : 'SOUND OFF'}
+            {muted ? t.videoPlayer.soundOn : t.videoPlayer.soundOff}
           </button>
         </div>
       </div>

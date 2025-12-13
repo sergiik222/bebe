@@ -183,6 +183,7 @@ const Portfolio = () => {
                                             <PhotoCategoryCardLarge
                                                 category={category}
                                                 onClick={() => handleCategoryClick(category, 'photo')}
+                                                t={t}
                                             />
                                         </div>
                                     ))}
@@ -209,6 +210,7 @@ const Portfolio = () => {
                                             <VideoCategoryCardLarge
                                                 category={category}
                                                 onClick={() => handleCategoryClick(category, 'video')}
+                                                t={t}
                                             />
                                         </div>
                                     ))}
@@ -479,7 +481,7 @@ const VideoCategoryCardMasonry = ({ category, onClick, variant }) => {
 };
 
 // Large card for horizontal scroll - Photo
-const PhotoCategoryCardLarge = ({ category, onClick }) => {
+const PhotoCategoryCardLarge = ({ category, onClick, t }) => {
     const categoryName = category.alt || category.name.split('.')[0];
 
     return (
@@ -502,7 +504,7 @@ const PhotoCategoryCardLarge = ({ category, onClick }) => {
                     {categoryName}
                 </h3>
                 <p className="text-xs text-gray-300 flex items-center gap-1">
-                    <span>Tap to explore</span>
+                    <span>{t.portfolio.tapToExplore}</span>
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -515,7 +517,7 @@ const PhotoCategoryCardLarge = ({ category, onClick }) => {
 };
 
 // Large card for horizontal scroll - Video
-const VideoCategoryCardLarge = ({ category, onClick }) => {
+const VideoCategoryCardLarge = ({ category, onClick, t }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
@@ -590,7 +592,7 @@ const VideoCategoryCardLarge = ({ category, onClick }) => {
                     {categoryName}
                 </h3>
                 <p className="text-xs text-gray-300 flex items-center gap-1 justify-end">
-                    <span>Tap to explore</span>
+                    <span>{t.portfolio.tapToExplore}</span>
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
