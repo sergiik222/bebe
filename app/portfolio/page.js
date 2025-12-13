@@ -322,12 +322,12 @@ const VideoCategoryCard = ({ category, onClick }) => {
                     isHovered ? 'scale-110' : 'scale-100'
                 } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
-            <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
+            <div className={`absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-70'
             }`} />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div className="absolute top-0 left-0 right-0 p-6">
                 <h3 className={`text-xl font-medium text-white transition-transform duration-300 ${
-                    isHovered ? 'translate-y-0' : 'translate-y-2'
+                    isHovered ? 'translate-y-0' : '-translate-y-2'
                 }`}>
                     {categoryName}
                 </h3>
