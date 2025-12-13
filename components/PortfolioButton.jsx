@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMenu } from '@/lib/MenuContext';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const PortfolioButton = () => {
     const pathname = usePathname();
     const { isMenuOpen } = useMenu();
+    const { t } = useLanguage();
 
     // Don't show on portfolio pages
     if (pathname?.startsWith('/portfolio')) {
@@ -19,7 +21,7 @@ const PortfolioButton = () => {
                 href="/portfolio"
                 className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-xs md:text-sm font-medium"
             >
-                Portfolio
+                {t.nav.portfolio}
             </Link>
         </div>
     );

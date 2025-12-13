@@ -92,8 +92,23 @@ const VideoGallery = () => {
 
 const VideoCard = ({ video, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
     const videoRef = useRef(null);
     const videoName = video.alt || video.name.split('.')[0];
+
+    // Load first frame on mount
+    useEffect(() => {
+        const videoEl = videoRef.current;
+        if (videoEl) {
+            const handleLoadedData = () => {
+                setIsLoaded(true);
+            };
+            videoEl.addEventListener('loadeddata', handleLoadedData);
+            // Force load first frame
+            videoEl.load();
+            return () => videoEl.removeEventListener('loadeddata', handleLoadedData);
+        }
+    }, []);
 
     useEffect(() => {
         if (videoRef.current) {
@@ -113,9 +128,15 @@ const VideoCard = ({ video, onClick }) => {
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
         >
+            {/* Loading placeholder */}
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                </div>
+            )}
             <video
                 ref={videoRef}
-                src={video.url}
+                src={`${video.url}#t=0.1`}
                 muted
                 loop
                 playsInline
@@ -124,7 +145,7 @@ const VideoCard = ({ video, onClick }) => {
                 preload="metadata"
                 className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
                     isHovered ? 'scale-105' : 'scale-100'
-                }`}
+                } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 

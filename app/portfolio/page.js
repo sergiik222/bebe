@@ -252,8 +252,23 @@ const PhotoCategoryCard = ({ category, onClick }) => {
 
 const VideoCategoryCard = ({ category, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
     const videoRef = useRef(null);
     const categoryName = category.alt || category.name.split('.')[0];
+
+    // Load first frame on mount
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            const handleLoadedData = () => {
+                setIsLoaded(true);
+            };
+            video.addEventListener('loadeddata', handleLoadedData);
+            // Force load first frame
+            video.load();
+            return () => video.removeEventListener('loadeddata', handleLoadedData);
+        }
+    }, []);
 
     useEffect(() => {
         if (videoRef.current) {
@@ -273,9 +288,15 @@ const VideoCategoryCard = ({ category, onClick }) => {
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
         >
+            {/* Loading placeholder */}
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                </div>
+            )}
             <video
                 ref={videoRef}
-                src={category.url}
+                src={`${category.url}#t=0.1`}
                 muted
                 loop
                 playsInline
@@ -284,7 +305,7 @@ const VideoCategoryCard = ({ category, onClick }) => {
                 preload="metadata"
                 className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
                     isHovered ? 'scale-110' : 'scale-100'
-                }`}
+                } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-70'
