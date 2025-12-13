@@ -9,9 +9,9 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
     // On mobile (< 768px), keep staggered margins even during drag
     const isMobile = windowWidth < 768;
     const getMarginTop = () => {
-        // Mobile landscape: flat layout, all in one line
+        // Mobile landscape: small top margin, flat layout
         if (isMobileLandscape) {
-            return '0px';
+            return '10px';
         }
         if (isMobile) {
             // Mobile portrait: always use mobile margins, never flatten
@@ -21,9 +21,9 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
         return isDragging ? `${-100}px` : `${media.marginTop}px`;
     };
     const getMarginBottom = () => {
-        // Mobile landscape: flat layout, all in one line
+        // Mobile landscape: small bottom margin, flat layout
         if (isMobileLandscape) {
-            return '0px';
+            return '10px';
         }
         if (isMobile) {
             // Mobile portrait: always use mobile margins, never flatten

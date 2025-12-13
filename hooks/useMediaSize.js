@@ -6,11 +6,11 @@ import { useMemo } from 'react';
  */
 export const useMediaSize = (isMobile, isLandscape = false) => {
   return useMemo(() => {
-    // Mobile landscape: no margins, one line
+    // Mobile landscape: smaller medias with small margins, flat layout
     if (isMobile && isLandscape) {
       return {
-        size: 320,
-        margin: 0
+        size: 220,
+        margin: 15
       };
     }
     // Mobile portrait
