@@ -197,6 +197,8 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
           url={videoUrl}
           playing={playing}
           muted={muted}
+          controls={false}
+          playsinline
           width="100%"
           height="100%"
           onProgress={handleProgress}
@@ -205,6 +207,10 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
           config={{
             file: {
               attributes: {
+                playsInline: true,
+                'webkit-playsinline': 'true',
+                disablePictureInPicture: true,
+                controlsList: 'nodownload nofullscreen noremoteplayback',
                 style: { width: '100%', height: '100%', objectFit: 'contain' }
               }
             }

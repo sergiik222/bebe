@@ -98,10 +98,22 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
                     url={videoUrl}
                     playing={playing}
                     muted
+                    playsinline
+                    controls={false}
                     width="100%"
                     height="100%"
                     className="absolute top-0 left-0"
                     onDuration={handleDuration}
+                    config={{
+                        file: {
+                            attributes: {
+                                playsInline: true,
+                                'webkit-playsinline': 'true',
+                                disablePictureInPicture: true,
+                                controlsList: 'nodownload nofullscreen noremoteplayback'
+                            }
+                        }
+                    }}
                 />
             </div>
 

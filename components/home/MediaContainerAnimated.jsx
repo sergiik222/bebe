@@ -9,8 +9,8 @@ import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { useMediaSize } from "@/hooks/useMediaSize";
 
 const WHEEL_MULTIPLIER = 1.05;
-const DECAY = 0.93;
-const MIN_VELOCITY = 0.18;
+const DECAY = 0.95;
+const MIN_VELOCITY = 0.05;
 
 const FOCUS_MARKS = [0.7, 1, 1.4, 2, 2.8, 4, 5.6, 8, 11, 16]; // example f-stop-like values
 const FOCUS_MIN = FOCUS_MARKS[0];
@@ -171,40 +171,6 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const wheelVelocity = useRef(0);
     const inertiaRafId = useRef(null);
 
-    const bindMedias = useDrag(({ active, movement: [mx], memo = mediaX.get() }) => {
-        inertiaActive.current = false;
-        wheelVelocity.current = 0;
-        // Cancel any pending animation frame when starting drag
-        if (inertiaRafId.current) {
-            cancelAnimationFrame(inertiaRafId.current);
-            inertiaRafId.current = null;
-        }
-        setIsDragging(active);
-        const next = mx + memo;
-        if (active) {
-            const wrapped = wrapX(next);
-            // If we wrapped, update memo to the new wrapped position
-            if (wrapped !== next) {
-                api.start({ mediaX: wrapped, immediate: true });
-                updateMiddleIndexThrottled(wrapped);
-                return wrapped;
-            }
-            api.start({ mediaX: next, immediate: true });
-            updateMiddleIndexThrottled(next);
-        } else {
-            const wrapped = wrapX(next);
-            api.start({ mediaX: wrapped, immediate: false });
-            updateMiddleIndex(wrapped);
-            snapToNearest(wrapped);
-        }
-
-        return memo;
-    }, {
-        axis: 'x',
-        pointer: { touch: true },
-        rubberband: 0.25
-    });
-
     const stepInertia = useCallback(() => {
         if (!inertiaActive.current) return;
 
@@ -223,6 +189,59 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         updateMiddleIndexThrottled(wrapped);
         inertiaRafId.current = requestAnimationFrame(stepInertia);
     }, [api, mediaX, snapToNearest, wrapX, updateMiddleIndexThrottled]);
+
+    const bindMedias = useDrag(({ active, movement: [mx], velocity: [vx], direction: [dx], memo = mediaX.get() }) => {
+        // Cancel any pending animation frame when starting drag
+        if (inertiaRafId.current) {
+            cancelAnimationFrame(inertiaRafId.current);
+            inertiaRafId.current = null;
+        }
+        inertiaActive.current = false;
+        wheelVelocity.current = 0;
+
+        setIsDragging(active);
+        const next = mx + memo;
+
+        if (active) {
+            const wrapped = wrapX(next);
+            // If we wrapped, update memo to the new wrapped position
+            if (wrapped !== next) {
+                api.start({ mediaX: wrapped, immediate: true });
+                updateMiddleIndexThrottled(wrapped);
+                return wrapped;
+            }
+            api.start({ mediaX: next, immediate: true });
+            updateMiddleIndexThrottled(next);
+        } else {
+            // On release, apply momentum based on velocity
+            const wrapped = wrapX(next);
+
+            // Calculate momentum from swipe velocity (vx is in px/ms)
+            const momentum = vx * dx * 15; // Scale velocity for better feel
+
+            if (Math.abs(momentum) > 0.5) {
+                // Apply momentum scrolling
+                wheelVelocity.current = momentum;
+                inertiaActive.current = true;
+                api.start({ mediaX: wrapped, immediate: true });
+                updateMiddleIndex(wrapped);
+                inertiaRafId.current = requestAnimationFrame(stepInertia);
+            } else {
+                // Small movement - just snap
+                api.start({ mediaX: wrapped, immediate: false });
+                updateMiddleIndex(wrapped);
+                snapToNearest(wrapped);
+            }
+        }
+
+        return memo;
+    }, {
+        axis: 'x',
+        pointer: { touch: true },
+        threshold: 5, // Start responding after just 5px of movement
+        rubberband: 0.15,
+        filterTaps: true
+    });
 
     useEffect(() => {
         const handleWheel = (e) => {

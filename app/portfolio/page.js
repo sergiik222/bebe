@@ -89,7 +89,7 @@ const Portfolio = () => {
 
     return (
         <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
-            <div className="flex-1 p-4 md:p-8">
+            <div className="flex-1 p-4 pt-20 md:p-8 md:pt-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 text-center">
@@ -187,7 +187,7 @@ const Portfolio = () => {
 
                         {/* Video Section */}
                         <div>
-                            <h2 className="text-lg sm:text-xl font-medium mb-4 text-[var(--accent-color)] text-right">
+                            <h2 className="text-lg sm:text-xl font-medium mb-4 text-[var(--accent-color)]">
                                 {t.portfolio.video}
                             </h2>
                             {videoCategories.length === 0 ? (
@@ -279,6 +279,8 @@ const VideoCategoryCard = ({ category, onClick }) => {
                 muted
                 loop
                 playsInline
+                webkit-playsinline="true"
+                disablePictureInPicture
                 preload="metadata"
                 className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
                     isHovered ? 'scale-110' : 'scale-100'

@@ -14,7 +14,7 @@ const About = () => {
 
     return (
         <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
-            <div className="flex-1 p-4 md:p-8">
+            <div className="flex-1 p-4 pt-20 md:p-8 md:pt-8">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 text-center">

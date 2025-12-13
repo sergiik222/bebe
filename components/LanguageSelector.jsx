@@ -2,9 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../lib/LanguageContext';
+import { useMenu } from '@/lib/MenuContext';
 
 const LanguageSelector = () => {
     const { language, changeLanguage, languages, mounted } = useLanguage();
+    const { isMenuOpen } = useMenu();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -25,7 +27,7 @@ const LanguageSelector = () => {
     }
 
     return (
-        <div className="fixed top-6 right-6 z-50" ref={dropdownRef}>
+        <div className={`fixed top-6 right-4 md:right-6 z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : 'opacity-100'}`} ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-sm font-medium"

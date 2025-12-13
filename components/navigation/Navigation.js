@@ -1,10 +1,11 @@
 'use client'
-import {useState, useEffect} from "react";
+import {useEffect} from "react";
 import NavLink from "@/components/navigation/NavLink";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useMenu } from "@/lib/MenuContext";
 
 export default function Navigation() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isMenuOpen: isOpen, setIsMenuOpen: setIsOpen } = useMenu();
     const { t } = useLanguage();
 
     const toggleIsOpened = () => {
