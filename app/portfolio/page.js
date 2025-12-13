@@ -237,8 +237,8 @@ const PhotoCategoryCard = ({ category, onClick }) => {
             <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-60'
             }`} />
-            {/* Category name - bottom left */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4">
+            {/* Category name - bottom right */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 text-right">
                 <h3 className={`text-sm lg:text-base font-medium text-white transition-transform duration-300 ${
                     isHovered ? 'translate-y-0' : 'translate-y-1'
                 }`}>
@@ -328,18 +328,18 @@ const VideoCategoryCard = ({ category, onClick }) => {
             <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-60'
             }`} />
-            {/* Category name - bottom left */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4">
+            {/* Category name - bottom right */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 text-right">
                 <h3 className={`text-sm lg:text-base font-medium text-white transition-transform duration-300 ${
                     isHovered ? 'translate-y-0' : 'translate-y-1'
                 }`}>
                     {categoryName}
                 </h3>
             </div>
-            {/* Play/Pause button - visible on mobile */}
+            {/* Play/Pause button - visible on mobile, bottom left */}
             <button
                 onClick={handlePlayPauseClick}
-                className="absolute bottom-3 right-3 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
+                className="absolute bottom-3 left-3 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
                 aria-label={isPlaying ? "Pause Video" : "Play Video"}
             >
                 {isPlaying ? (
