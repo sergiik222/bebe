@@ -6,12 +6,31 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
      const mediaType = media.mediaType
     var height = mediaSize
     height = mediaSize*0.5625
+    // On mobile (< 768px), keep staggered margins even during drag
+    const isMobile = windowWidth < 768;
+    const getMarginTop = () => {
+        if (isMobile) {
+            // Mobile: always use mobile margins, never flatten
+            return `${media.marginTopMobile - 100}px`;
+        }
+        // Desktop: flatten during drag
+        return isDragging ? `${-100}px` : `${media.marginTop}px`;
+    };
+    const getMarginBottom = () => {
+        if (isMobile) {
+            // Mobile: always use mobile margins, never flatten
+            return `${media.marginBottomMobile - 100}px`;
+        }
+        // Desktop: flatten during drag
+        return isDragging ? 0 : `${media.marginBottom}px`;
+    };
+
     return (
         <div
-            className={`relative noselect transition-all duration-700 ease-in-out ${!isDragging ? 'hover:z-50' : ''} ${isDragging || windowWidth < 640 ? 'mt-0 mb-0' : ''}`}
+            className={`relative noselect transition-all duration-700 ease-in-out ${!isDragging ? 'hover:z-50' : ''}`}
             style={{
-                marginTop: isDragging ? `${-100}px` : windowWidth < 640 ? `${media.marginTopMobile - 100}px` : `${media.marginTop}px`,
-                marginBottom: isDragging ? 0 : windowWidth < 640 ? `${media.marginBottomMobile - 100}px` : `${media.marginBottom}px`,
+                marginTop: getMarginTop(),
+                marginBottom: getMarginBottom(),
                 width: `${mediaSize}px`,
                 height: `${height}px`,
                 flexShrink: 0,
