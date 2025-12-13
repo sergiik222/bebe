@@ -131,7 +131,7 @@ export default function Navigation() {
             {/* Toggle Button */}
             <button
                 onClick={toggleIsOpened}
-                className={`fixed top-6 z-50 h-10 flex items-center justify-center rounded-lg transition-all duration-500 ease-out group ${isOpen ? 'right-6 md:left-[250px] md:right-auto' : 'left-6'} w-10`}
+                className={`fixed top-6 z-50 h-10 flex items-center justify-center rounded-lg transition-all duration-500 ease-out group ${isOpen ? 'left-[calc(90vw-4rem)] md:left-[250px]' : 'left-6'} w-10`}
                 style={{
                     background: 'rgba(24, 27, 32, 0.8)',
                     backdropFilter: 'blur(12px)',
