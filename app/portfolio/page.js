@@ -12,6 +12,7 @@ const Portfolio = () => {
     const [videoCategories, setVideoCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [splitPosition, setSplitPosition] = useState(50); // percentage for left panel
+    const [activeTab, setActiveTab] = useState('photo'); // For mobile tab switcher
     const containerRef = useRef(null);
     const isDragging = useRef(false);
 
@@ -161,50 +162,79 @@ const Portfolio = () => {
                         </div>
                     </div>
 
-                    {/* Single Column Layout - Tablet & Mobile */}
-                    <div className="lg:hidden space-y-10">
-                        {/* Photo Section */}
-                        <div>
-                            <h2 className="text-lg sm:text-xl font-medium mb-4 text-[var(--accent-color)]">
+                    {/* Mobile Tab-Based Layout */}
+                    <div className="lg:hidden">
+                        {/* Tab Switcher */}
+                        <div className="flex mb-6 bg-zinc-900/50 rounded-full p-1 backdrop-blur-sm">
+                            <button
+                                onClick={() => setActiveTab('photo')}
+                                className={`flex-1 py-3 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                    activeTab === 'photo'
+                                        ? 'bg-[var(--accent-color)] text-black shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                }`}
+                            >
                                 {t.portfolio.photo}
-                            </h2>
-                            {photoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                    {t.portfolio.noCategories}
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                                    {photoCategories.map((category, index) => (
-                                        <PhotoCategoryCard
-                                            key={index}
-                                            category={category}
-                                            onClick={() => handleCategoryClick(category, 'photo')}
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('video')}
+                                className={`flex-1 py-3 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                                    activeTab === 'video'
+                                        ? 'bg-[var(--accent-color)] text-black shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                }`}
+                            >
+                                {t.portfolio.video}
+                            </button>
                         </div>
 
-                        {/* Video Section */}
-                        <div>
-                            <h2 className="text-lg sm:text-xl font-medium mb-4 text-[var(--accent-color)]">
-                                {t.portfolio.video}
-                            </h2>
-                            {videoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                    {t.portfolio.noCategories}
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                                    {videoCategories.map((category, index) => (
-                                        <VideoCategoryCard
-                                            key={index}
-                                            category={category}
-                                            onClick={() => handleCategoryClick(category, 'video')}
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                        {/* Tab Content */}
+                        <div className="relative overflow-hidden">
+                            {/* Photo Content */}
+                            <div className={`transition-all duration-400 ease-out ${
+                                activeTab === 'photo'
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 -translate-x-full absolute inset-0 pointer-events-none'
+                            }`}>
+                                {photoCategories.length === 0 ? (
+                                    <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                        {t.portfolio.noCategories}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {photoCategories.map((category, index) => (
+                                            <PhotoCategoryCard
+                                                key={index}
+                                                category={category}
+                                                onClick={() => handleCategoryClick(category, 'photo')}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Video Content */}
+                            <div className={`transition-all duration-400 ease-out ${
+                                activeTab === 'video'
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 translate-x-full absolute inset-0 pointer-events-none'
+                            }`}>
+                                {videoCategories.length === 0 ? (
+                                    <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                        {t.portfolio.noCategories}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {videoCategories.map((category, index) => (
+                                            <VideoCategoryCard
+                                                key={index}
+                                                category={category}
+                                                onClick={() => handleCategoryClick(category, 'video')}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
