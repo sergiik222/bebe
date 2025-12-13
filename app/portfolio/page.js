@@ -162,58 +162,40 @@ const Portfolio = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Horizontal Scroll Layout */}
-                    <div className="lg:hidden space-y-8">
-                        {/* Photo Section */}
-                        <div>
-                            <h2 className="text-lg font-medium mb-4 text-[var(--accent-color)] flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                {t.portfolio.photo}
-                            </h2>
-                            {photoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                    {t.portfolio.noCategories}
-                                </div>
-                            ) : (
-                                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
-                                    {photoCategories.map((category, index) => (
-                                        <div key={index} className="snap-start flex-shrink-0 w-[75vw] max-w-[300px]">
-                                            <PhotoCategoryCardLarge
-                                                category={category}
-                                                onClick={() => handleCategoryClick(category, 'photo')}
+                    {/* Mobile Masonry/Pinterest Grid Layout */}
+                    <div className="lg:hidden">
+                        {/* Combined masonry grid - photos and videos mixed */}
+                        <div className="columns-2 gap-3 space-y-3">
+                            {(() => {
+                                // Interleave photos and videos for visual variety
+                                const allItems = [];
+                                const maxLen = Math.max(photoCategories.length, videoCategories.length);
+                                for (let i = 0; i < maxLen; i++) {
+                                    if (i < photoCategories.length) {
+                                        allItems.push({ type: 'photo', category: photoCategories[i], index: i });
+                                    }
+                                    if (i < videoCategories.length) {
+                                        allItems.push({ type: 'video', category: videoCategories[i], index: i });
+                                    }
+                                }
+                                return allItems.map((item, idx) => (
+                                    <div key={`${item.type}-${item.index}`} className="break-inside-avoid mb-3">
+                                        {item.type === 'photo' ? (
+                                            <PhotoCategoryCardMasonry
+                                                category={item.category}
+                                                onClick={() => handleCategoryClick(item.category, 'photo')}
+                                                variant={idx % 3}
                                             />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Video Section */}
-                        <div>
-                            <h2 className="text-lg font-medium mb-4 text-[var(--accent-color)] flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                {t.portfolio.video}
-                            </h2>
-                            {videoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                    {t.portfolio.noCategories}
-                                </div>
-                            ) : (
-                                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
-                                    {videoCategories.map((category, index) => (
-                                        <div key={index} className="snap-start flex-shrink-0 w-[75vw] max-w-[300px]">
-                                            <VideoCategoryCardLarge
-                                                category={category}
-                                                onClick={() => handleCategoryClick(category, 'video')}
+                                        ) : (
+                                            <VideoCategoryCardMasonry
+                                                category={item.category}
+                                                onClick={() => handleCategoryClick(item.category, 'video')}
+                                                variant={idx % 3}
                                             />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                                        )}
+                                    </div>
+                                ));
+                            })()}
                         </div>
                     </div>
                 </div>
@@ -375,6 +357,105 @@ const VideoCategoryCard = ({ category, onClick }) => {
             <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
             }`} />
+        </div>
+    );
+};
+
+// Masonry card - Photo (varying heights for Pinterest effect)
+const PhotoCategoryCardMasonry = ({ category, onClick, variant }) => {
+    const categoryName = category.alt || category.name.split('.')[0];
+    // Different aspect ratios for visual variety
+    const aspectClasses = ['aspect-[3/4]', 'aspect-square', 'aspect-[4/5]'];
+    const aspectClass = aspectClasses[variant % 3];
+
+    return (
+        <div
+            className={`relative ${aspectClass} rounded-2xl overflow-hidden cursor-pointer group active:scale-[0.98] transition-transform`}
+            onClick={onClick}
+        >
+            <Image
+                src={category.url}
+                alt={categoryName}
+                fill
+                sizes="50vw"
+                className="object-cover"
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            {/* Photo badge */}
+            <div className="absolute top-2 left-2 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            {/* Category name */}
+            <div className="absolute bottom-0 left-0 right-0 p-3">
+                <h3 className="text-sm font-medium text-white">
+                    {categoryName}
+                </h3>
+            </div>
+            {/* Accent border on touch */}
+            <div className="absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl opacity-0 group-active:opacity-100 transition-opacity" />
+        </div>
+    );
+};
+
+// Masonry card - Video (varying heights for Pinterest effect)
+const VideoCategoryCardMasonry = ({ category, onClick, variant }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const videoRef = useRef(null);
+    const categoryName = category.alt || category.name.split('.')[0];
+    // Different aspect ratios for visual variety
+    const aspectClasses = ['aspect-[4/5]', 'aspect-[3/4]', 'aspect-square'];
+    const aspectClass = aspectClasses[variant % 3];
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            const handleLoadedData = () => setIsLoaded(true);
+            video.addEventListener('loadeddata', handleLoadedData);
+            video.load();
+            return () => video.removeEventListener('loadeddata', handleLoadedData);
+        }
+    }, []);
+
+    return (
+        <div
+            className={`relative ${aspectClass} rounded-2xl overflow-hidden cursor-pointer group active:scale-[0.98] transition-transform`}
+            onClick={onClick}
+        >
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                    <div className="animate-pulse w-8 h-8 rounded-full bg-zinc-700" />
+                </div>
+            )}
+            <video
+                ref={videoRef}
+                src={`${category.url}#t=0.1`}
+                muted
+                loop
+                playsInline
+                webkit-playsinline="true"
+                disablePictureInPicture
+                preload="metadata"
+                className={`absolute inset-0 w-full h-full object-cover ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            {/* Video badge */}
+            <div className="absolute top-2 left-2 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+            {/* Category name */}
+            <div className="absolute bottom-0 left-0 right-0 p-3">
+                <h3 className="text-sm font-medium text-white">
+                    {categoryName}
+                </h3>
+            </div>
+            {/* Accent border on touch */}
+            <div className="absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl opacity-0 group-active:opacity-100 transition-opacity" />
         </div>
     );
 };
