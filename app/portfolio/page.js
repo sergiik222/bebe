@@ -219,43 +219,31 @@ const PhotoCategoryCard = ({ category, onClick }) => {
 
     return (
         <div
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer group"
+            className="cursor-pointer group"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
         >
-            <Image
-                src={category.url}
-                alt={categoryName}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className={`object-cover transition-transform duration-500 ${
-                    isHovered ? 'scale-110' : 'scale-100'
-                }`}
-            />
-            {/* Gradient - top on mobile, bottom on desktop */}
-            <div className={`absolute inset-0 lg:hidden bg-gradient-to-b from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-70'
-            }`} />
-            <div className={`absolute inset-0 hidden lg:block bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-70'
-            }`} />
-            {/* Text - top on mobile, bottom on desktop */}
-            <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
-                <h3 className="text-base font-medium text-white drop-shadow-lg">
-                    {categoryName}
-                </h3>
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                <Image
+                    src={category.url}
+                    alt={categoryName}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className={`object-cover transition-transform duration-500 ${
+                        isHovered ? 'scale-110' : 'scale-100'
+                    }`}
+                />
+                <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
+                    isHovered ? 'opacity-100' : 'opacity-0'
+                }`} />
             </div>
-            <div className="absolute bottom-0 hidden lg:block left-0 right-0 p-6">
-                <h3 className={`text-xl font-medium text-white transition-transform duration-300 ${
-                    isHovered ? 'translate-y-0' : 'translate-y-2'
-                }`}>
-                    {categoryName}
-                </h3>
-            </div>
-            <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-0'
-            }`} />
+            {/* Category name below image */}
+            <h3 className={`mt-2 text-sm lg:text-base font-medium text-[var(--accent-color)] transition-opacity duration-300 ${
+                isHovered ? 'opacity-100' : 'opacity-70'
+            }`}>
+                {categoryName}
+            </h3>
         </div>
     );
 };
@@ -308,80 +296,68 @@ const VideoCategoryCard = ({ category, onClick }) => {
 
     return (
         <div
-            className="relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer group"
+            className="cursor-pointer group"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
         >
-            {/* Loading placeholder */}
-            {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
-                </div>
-            )}
-            <video
-                ref={videoRef}
-                src={`${category.url}#t=0.1`}
-                muted
-                loop
-                playsInline
-                webkit-playsinline="true"
-                disablePictureInPicture
-                preload="metadata"
-                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
-                    isHovered ? 'scale-110' : 'scale-100'
-                } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-            {/* Gradient - top on mobile, bottom on desktop */}
-            <div className={`absolute inset-0 lg:hidden bg-gradient-to-b from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-70'
-            }`} />
-            <div className={`absolute inset-0 hidden lg:block bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-70'
-            }`} />
-            {/* Text - top on mobile, bottom on desktop */}
-            <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
-                <h3 className="text-base font-medium text-white drop-shadow-lg">
-                    {categoryName}
-                </h3>
-            </div>
-            <div className="absolute bottom-0 hidden lg:block left-0 right-0 p-6">
-                <h3 className={`text-xl font-medium text-white transition-transform duration-300 ${
-                    isHovered ? 'translate-y-0' : 'translate-y-2'
-                }`}>
-                    {categoryName}
-                </h3>
-            </div>
-            {/* Play/Pause button - visible on mobile */}
-            <button
-                onClick={handlePlayPauseClick}
-                className="absolute bottom-4 left-4 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
-                aria-label={isPlaying ? "Pause Video" : "Play Video"}
-            >
-                {isPlaying ? (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <rect x="6" y="5" width="3" height="14"/>
-                        <rect x="14" y="5" width="4" height="14"/>
-                    </svg>
-                ) : (
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+                {/* Loading placeholder */}
+                {!isLoaded && (
+                    <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                        <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                    </div>
                 )}
-            </button>
-            <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-0'
-            }`} />
+                <video
+                    ref={videoRef}
+                    src={`${category.url}#t=0.1`}
+                    muted
+                    loop
+                    playsInline
+                    webkit-playsinline="true"
+                    disablePictureInPicture
+                    preload="metadata"
+                    className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ${
+                        isHovered ? 'scale-110' : 'scale-100'
+                    } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                />
+                {/* Play/Pause button - visible on mobile */}
+                <button
+                    onClick={handlePlayPauseClick}
+                    className="absolute bottom-3 left-3 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
+                    aria-label={isPlaying ? "Pause Video" : "Play Video"}
+                >
+                    {isPlaying ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <rect x="6" y="5" width="3" height="14"/>
+                            <rect x="14" y="5" width="4" height="14"/>
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    )}
+                </button>
+                <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
+                    isHovered ? 'opacity-100' : 'opacity-0'
+                }`} />
+            </div>
+            {/* Category name below video */}
+            <h3 className={`mt-2 text-sm lg:text-base font-medium text-[var(--accent-color)] transition-opacity duration-300 ${
+                isHovered ? 'opacity-100' : 'opacity-70'
+            }`}>
+                {categoryName}
+            </h3>
         </div>
     );
 };

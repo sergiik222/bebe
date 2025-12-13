@@ -247,10 +247,11 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
               e.stopPropagation()
               togglePlay()
             }}
-            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase"
+            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[50px] md:min-w-[60px] text-left"
             style={{ color: 'var(--accent-color)' }}
           >
-            {playing ? 'PAUSE' : 'PLAY'}
+            <span className={playing ? 'inline' : 'hidden'}>PAUSE</span>
+            <span className={playing ? 'hidden' : 'inline'}>PLAY</span>
           </button>
 
           {/* Sound Toggle - Bottom Right */}
@@ -259,10 +260,11 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
               e.stopPropagation()
               toggleMute()
             }}
-            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase"
+            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[80px] md:min-w-[100px] text-right"
             style={{ color: 'var(--accent-color)' }}
           >
-            {muted ? 'SOUND ON' : 'SOUND OFF'}
+            <span className={muted ? 'inline' : 'hidden'}>SOUND ON</span>
+            <span className={muted ? 'hidden' : 'inline'}>SOUND OFF</span>
           </button>
         </div>
       </div>
