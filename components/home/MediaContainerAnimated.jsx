@@ -298,8 +298,8 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         medias={loopedMedias}
                     />
                 </animated.div>
-                {/* Progress bar (full-width) */}
-                <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40">
+                {/* Progress bar (full-width) - hidden on mobile */}
+                <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40 hidden md:block">
                   <div className="relative mx-auto h-px bg-white/30" style={{ width: '100%' }}>
                     {/* Fill to current position */}
                     <animated.div
@@ -350,9 +350,9 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                   </div>
                 </div>
 
-                {/* Navigation arrow - on the progress bar line */}
+                {/* Navigation arrow - on the progress bar line - hidden on mobile */}
                 <animated.div
-                  className="pointer-events-none fixed bottom-6 z-40"
+                  className="pointer-events-none fixed bottom-6 z-40 hidden md:block"
                   style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`), transform: 'translateX(-50%) translateY(30%)' }}
                 >
                   <svg

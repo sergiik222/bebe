@@ -241,8 +241,8 @@ const PhotoCategoryCard = ({ category, onClick }) => {
                 isHovered ? 'opacity-100' : 'opacity-70'
             }`} />
             {/* Text - top on mobile, bottom on desktop */}
-            <div className="absolute top-0 lg:hidden left-0 right-0 p-6">
-                <h3 className="text-xl font-medium text-white">
+            <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
+                <h3 className="text-base font-medium text-white drop-shadow-lg">
                     {categoryName}
                 </h3>
             </div>
@@ -340,8 +340,8 @@ const VideoCategoryCard = ({ category, onClick }) => {
                 isHovered ? 'opacity-100' : 'opacity-70'
             }`} />
             {/* Text - top on mobile, bottom on desktop */}
-            <div className="absolute top-0 lg:hidden left-0 right-0 p-6">
-                <h3 className="text-xl font-medium text-white">
+            <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
+                <h3 className="text-base font-medium text-white drop-shadow-lg">
                     {categoryName}
                 </h3>
             </div>

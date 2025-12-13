@@ -167,8 +167,8 @@ const VideoCard = ({ video, onClick }) => {
             <div className="absolute inset-0 hidden lg:block bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
             {/* Video name - top on mobile, bottom on desktop */}
-            <div className="absolute top-0 lg:hidden left-0 right-0 p-4">
-                <h3 className="text-lg font-medium text-white">{videoName}</h3>
+            <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
+                <h3 className="text-base font-medium text-white drop-shadow-lg">{videoName}</h3>
             </div>
             <div className="absolute bottom-0 hidden lg:block left-0 right-0 p-4">
                 <h3 className="text-lg font-medium text-white">{videoName}</h3>
