@@ -53,6 +53,15 @@ export default function Navigation() {
                 }`}
             />
 
+            {/* Mobile Bottom Bar - same padding as top */}
+            <div
+                className={`md:hidden fixed bottom-0 left-0 right-0 h-16 z-40 transition-all duration-300 ${
+                    isScrolled || isOpen
+                        ? 'bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800'
+                        : 'bg-transparent'
+                }`}
+            />
+
             {/* Backdrop Overlay */}
             <div
                 className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
