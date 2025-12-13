@@ -260,11 +260,10 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
               e.stopPropagation()
               toggleMute()
             }}
-            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[80px] md:min-w-[100px] text-right"
+            className="text-xs md:text-sm tracking-widest font-medium hover:opacity-70 transition-opacity uppercase min-w-[75px] md:min-w-[100px] text-right"
             style={{ color: 'var(--accent-color)' }}
           >
-            <span className={muted ? 'inline' : 'hidden'}>SOUND ON</span>
-            <span className={muted ? 'hidden' : 'inline'}>SOUND OFF</span>
+            {muted ? 'SOUND ON' : 'SOUND OFF'}
           </button>
         </div>
       </div>
