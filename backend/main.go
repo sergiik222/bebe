@@ -74,7 +74,12 @@ func main() {
 		port = "8080"
 	}
 
+	// Log configuration
+	backendURL := os.Getenv("BACKEND_URL")
 	log.Printf("Server starting on port %s", port)
-	log.Println("If not authorized yet, visit: http://localhost:" + port + "/api/auth/url")
+	log.Printf("BACKEND_URL: %s (used for email links)", backendURL)
+	if backendURL == "" {
+		log.Println("Warning: BACKEND_URL not set, email links will use localhost")
+	}
 	router.Run(":" + port)
 }
