@@ -1,5 +1,5 @@
 'use client'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import NavLink from "@/components/navigation/NavLink";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useMenu } from "@/lib/MenuContext";
@@ -7,6 +7,7 @@ import { useMenu } from "@/lib/MenuContext";
 export default function Navigation() {
     const { isMenuOpen: isOpen, setIsMenuOpen: setIsOpen } = useMenu();
     const { t } = useLanguage();
+    const [isScrolled, setIsScrolled] = useState(false);
 
     const toggleIsOpened = () => {
         setIsOpen(!isOpen);
@@ -24,6 +25,15 @@ export default function Navigation() {
         };
     }, [isOpen]);
 
+    // Track scroll position for header background
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const menuItems = [
         { href: "/", label: t.nav.home, size: "text-lg" },
         { href: "/about", label: t.nav.about, size: "text-base" },
@@ -34,6 +44,15 @@ export default function Navigation() {
 
     return (
         <>
+            {/* Mobile Header Bar - only visible on mobile when scrolled or menu is open */}
+            <div
+                className={`md:hidden fixed top-0 left-0 right-0 h-16 z-40 transition-all duration-300 ${
+                    isScrolled || isOpen
+                        ? 'bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800'
+                        : 'bg-transparent'
+                }`}
+            />
+
             {/* Backdrop Overlay */}
             <div
                 className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}

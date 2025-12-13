@@ -156,12 +156,12 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full sm:flex-1 px-6 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full sm:flex-1 px-6 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">
                                 <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></span>
-                                {t.book.booking}
+                                <span className="hidden sm:inline">{t.book.booking}</span>
                             </span>
                         ) : (
                             t.book.bookAppointment
