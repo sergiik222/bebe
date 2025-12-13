@@ -6,7 +6,7 @@ import { useMemo } from 'react';
  */
 export const useMediaSize = (isMobile) => {
   return useMemo(() => ({
-    size: isMobile ? 250 : 450,
-    margin: isMobile ? 70 : 100
+    size: isMobile ? 320 : 450,
+    margin: isMobile ? 30 : 100
   }), [isMobile]);
 };
