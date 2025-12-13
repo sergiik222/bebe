@@ -24,10 +24,18 @@ type CalendarService struct {
 
 // NewCalendarService creates a new calendar service
 func NewCalendarService() (*CalendarService, error) {
+	clientID := os.Getenv("GOOGLE_CLIENT_ID")
+	clientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
+	redirectURI := os.Getenv("GOOGLE_REDIRECT_URI")
+
+	// Debug logging for env vars (mask sensitive data)
+	log.Printf("Calendar Service Init - ClientID set: %v, ClientSecret set: %v, RedirectURI: %s",
+		clientID != "", clientSecret != "", redirectURI)
+
 	config := &oauth2.Config{
-		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
-		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-		RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URI"),
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		RedirectURL:  redirectURI,
 		Scopes: []string{
 			calendar.CalendarReadonlyScope,
 			calendar.CalendarEventsScope,
