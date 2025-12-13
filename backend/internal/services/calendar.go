@@ -14,12 +14,11 @@ import (
 	"google.golang.org/api/option"
 )
 
-const tokenFile = "token.json"
-
 type CalendarService struct {
 	service    *calendar.Service
 	config     *oauth2.Config
 	calendarID string
+	tokenFile  string
 }
 
 // NewCalendarService creates a new calendar service
@@ -48,9 +47,16 @@ func NewCalendarService() (*CalendarService, error) {
 		calendarID = "primary"
 	}
 
+	// Token file path - use /tmp for container environments
+	tokenFile := os.Getenv("TOKEN_FILE_PATH")
+	if tokenFile == "" {
+		tokenFile = "/tmp/token.json"
+	}
+
 	cs := &CalendarService{
 		config:     config,
 		calendarID: calendarID,
+		tokenFile:  tokenFile,
 	}
 
 	// Try to load existing token
@@ -177,9 +183,22 @@ func (cs *CalendarService) DeleteEvent(eventID string) error {
 	return cs.service.Events.Delete(cs.calendarID, eventID).Do()
 }
 
-// loadToken reads the token from file
+// loadToken reads the token from environment variable or file
 func (cs *CalendarService) loadToken() (*oauth2.Token, error) {
-	file, err := os.Open(tokenFile)
+	// First try to load from environment variable (for container deployments)
+	tokenJSON := os.Getenv("GOOGLE_OAUTH_TOKEN")
+	if tokenJSON != "" {
+		token := &oauth2.Token{}
+		if err := json.Unmarshal([]byte(tokenJSON), token); err != nil {
+			log.Printf("Failed to parse GOOGLE_OAUTH_TOKEN: %v", err)
+		} else {
+			log.Println("Loaded token from GOOGLE_OAUTH_TOKEN environment variable")
+			return token, nil
+		}
+	}
+
+	// Fall back to file
+	file, err := os.Open(cs.tokenFile)
 	if err != nil {
 		return nil, err
 	}
@@ -187,14 +206,26 @@ func (cs *CalendarService) loadToken() (*oauth2.Token, error) {
 
 	token := &oauth2.Token{}
 	err = json.NewDecoder(file).Decode(token)
+	if err == nil {
+		log.Printf("Loaded token from file: %s", cs.tokenFile)
+	}
 	return token, err
 }
 
-// saveToken saves the token to file
+// saveToken saves the token to file and logs it for env var setup
 func (cs *CalendarService) saveToken(token *oauth2.Token) error {
-	file, err := os.Create(tokenFile)
+	// Always log the token JSON so it can be set as env var
+	tokenJSON, _ := json.Marshal(token)
+	log.Printf("=== OAUTH TOKEN (save this as GOOGLE_OAUTH_TOKEN env var) ===")
+	log.Printf("%s", string(tokenJSON))
+	log.Printf("=== END OAUTH TOKEN ===")
+
+	// Try to save to file
+	file, err := os.Create(cs.tokenFile)
 	if err != nil {
-		return err
+		log.Printf("Could not save token to file (this is OK for container deployments): %v", err)
+		log.Println("Set the GOOGLE_OAUTH_TOKEN environment variable with the token JSON above")
+		return nil // Don't return error - token is still valid in memory
 	}
 	defer file.Close()
 
