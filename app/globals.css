@@ -37,6 +37,15 @@
  
 }
 
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 .fisheye {
     transform: perspective(1000px) scale(1.2) rotateX(10deg) rotateY(10deg);
 }

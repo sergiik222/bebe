@@ -162,79 +162,58 @@ const Portfolio = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Tab-Based Layout */}
-                    <div className="lg:hidden">
-                        {/* Tab Switcher */}
-                        <div className="flex mb-6 bg-zinc-900/50 rounded-full p-1 backdrop-blur-sm">
-                            <button
-                                onClick={() => setActiveTab('photo')}
-                                className={`flex-1 py-3 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
-                                    activeTab === 'photo'
-                                        ? 'bg-[var(--accent-color)] text-black shadow-lg'
-                                        : 'text-gray-400 hover:text-white'
-                                }`}
-                            >
+                    {/* Mobile Horizontal Scroll Layout */}
+                    <div className="lg:hidden space-y-8">
+                        {/* Photo Section */}
+                        <div>
+                            <h2 className="text-lg font-medium mb-4 text-[var(--accent-color)] flex items-center gap-2">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
                                 {t.portfolio.photo}
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('video')}
-                                className={`flex-1 py-3 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
-                                    activeTab === 'video'
-                                        ? 'bg-[var(--accent-color)] text-black shadow-lg'
-                                        : 'text-gray-400 hover:text-white'
-                                }`}
-                            >
-                                {t.portfolio.video}
-                            </button>
-                        </div>
-
-                        {/* Tab Content */}
-                        <div className="relative overflow-hidden">
-                            {/* Photo Content */}
-                            <div className={`transition-all duration-400 ease-out ${
-                                activeTab === 'photo'
-                                    ? 'opacity-100 translate-x-0'
-                                    : 'opacity-0 -translate-x-full absolute inset-0 pointer-events-none'
-                            }`}>
-                                {photoCategories.length === 0 ? (
-                                    <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                        {t.portfolio.noCategories}
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {photoCategories.map((category, index) => (
-                                            <PhotoCategoryCard
-                                                key={index}
+                            </h2>
+                            {photoCategories.length === 0 ? (
+                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                    {t.portfolio.noCategories}
+                                </div>
+                            ) : (
+                                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+                                    {photoCategories.map((category, index) => (
+                                        <div key={index} className="snap-start flex-shrink-0 w-[75vw] max-w-[300px]">
+                                            <PhotoCategoryCardLarge
                                                 category={category}
                                                 onClick={() => handleCategoryClick(category, 'photo')}
                                             />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
-                            {/* Video Content */}
-                            <div className={`transition-all duration-400 ease-out ${
-                                activeTab === 'video'
-                                    ? 'opacity-100 translate-x-0'
-                                    : 'opacity-0 translate-x-full absolute inset-0 pointer-events-none'
-                            }`}>
-                                {videoCategories.length === 0 ? (
-                                    <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-xl">
-                                        {t.portfolio.noCategories}
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {videoCategories.map((category, index) => (
-                                            <VideoCategoryCard
-                                                key={index}
+                        {/* Video Section */}
+                        <div>
+                            <h2 className="text-lg font-medium mb-4 text-[var(--accent-color)] flex items-center gap-2">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                {t.portfolio.video}
+                            </h2>
+                            {videoCategories.length === 0 ? (
+                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                    {t.portfolio.noCategories}
+                                </div>
+                            ) : (
+                                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+                                    {videoCategories.map((category, index) => (
+                                        <div key={index} className="snap-start flex-shrink-0 w-[75vw] max-w-[300px]">
+                                            <VideoCategoryCardLarge
                                                 category={category}
                                                 onClick={() => handleCategoryClick(category, 'video')}
                                             />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -396,6 +375,105 @@ const VideoCategoryCard = ({ category, onClick }) => {
             <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
             }`} />
+        </div>
+    );
+};
+
+// Large card for horizontal scroll - Photo
+const PhotoCategoryCardLarge = ({ category, onClick }) => {
+    const categoryName = category.alt || category.name.split('.')[0];
+
+    return (
+        <div
+            className="relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer group active:scale-[0.98] transition-transform"
+            onClick={onClick}
+        >
+            <Image
+                src={category.url}
+                alt={categoryName}
+                fill
+                sizes="75vw"
+                className="object-cover transition-transform duration-500 group-active:scale-105"
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            {/* Category name */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h3 className="text-lg font-medium text-white mb-1">
+                    {categoryName}
+                </h3>
+                <p className="text-xs text-gray-300 flex items-center gap-1">
+                    <span>Tap to explore</span>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                </p>
+            </div>
+            {/* Accent border on touch */}
+            <div className="absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl opacity-0 group-active:opacity-100 transition-opacity" />
+        </div>
+    );
+};
+
+// Large card for horizontal scroll - Video
+const VideoCategoryCardLarge = ({ category, onClick }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const videoRef = useRef(null);
+    const categoryName = category.alt || category.name.split('.')[0];
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            const handleLoadedData = () => setIsLoaded(true);
+            video.addEventListener('loadeddata', handleLoadedData);
+            video.load();
+            return () => video.removeEventListener('loadeddata', handleLoadedData);
+        }
+    }, []);
+
+    return (
+        <div
+            className="relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer group active:scale-[0.98] transition-transform"
+            onClick={onClick}
+        >
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                </div>
+            )}
+            <video
+                ref={videoRef}
+                src={`${category.url}#t=0.1`}
+                muted
+                loop
+                playsInline
+                webkit-playsinline="true"
+                disablePictureInPicture
+                preload="metadata"
+                className={`absolute inset-0 w-full h-full object-cover ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            {/* Play icon indicator */}
+            <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-full p-2">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </div>
+            {/* Category name */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h3 className="text-lg font-medium text-white mb-1">
+                    {categoryName}
+                </h3>
+                <p className="text-xs text-gray-300 flex items-center gap-1">
+                    <span>Tap to explore</span>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                </p>
+            </div>
+            {/* Accent border on touch */}
+            <div className="absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl opacity-0 group-active:opacity-100 transition-opacity" />
         </div>
     );
 };
