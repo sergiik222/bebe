@@ -48,7 +48,7 @@ export default function Navigation() {
             <div
                 className={`md:hidden fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
                     isScrolled || isOpen
-                        ? 'bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800'
+                        ? 'bg-zinc-900/90 backdrop-blur-md'
                         : 'bg-transparent'
                 }`}
                 style={{ height: 'calc(1.5rem + 2.5rem + 1.5rem)' }} // top-6 (24px) + h-10 (40px) + 24px bottom padding

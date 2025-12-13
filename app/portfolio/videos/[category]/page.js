@@ -162,10 +162,10 @@ const VideoCard = ({ video, onClick }) => {
                     isHovered ? 'scale-105' : 'scale-100'
                 } ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-transparent" />
 
             {/* Video name */}
-            <div className="absolute bottom-0 left-0 right-0 p-4">
+            <div className="absolute top-0 left-0 right-0 p-4">
                 <h3 className="text-lg font-medium text-white">{videoName}</h3>
             </div>
 
