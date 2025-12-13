@@ -44,22 +44,14 @@ export default function Navigation() {
 
     return (
         <>
-            {/* Mobile Header Bar - only visible on mobile when scrolled or menu is open */}
+            {/* Mobile Header Bar - button is top-6 (24px) + h-10 (40px) + 24px bottom = 88px total, use h-22 */}
             <div
-                className={`md:hidden fixed top-0 left-0 right-0 h-16 z-40 transition-all duration-300 ${
+                className={`md:hidden fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
                     isScrolled || isOpen
                         ? 'bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800'
                         : 'bg-transparent'
                 }`}
-            />
-
-            {/* Mobile Bottom Bar - same padding as top */}
-            <div
-                className={`md:hidden fixed bottom-0 left-0 right-0 h-16 z-40 transition-all duration-300 ${
-                    isScrolled || isOpen
-                        ? 'bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800'
-                        : 'bg-transparent'
-                }`}
+                style={{ height: '88px' }}
             />
 
             {/* Backdrop Overlay */}
