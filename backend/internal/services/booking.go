@@ -235,13 +235,14 @@ func (bs *BookingService) ConfirmBooking(token string) (*models.Booking, error) 
 	booking.Status = "confirmed"
 	bs.mu.Unlock()
 
-	// Parse date and times
+	// Parse date and times using Berlin timezone (matches calendar.go)
+	berlinLoc, _ := time.LoadLocation("Europe/Berlin")
 	date, _ := time.Parse("2006-01-02", booking.Date)
 	startTime, _ := time.Parse("15:04", booking.StartTime)
 	endTime, _ := time.Parse("15:04", booking.EndTime)
 
-	start := time.Date(date.Year(), date.Month(), date.Day(), startTime.Hour(), startTime.Minute(), 0, 0, time.Local)
-	end := time.Date(date.Year(), date.Month(), date.Day(), endTime.Hour(), endTime.Minute(), 0, 0, time.Local)
+	start := time.Date(date.Year(), date.Month(), date.Day(), startTime.Hour(), startTime.Minute(), 0, 0, berlinLoc)
+	end := time.Date(date.Year(), date.Month(), date.Day(), endTime.Hour(), endTime.Minute(), 0, 0, berlinLoc)
 
 	// Create calendar event
 	if bs.calendar != nil && bs.calendar.IsAuthorized() {
