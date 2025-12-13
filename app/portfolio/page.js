@@ -253,6 +253,7 @@ const PhotoCategoryCard = ({ category, onClick }) => {
 const VideoCategoryCard = ({ category, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
     const categoryName = category.alt || category.name.split('.')[0];
 
@@ -277,9 +278,23 @@ const VideoCategoryCard = ({ category, onClick }) => {
             } else {
                 videoRef.current.pause();
                 videoRef.current.currentTime = 0;
+                setIsPlaying(false);
             }
         }
     }, [isHovered]);
+
+    const handlePlayPauseClick = (e) => {
+        e.stopPropagation();
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                videoRef.current.play().catch(() => {});
+                setIsPlaying(true);
+            }
+        }
+    };
 
     return (
         <div
@@ -317,6 +332,33 @@ const VideoCategoryCard = ({ category, onClick }) => {
                     {categoryName}
                 </h3>
             </div>
+            {/* Play/Pause button - visible on mobile */}
+            <button
+                onClick={handlePlayPauseClick}
+                className="absolute bottom-4 left-4 z-20 block lg:hidden p-1 rounded-full bg-black bg-opacity-60 hover:bg-opacity-80 transition-colors"
+                aria-label={isPlaying ? "Pause Video" : "Play Video"}
+            >
+                {isPlaying ? (
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <rect x="6" y="5" width="3" height="14"/>
+                        <rect x="14" y="5" width="4" height="14"/>
+                    </svg>
+                ) : (
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                )}
+            </button>
             <div className={`absolute inset-0 border-2 border-[var(--accent-color)] rounded-2xl transition-opacity duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
             }`} />

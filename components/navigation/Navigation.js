@@ -44,14 +44,14 @@ export default function Navigation() {
 
     return (
         <>
-            {/* Mobile Header Bar - button is top-6 (24px) + h-10 (40px) + 24px bottom = 88px total, use h-22 */}
+            {/* Mobile Header Bar - covers menu button with equal padding */}
             <div
-                className={`md:hidden fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+                className={`md:hidden fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
                     isScrolled || isOpen
                         ? 'bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800'
                         : 'bg-transparent'
                 }`}
-                style={{ height: '88px' }}
+                style={{ height: 'calc(1.5rem + 2.5rem + 1.5rem)' }} // top-6 (24px) + h-10 (40px) + 24px bottom padding
             />
 
             {/* Backdrop Overlay */}
