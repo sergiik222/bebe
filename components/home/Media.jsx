@@ -2,23 +2,31 @@ import React, { memo } from 'react';
 import VideoComponent from "@/components/home/Video.component";
 import ImageComponent from "@/components/home/ImageComponent";
 
-const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth}) => {
+const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth, isMobileLandscape}) => {
      const mediaType = media.mediaType
     var height = mediaSize
     height = mediaSize*0.5625
     // On mobile (< 768px), keep staggered margins even during drag
     const isMobile = windowWidth < 768;
     const getMarginTop = () => {
+        // Mobile landscape: flat layout, all in one line
+        if (isMobileLandscape) {
+            return '0px';
+        }
         if (isMobile) {
-            // Mobile: always use mobile margins, never flatten
+            // Mobile portrait: always use mobile margins, never flatten
             return `${media.marginTopMobile - 100}px`;
         }
         // Desktop: flatten during drag
         return isDragging ? `${-100}px` : `${media.marginTop}px`;
     };
     const getMarginBottom = () => {
+        // Mobile landscape: flat layout, all in one line
+        if (isMobileLandscape) {
+            return '0px';
+        }
         if (isMobile) {
-            // Mobile: always use mobile margins, never flatten
+            // Mobile portrait: always use mobile margins, never flatten
             return `${media.marginBottomMobile - 100}px`;
         }
         // Desktop: flatten during drag
@@ -53,7 +61,8 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
         prevProps.mediaSize === nextProps.mediaSize &&
         prevProps.mediaMargin === nextProps.mediaMargin &&
         prevProps.index === nextProps.index &&
-        prevProps.windowWidth === nextProps.windowWidth
+        prevProps.windowWidth === nextProps.windowWidth &&
+        prevProps.isMobileLandscape === nextProps.isMobileLandscape
     );
 });
 

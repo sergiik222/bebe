@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import Media from './Media';
 
-const MediaContainer = memo(({  middleIndex, isDragging, mediaSize, mediaMargin, windowWidth, medias }) => {
+const MediaContainer = memo(({  middleIndex, isDragging, mediaSize, mediaMargin, windowWidth, medias, isMobileLandscape }) => {
 
     if (!Array.isArray(medias) || medias.length === 0) {
        return null; // Return null instead of empty div
@@ -23,6 +23,7 @@ const MediaContainer = memo(({  middleIndex, isDragging, mediaSize, mediaMargin,
                         mediaMargin={mediaMargin}
                         index={index}
                         windowWidth={windowWidth}
+                        isMobileLandscape={isMobileLandscape}
                     />
                 );
             })}
@@ -36,7 +37,8 @@ const MediaContainer = memo(({  middleIndex, isDragging, mediaSize, mediaMargin,
         prevProps.mediaSize === nextProps.mediaSize &&
         prevProps.mediaMargin === nextProps.mediaMargin &&
         prevProps.windowWidth === nextProps.windowWidth &&
-        prevProps.medias.length === nextProps.medias.length
+        prevProps.medias.length === nextProps.medias.length &&
+        prevProps.isMobileLandscape === nextProps.isMobileLandscape
     );
 });
 

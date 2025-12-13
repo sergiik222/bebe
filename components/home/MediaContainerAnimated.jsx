@@ -41,8 +41,11 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const [middleIndex, setMiddleIndex] = useState(0);
 
     // Use custom hooks for window dimensions and media sizing
-    const { width: windowWidth, isMobile } = useWindowDimensions();
-    const { margin: mediaMargin } = useMediaSize(isMobile);
+    const { width: windowWidth, isMobile, isLandscape } = useWindowDimensions();
+    const { margin: mediaMargin } = useMediaSize(isMobile, isLandscape);
+
+    // Check if we're in mobile landscape mode (flat layout, no stagger)
+    const isMobileLandscape = isMobile && isLandscape;
 
     const realMediaCount = medias?.length || 0;
 
@@ -296,6 +299,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         mediaMargin={mediaMargin}
                         windowWidth={windowWidth}
                         medias={loopedMedias}
+                        isMobileLandscape={isMobileLandscape}
                     />
                 </animated.div>
                 {/* Progress bar (full-width) - hidden on mobile */}
