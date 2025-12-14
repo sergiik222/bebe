@@ -8,9 +8,17 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import { useMediaHover } from "@/hooks/useMediaHover";
 import 'yet-another-react-lightbox/styles.css';
 
-const ImageComponent = memo(({src, alt, isMiddle, isDragging, date} ) => {
+const ImageComponent = memo(({src, alt, isMiddle, isDragging, date, onLoaded} ) => {
     const dispatch = useDispatch()
     const [isFullscreen, setIsFullscreen] = useState(false)
+    const hasCalledOnLoaded = React.useRef(false);
+
+    const handleImageLoad = useCallback(() => {
+        if (onLoaded && !hasCalledOnLoaded.current) {
+            hasCalledOnLoaded.current = true;
+            onLoaded();
+        }
+    }, [onLoaded]);
 
     // Handle hover changes - dispatch to Redux
     const handleHoverChange = useCallback((hovering) => {
@@ -56,6 +64,7 @@ const ImageComponent = memo(({src, alt, isMiddle, isDragging, date} ) => {
                         alt={alt}
                         fill
                         draggable="false"
+                        onLoad={handleImageLoad}
                     />
                 </div>
 
@@ -87,7 +96,8 @@ const ImageComponent = memo(({src, alt, isMiddle, isDragging, date} ) => {
         prevProps.alt === nextProps.alt &&
         prevProps.isMiddle === nextProps.isMiddle &&
         prevProps.isDragging === nextProps.isDragging &&
-        prevProps.date === nextProps.date
+        prevProps.date === nextProps.date &&
+        prevProps.onLoaded === nextProps.onLoaded
     );
 });
 

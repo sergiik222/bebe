@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"bebe-backend/internal/database"
 	"bebe-backend/internal/handlers"
 	"bebe-backend/internal/services"
 
@@ -15,6 +16,18 @@ import (
 func main() {
 	// Load .env file (ignore error in production where env vars are set directly)
 	_ = godotenv.Load()
+
+	// Initialize database connection
+	if err := database.Connect(); err != nil {
+		log.Printf("Warning: Database connection failed: %v", err)
+		log.Println("Admin panel and gallery features will not be available")
+	} else {
+		// Initialize database schema
+		if err := database.InitSchema(); err != nil {
+			log.Printf("Warning: Failed to initialize database schema: %v", err)
+		}
+		defer database.Close()
+	}
 
 	// Initialize services
 	calendarService, err := services.NewCalendarService()
@@ -29,11 +42,15 @@ func main() {
 	)
 
 	bookingService := services.NewBookingService(calendarService, emailService)
+	adminService := services.NewAdminService()
+	galleryService := services.NewGalleryService(emailService)
 
 	// Initialize handlers
 	bookingHandler := handlers.NewBookingHandler(bookingService, calendarService)
 	authHandler := handlers.NewAuthHandler()
 	contactHandler := handlers.NewContactHandler(emailService)
+	adminHandler := handlers.NewAdminHandler(adminService)
+	galleryHandler := handlers.NewGalleryHandler(galleryService)
 
 	// Setup router
 	router := gin.Default()
@@ -66,6 +83,25 @@ func main() {
 
 		// Contact route
 		api.POST("/contact", contactHandler.SendContactMessage)
+
+		// Admin authentication routes
+		api.POST("/admin/login", adminHandler.Login)
+		api.POST("/admin/setup", adminHandler.Setup) // Only works if no admin exists
+
+		// Protected admin routes
+		admin := api.Group("/admin")
+		admin.Use(adminHandler.AuthMiddleware())
+		{
+			admin.GET("/me", adminHandler.Me)
+			admin.GET("/galleries", galleryHandler.ListGalleries)
+			admin.POST("/galleries", galleryHandler.CreateGallery)
+			admin.DELETE("/galleries/:id", galleryHandler.DeleteGallery)
+			admin.POST("/galleries/:id/resend", galleryHandler.ResendEmail)
+		}
+
+		// Public gallery routes (for clients)
+		api.GET("/gallery/:token", galleryHandler.GetGalleryByToken)
+		api.POST("/gallery/:token/download", galleryHandler.TrackDownload)
 	}
 
 	// Start server

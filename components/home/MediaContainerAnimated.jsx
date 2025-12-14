@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
-import Spinner from "@/components/helpers/Spinner";
+import Loader from "@/components/ui/Loader";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { useMediaSize } from "@/hooks/useMediaSize";
 
@@ -39,6 +39,24 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     const scrollRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [middleIndex, setMiddleIndex] = useState(0);
+    const [mediaLoaded, setMediaLoaded] = useState(false);
+    const loadedCountRef = useRef(0);
+
+    // Track when enough media items have loaded (at least first 3)
+    const handleMediaLoaded = useCallback(() => {
+        loadedCountRef.current += 1;
+        // Show content after 3 items load or after all items if less than 3
+        const minToShow = Math.min(3, medias?.length || 0);
+        if (loadedCountRef.current >= minToShow && !mediaLoaded) {
+            setMediaLoaded(true);
+        }
+    }, [medias?.length, mediaLoaded]);
+
+    // Reset loaded state when medias change
+    useEffect(() => {
+        loadedCountRef.current = 0;
+        setMediaLoaded(false);
+    }, [medias]);
 
     // Use custom hooks for window dimensions and media sizing
     const { width: windowWidth, isMobile, isLandscape } = useWindowDimensions();
@@ -281,10 +299,27 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         };
     }, [api, mediaX, wrapX, stepInertia, updateMiddleIndexThrottled]);
 
+    // Show loader while API is loading OR while initial media items are loading
+    const showLoader = mediasAreLoading || (!mediaLoaded && medias?.length > 0);
+
     if (mediasAreLoading) {
-        return <Spinner />;
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg">
+                <Loader size="lg" />
+            </div>
+        );
+    } else if (!medias || medias.length === 0) {
+        // No media to show
+        return null;
     } else {
         return (
+            <>
+            {/* Show loader overlay while media is loading */}
+            {showLoader && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg">
+                    <Loader size="lg" />
+                </div>
+            )}
             <div ref={containerRef} className="relative w-full h-screen overflow-hidden touch-none">
                 <animated.div
                     ref={scrollRef}
@@ -300,6 +335,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         windowWidth={windowWidth}
                         medias={loopedMedias}
                         isMobileLandscape={isMobileLandscape}
+                        onMediaLoaded={handleMediaLoaded}
                     />
                 </animated.div>
                 {/* Progress bar (full-width) - hidden on mobile */}
@@ -371,6 +407,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                 </animated.div>
 
             </div>
+            </>
         );
     }
 };

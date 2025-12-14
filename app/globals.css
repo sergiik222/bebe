@@ -15,9 +15,9 @@
     --accent-dark: #52525b;
     --accent-glow: rgba(113, 113, 122, 0.6);
     --accent-glow-strong: rgba(113, 113, 122, 0.8);
-    
+
 */
-    /* Emerald    
+    /* Emerald
       --accent-color: #10b981;
     --accent-color-rgb: 16, 185, 129;
     --accent-light: #34d399;
@@ -30,11 +30,19 @@
     --accent-color: #84cc16;
     --accent-color-rgb: 132, 204, 22;
     --accent-light: #a3e635;
-    --accent-dark: #65a30d; 
+    --accent-dark: #65a30d;
     --accent-glow: rgba(132, 204, 22, 0.6);
-  --accent-glow-strong: rgba(132, 204, 22, 0.8);
-    
- 
+    --accent-glow-strong: rgba(132, 204, 22, 0.8);
+}
+
+/* ========================================
+   FONT CONFIGURATION
+   Change the font-family here to update everywhere
+   The --font-primary variable is set by Next.js in layout.js
+   ======================================== */
+
+html, body {
+    font-family: var(--font-primary), sans-serif;
 }
 
 /* Hide scrollbar for horizontal scroll containers */
@@ -98,12 +106,12 @@ html, body {
 }
 
 .font_regular {
-    font-family: var(--font-exo2), sans-serif;
+    font-family: var(--font-primary), sans-serif;
     font-weight: 400;
 }
 
 .font_bold {
-    font-family: var(--font-exo2), sans-serif;
+    font-family: var(--font-primary), sans-serif;
     font-weight: 700;
 }
 

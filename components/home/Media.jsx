@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import VideoComponent from "@/components/home/Video.component";
 import ImageComponent from "@/components/home/ImageComponent";
 
-const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth, isMobileLandscape}) => {
+const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index, windowWidth, isMobileLandscape, onLoaded}) => {
      const mediaType = media.mediaType
     var height = mediaSize
     height = mediaSize*0.5625
@@ -44,7 +44,7 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
                 flexShrink: 0,
                 marginLeft: index === 0 ? 0 : `${mediaMargin}px`,
             }}>
-            {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} date={media.date} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging}/>}
+            {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} date={media.date} onLoaded={onLoaded} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging} onLoaded={onLoaded}/>}
         </div>
     );
 }, (prevProps, nextProps) => {
@@ -62,7 +62,8 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
         prevProps.mediaMargin === nextProps.mediaMargin &&
         prevProps.index === nextProps.index &&
         prevProps.windowWidth === nextProps.windowWidth &&
-        prevProps.isMobileLandscape === nextProps.isMobileLandscape
+        prevProps.isMobileLandscape === nextProps.isMobileLandscape &&
+        prevProps.onLoaded === nextProps.onLoaded
     );
 });
 

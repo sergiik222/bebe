@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { InlineLoader } from '@/components/ui/Loader';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
@@ -160,7 +161,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">
-                                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></span>
+                                <InlineLoader />
                                 <span className="hidden sm:inline">{t.book.booking}</span>
                             </span>
                         ) : (

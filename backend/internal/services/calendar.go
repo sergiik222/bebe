@@ -187,6 +187,7 @@ func (cs *CalendarService) DeleteEvent(eventID string) error {
 func (cs *CalendarService) loadToken() (*oauth2.Token, error) {
 	// First try to load from environment variable (for container deployments)
 	tokenJSON := os.Getenv("GOOGLE_OAUTH_TOKEN")
+	log.Println("Token: ", tokenJSON)
 	if tokenJSON != "" {
 		token := &oauth2.Token{}
 		if err := json.Unmarshal([]byte(tokenJSON), token); err != nil {

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Loader from '@/components/ui/Loader';
 
 const Portfolio = () => {
     const { t } = useLanguage();
@@ -82,7 +83,7 @@ const Portfolio = () => {
         return (
             <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
                 <div className="flex-1 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--accent-color)]"></div>
+                    <Loader size="lg" />
                 </div>
             </div>
         );

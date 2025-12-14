@@ -23,20 +23,33 @@ const ScrollToTopButton = () => {
     };
 
     return (
-        isVisible && (
+        <button
+            onClick={handleClick}
+            className={`fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-300 group ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+            style={{
+                background: 'rgba(24, 27, 32, 0.8)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+            }}
+            aria-label="Scroll to top"
+        >
             <div
-                className="fixed bottom-6 right-8 p-2 rounded-full cursor-pointer text-gray-300 items-center w-8  hover:text-gray-400"
-                onClick={handleClick}
+                className="absolute inset-0 rounded-lg border border-zinc-700 group-hover:border-[var(--accent-color)] transition-colors duration-300"
+            />
+            <svg
+                className="w-5 h-5 text-gray-300 group-hover:text-[var(--accent-color)] transition-colors duration-300"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1024 1024" fill="none"
-                     strokeWidth="2" stroke="currentColor" className="w-8 h-8">
-                    <path fill="currentColor"
-                          d="M572.235 205.282v600.365a30.118 30.118 0 1 1-60.235 0V205.282L292.382 438.633a28.913 28.913 0 0 1-42.646 0a33.43 33.43 0 0 1 0-45.236l271.058-288.045a28.913 28.913 0 0 1 42.647 0L834.5 393.397a33.43 33.43 0 0 1 0 45.176a28.913 28.913 0 0 1-42.647 0l-219.618-233.23z"/>
-                </svg>
-
-
-            </div>
-        )
+                <path d="M18 15l-6-6-6 6"/>
+            </svg>
+        </button>
     );
 };
 

@@ -1,19 +1,8 @@
-import { Bars } from 'react-loader-spinner'
+// Legacy Spinner component - now uses the new camera lens Loader
+import { PageLoader } from '@/components/ui/Loader';
 
 const Spinner = () => {
-  return (
-      <div className="fixed inset-0 flex justify-center items-center bg-background bg-opacity-50 z-50">
-        <Bars
-            height="120"
-            width="150"
-            color="white"
-            ariaLabel="bars-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-        />
-      </div>
-  )
+  return <PageLoader />;
 }
 
 export default Spinner

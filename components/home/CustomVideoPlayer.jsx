@@ -161,6 +161,7 @@ const CustomVideoPlayer = ({ videoUrl, title, isOpen, onClose }) => {
   const playerContent = (
     <div
       className="fixed inset-0 z-[9999] bg-black flex flex-col"
+      style={{ fontFamily: 'var(--font-primary), sans-serif' }}
       onMouseMove={handleMouseMove}
     >
       {/* Top Bar - Black background */}

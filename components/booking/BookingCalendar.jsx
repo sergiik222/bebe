@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import Loader from '@/components/ui/Loader';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
@@ -168,10 +169,11 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
         return !(currentYear === now.getFullYear() && currentMonth === now.getMonth());
     };
 
+    
     if (loading) {
         return (
             <div className="flex justify-center items-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent-color)]"></div>
+                <Loader size="md" />
             </div>
         );
     }

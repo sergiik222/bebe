@@ -6,9 +6,10 @@ import {setChosenMediaName} from "@/store/media/media.action";
 import VideoBrackets from "@/components/home/VideoBrackets";
 import CustomVideoPlayer from "@/components/home/CustomVideoPlayer";
 
-const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
+const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle, onLoaded }) => {
     const playerRef = useRef(null);
     const canOpenRef = useRef(false);
+    const hasCalledOnLoaded = useRef(false);
     const dispatch = useDispatch();
     const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
@@ -74,6 +75,13 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
         setDuration(dur);
     };
 
+    const handleReady = () => {
+        if (onLoaded && !hasCalledOnLoaded.current) {
+            hasCalledOnLoaded.current = true;
+            onLoaded();
+        }
+    };
+
     const handlePlayPauseButtonClick = (e) => {
         e.stopPropagation();
         if (playing) {
@@ -104,6 +112,7 @@ const VideoComponent = ({ videoUrl, isDragging, alt, isMiddle }) => {
                     height="100%"
                     className="absolute top-0 left-0"
                     onDuration={handleDuration}
+                    onReady={handleReady}
                     config={{
                         file: {
                             attributes: {

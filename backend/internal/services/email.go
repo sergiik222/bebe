@@ -126,31 +126,101 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
 	cancelURL := fmt.Sprintf("%s/api/booking/cancel/%s", baseURL, booking.Token)
 
 	html := fmt.Sprintf(`
-		<h2>New Booking Request</h2>
-		<p><strong>From:</strong> %s</p>
-		<p><strong>Email:</strong> %s</p>
-		<p><strong>Phone:</strong> %s</p>
-		<p><strong>Date:</strong> %s</p>
-		<p><strong>Time:</strong> %s - %s</p>
-		<p><strong>Language:</strong> %s</p>
-		%s
-		<hr>
-		<table cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
-			<tr>
-				<td style="padding-bottom: 12px;">
-					<a href="%s" style="display: block; background-color: #10b981; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; text-align: center; font-weight: bold;">Confirm Booking</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a href="%s" style="display: block; background-color: #ef4444; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; text-align: center; font-weight: bold;">Cancel Booking</a>
-				</td>
-			</tr>
-		</table>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0a0a0a;">
+    <table width="100%%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #18181b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0a0a0a 0%%, #18181b 100%%); padding: 40px 30px; text-align: center; border-bottom: 1px solid #27272a;">
+                            <h1 style="color: #84cc16; margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 3px;">BEBE MEDIA</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <h2 style="color: #84cc16; margin: 0 0 25px; font-weight: 400; font-size: 24px;">New Booking Request</h2>
+                            <table style="margin: 0 0 25px; background-color: #27272a; border-radius: 8px; width: 100%%;">
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Client</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 16px; font-weight: 500;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Email</p>
+                                        <p style="color: #84cc16; margin: 5px 0 0; font-size: 16px;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Phone</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 16px;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Date</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Time</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s - %s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Language</p>
+                                        <p style="color: #a1a1aa; margin: 5px 0 0; font-size: 14px;">%s</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            %s
+                            <table width="100%%" cellpadding="0" cellspacing="0" style="margin-top: 30px;">
+                                <tr>
+                                    <td align="center" style="padding-bottom: 12px;">
+                                        <a href="%s" style="display: inline-block; background-color: #84cc16; color: #0a0a0a; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">CONFIRM BOOKING</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <a href="%s" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">CANCEL BOOKING</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #0a0a0a; padding: 25px 30px; text-align: center; border-top: 1px solid #27272a;">
+                            <p style="color: #71717a; font-size: 13px; margin: 0;">
+                                <a href="https://bebemedia.at" style="color: #84cc16; text-decoration: none;">bebemedia.at</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
 	`, booking.Name, booking.Email, booking.Phone, booking.Date, booking.StartTime, booking.EndTime, booking.Language,
 		func() string {
 			if booking.Message != "" {
-				return fmt.Sprintf("<p><strong>Message:</strong> %s</p>", booking.Message)
+				return fmt.Sprintf(`<div style="margin-bottom: 25px; padding: 20px; background-color: #27272a; border-radius: 8px; border-left: 4px solid #84cc16;">
+                    <p style="color: #71717a; margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message</p>
+                    <p style="color: #d4d4d8; margin: 0; font-size: 15px; line-height: 1.6;">%s</p>
+                </div>`, booking.Message)
 			}
 			return ""
 		}(),
@@ -164,14 +234,66 @@ func (es *EmailService) SendConfirmationToUser(booking *models.Booking) error {
 	t := getTranslation(booking.Language)
 
 	html := fmt.Sprintf(`
-		<h2>%s</h2>
-		<p>%s %s,</p>
-		<p>%s</p>
-		<p><strong>%s:</strong> %s</p>
-		<p><strong>%s:</strong> %s - %s</p>
-		<p>%s</p>
-		<p>%s</p>
-		<p>%s,<br>Bebe</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0a0a0a;">
+    <table width="100%%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #18181b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0a0a0a 0%%, #18181b 100%%); padding: 40px 30px; text-align: center; border-bottom: 1px solid #27272a;">
+                            <h1 style="color: #84cc16; margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 3px;">BEBE MEDIA</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <!-- Success Icon -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div style="display: inline-block; width: 60px; height: 60px; background-color: rgba(132, 204, 22, 0.15); border-radius: 50%%; line-height: 60px; font-size: 28px;">&#10003;</div>
+                            </div>
+                            <h2 style="color: #84cc16; margin: 0 0 25px; font-weight: 400; font-size: 24px; text-align: center;">%s</h2>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 16px;">%s %s,</p>
+                            <p style="color: #d4d4d8; line-height: 1.8; font-size: 16px;">%s</p>
+                            <table style="margin: 25px 0; background-color: #27272a; border-radius: 8px; width: 100%%;">
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
+                                        <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s - %s</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="color: #84cc16; line-height: 1.8; font-size: 16px; font-weight: 500;">%s</p>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 14px;">%s</p>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 16px; margin-top: 30px;">%s,<br><span style="color: #84cc16; font-weight: 500;">Bebe</span></p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #0a0a0a; padding: 25px 30px; text-align: center; border-top: 1px solid #27272a;">
+                            <p style="color: #71717a; font-size: 13px; margin: 0;">
+                                <a href="https://bebemedia.at" style="color: #84cc16; text-decoration: none;">bebemedia.at</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
 	`, t.confirmTitle, t.confirmDear, booking.Name, t.confirmBody,
 		t.confirmDate, booking.Date, t.confirmTime, booking.StartTime, booking.EndTime,
 		t.confirmLookingFwd, t.confirmQuestions, t.confirmRegards)
@@ -184,13 +306,65 @@ func (es *EmailService) SendCancellationToUser(booking *models.Booking) error {
 	t := getTranslation(booking.Language)
 
 	html := fmt.Sprintf(`
-		<h2>%s</h2>
-		<p>%s %s,</p>
-		<p>%s</p>
-		<p><strong>%s:</strong> %s</p>
-		<p><strong>%s:</strong> %s - %s</p>
-		<p>%s</p>
-		<p>%s,<br>Bebe</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0a0a0a;">
+    <table width="100%%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0a; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #18181b; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0a0a0a 0%%, #18181b 100%%); padding: 40px 30px; text-align: center; border-bottom: 1px solid #27272a;">
+                            <h1 style="color: #84cc16; margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 3px;">BEBE MEDIA</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <!-- Info Icon -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div style="display: inline-block; width: 60px; height: 60px; background-color: rgba(161, 161, 170, 0.15); border-radius: 50%%; line-height: 60px; font-size: 28px;">&#8505;</div>
+                            </div>
+                            <h2 style="color: #fafafa; margin: 0 0 25px; font-weight: 400; font-size: 24px; text-align: center;">%s</h2>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 16px;">%s %s,</p>
+                            <p style="color: #d4d4d8; line-height: 1.8; font-size: 16px;">%s</p>
+                            <table style="margin: 25px 0; background-color: #27272a; border-radius: 8px; width: 100%%;">
+                                <tr>
+                                    <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
+                                        <p style="color: #a1a1aa; margin: 5px 0 0; font-size: 18px; font-weight: 500; text-decoration: line-through;">%s</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 20px;">
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
+                                        <p style="color: #a1a1aa; margin: 5px 0 0; font-size: 18px; font-weight: 500; text-decoration: line-through;">%s - %s</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 14px; padding: 15px; background-color: #27272a; border-radius: 8px; border-left: 4px solid #71717a;">%s</p>
+                            <p style="color: #a1a1aa; line-height: 1.8; font-size: 16px; margin-top: 30px;">%s,<br><span style="color: #84cc16; font-weight: 500;">Bebe</span></p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #0a0a0a; padding: 25px 30px; text-align: center; border-top: 1px solid #27272a;">
+                            <p style="color: #71717a; font-size: 13px; margin: 0;">
+                                <a href="https://bebemedia.at" style="color: #84cc16; text-decoration: none;">bebemedia.at</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
 	`, t.cancelTitle, t.cancelDear, booking.Name, t.cancelBody,
 		t.cancelDate, booking.Date, t.cancelTime, booking.StartTime, booking.EndTime,
 		t.cancelApology, t.cancelRegards)
@@ -219,6 +393,11 @@ func (es *EmailService) SendContactMessage(name, email, phone, subject, message 
 	`, name, email, email, phoneInfo, subject, message, name)
 
 	return es.sendEmail(es.ownerEmail, "Contact: "+subject, html)
+}
+
+// SendHTML sends an email with custom HTML (public method for gallery service)
+func (es *EmailService) SendHTML(to, subject, html string) error {
+	return es.sendEmail(to, subject, html)
 }
 
 // sendEmail sends an email via Resend API
