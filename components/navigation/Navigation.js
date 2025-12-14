@@ -1,5 +1,6 @@
 'use client'
 import {useEffect, useState, useRef} from "react";
+import { usePathname } from "next/navigation";
 import NavLink from "@/components/navigation/NavLink";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useMenu } from "@/lib/MenuContext";
@@ -11,6 +12,11 @@ export default function Navigation() {
     const [isLangOpen, setIsLangOpen] = useState(false);
     const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
     const langRef = useRef(null);
+    const pathname = usePathname();
+
+    // Check if we're on specific pages
+    const isGalleryPage = pathname?.startsWith('/gallery');
+    const isAdminPage = pathname === '/admin';
 
     // Check if admin is logged in
     useEffect(() => {
@@ -87,8 +93,8 @@ export default function Navigation() {
 
             {/* Top Right buttons */}
             <div className={`fixed top-6 right-4 md:right-6 z-[60] flex items-center gap-2 md:gap-3 transition-opacity duration-300 ${isOpen ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : 'opacity-100'}`}>
-                {/* Admin Button - only visible when logged in */}
-                {isAdminLoggedIn && (
+                {/* Admin Button - only visible when logged in, not on gallery page or admin page */}
+                {isAdminLoggedIn && !isGalleryPage && !isAdminPage && (
                     <a
                         href="/admin"
                         className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900 backdrop-blur-sm border border-[var(--accent-color)]/50 rounded-lg text-[var(--accent-color)] hover:border-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 transition-colors text-xs md:text-sm font-medium"
@@ -97,13 +103,13 @@ export default function Navigation() {
                     </a>
                 )}
 
-                {/* Logout Button - only visible when logged in */}
-                {isAdminLoggedIn && (
+                {/* Logout Button - only visible on admin page */}
+                {isAdminLoggedIn && isAdminPage && (
                     <button
                         onClick={() => {
                             localStorage.removeItem('adminToken');
                             window.dispatchEvent(new Event('adminAuthChanged'));
-                            window.location.href = '/';
+                            window.location.href = '/admin';
                         }}
                         className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900 border border-red-500/50 rounded-lg text-red-500 hover:border-red-500 hover:bg-red-500/10 transition-colors text-xs md:text-sm font-medium"
                     >

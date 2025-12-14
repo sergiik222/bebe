@@ -252,9 +252,9 @@ const AdminPanel = () => {
 
     // Admin Dashboard
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen pt-16 md:pt-0">
             {/* Header */}
-            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-6 sticky top-0 z-40 backdrop-blur-lg">
+            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-6 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-row justify-between items-center">
                         <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">

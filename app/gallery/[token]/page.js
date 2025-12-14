@@ -5,12 +5,12 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Lightbox from 'yet-another-react-lightbox';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import Video from 'yet-another-react-lightbox/plugins/video';
 import Download from 'yet-another-react-lightbox/plugins/download';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import JSZip from 'jszip';
 import Loader from '@/components/ui/Loader';
+import CustomVideoPlayer from '@/components/home/CustomVideoPlayer';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 const CDN_HOSTNAME = process.env.NEXT_PUBLIC_BUNNY_CDN_HOSTNAME;
@@ -36,6 +36,7 @@ const ClientGallery = () => {
     const [lightboxIndex, setLightboxIndex] = useState(0);
     const [zipDownloading, setZipDownloading] = useState(false);
     const [zipProgress, setZipProgress] = useState(0);
+    const [selectedVideo, setSelectedVideo] = useState(null);
 
     useEffect(() => {
         fetchGallery();
@@ -175,26 +176,24 @@ const ClientGallery = () => {
         }
     };
 
-    const handlePhotoClick = (index) => {
-        setLightboxIndex(index);
-        setLightboxOpen(true);
+    const handleMediaClick = (item) => {
+        if (item.type === 'video') {
+            setSelectedVideo(item);
+        } else {
+            // Find index in imageMedia array for lightbox
+            const imageIndex = media.filter(m => m.type !== 'video').findIndex(m => m.name === item.name);
+            setLightboxIndex(imageIndex);
+            setLightboxOpen(true);
+        }
     };
 
-    // Prepare slides for lightbox
-    const slides = media.map(item => {
-        if (item.type === 'video') {
-            return {
-                type: 'video',
-                sources: [{ src: item.url, type: 'video/mp4' }],
-                poster: getOptimizedUrl(item.url, 800),
-            };
-        }
-        return {
-            src: item.url,
-            alt: item.name,
-            download: item.url,
-        };
-    });
+    // Prepare slides for lightbox (only images, videos use custom player)
+    const imageMedia = media.filter(item => item.type !== 'video');
+    const slides = imageMedia.map(item => ({
+        src: item.url,
+        alt: item.name,
+        download: item.url,
+    }));
 
     // Loading state
     if (loading) {
@@ -226,67 +225,63 @@ const ClientGallery = () => {
     }
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen pt-16 md:pt-0">
             {/* Header */}
-            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-4 sticky top-0 z-40 backdrop-blur-lg">
+            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-4 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                        <div>
-                            <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">
-                                {gallery?.title || 'Your Gallery'}
-                            </h1>
-                            {gallery?.message && (
-                                <p className="text-gray-400 text-sm mt-1">{gallery.message}</p>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <button
-                                onClick={selectAll}
-                                className="text-sm text-[var(--accent-color)] hover:underline"
-                            >
-                                {selected.size === media.length ? 'Deselect All' : 'Select All'}
-                            </button>
-                            <button
-                                onClick={downloadSelected}
-                                disabled={selected.size === 0 || downloading || zipDownloading}
-                                className="px-3 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                            >
-                                {downloading
-                                    ? `${downloadProgress.current}/${downloadProgress.total}...`
-                                    : `Download (${selected.size})`}
-                            </button>
-                            <button
-                                onClick={downloadAsZip}
-                                disabled={selected.size === 0 || downloading || zipDownloading}
-                                className="px-3 py-2 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2"
-                            >
-                                {zipDownloading ? (
-                                    <>
-                                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        {zipProgress}%
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                        </svg>
-                                        ZIP
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </div>
+                    <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">
+                        {gallery?.title || 'Your Gallery'}
+                    </h1>
+                    {gallery?.message && (
+                        <p className="text-gray-400 text-sm mt-1">{gallery.message}</p>
+                    )}
                 </div>
             </header>
 
             <main className="max-w-7xl mx-auto p-4 md:p-6">
-                {/* Media count */}
-                <p className="text-gray-400 text-sm mb-4">
-                    {media.length} {media.length === 1 ? 'file' : 'files'}
-                </p>
+                {/* Actions row */}
+                <div className="flex items-center gap-2 flex-wrap mb-4">
+                    <button
+                        onClick={selectAll}
+                        className="px-3 py-2 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 text-sm"
+                    >
+                        {selected.size === media.length ? 'Deselect All' : 'Select All'}
+                    </button>
+                    <button
+                        onClick={downloadSelected}
+                        disabled={selected.size === 0 || downloading || zipDownloading}
+                        className="px-3 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    >
+                        {downloading
+                            ? `${downloadProgress.current}/${downloadProgress.total}...`
+                            : `Download (${selected.size})`}
+                    </button>
+                    <button
+                        onClick={downloadAsZip}
+                        disabled={selected.size === 0 || downloading || zipDownloading}
+                        className="px-3 py-2 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2"
+                    >
+                        {zipDownloading ? (
+                            <>
+                                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                {zipProgress}%
+                            </>
+                        ) : (
+                            <>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                </svg>
+                                ZIP
+                            </>
+                        )}
+                    </button>
+                    <span className="text-gray-400 text-sm ml-2">
+                        {media.length} {media.length === 1 ? 'file' : 'files'}
+                    </span>
+                </div>
 
                 {/* Media Grid */}
                 {media.length === 0 ? (
@@ -301,7 +296,7 @@ const ClientGallery = () => {
                                 item={item}
                                 isSelected={selected.has(item.name)}
                                 onToggle={() => toggleSelect(item.name)}
-                                onView={() => handlePhotoClick(index)}
+                                onView={() => handleMediaClick(item)}
                                 onDownload={() => downloadSingle(item)}
                             />
                         ))}
@@ -309,7 +304,7 @@ const ClientGallery = () => {
                 )}
             </main>
 
-            {/* Lightbox using yet-another-react-lightbox */}
+            {/* Lightbox for images */}
             <Lightbox
                 open={lightboxOpen}
                 close={() => setLightboxOpen(false)}
@@ -318,11 +313,15 @@ const ClientGallery = () => {
                 on={{
                     view: ({ index }) => setLightboxIndex(index),
                 }}
-                plugins={[Thumbnails, Video, Download]}
-                video={{
-                    controls: true,
-                    autoPlay: true,
-                }}
+                plugins={[Thumbnails, Download]}
+            />
+
+            {/* Custom Video Player for videos */}
+            <CustomVideoPlayer
+                videoUrl={selectedVideo?.url}
+                title={selectedVideo?.name?.split('.')[0] || ''}
+                isOpen={!!selectedVideo}
+                onClose={() => setSelectedVideo(null)}
             />
         </div>
     );
@@ -373,15 +372,6 @@ const MediaCard = ({ item, isSelected, onToggle, onView, onDownload }) => {
                     </svg>
                 )}
             </div>
-
-            {/* Video indicator */}
-            {isVideo && (
-                <div className="absolute bottom-2 left-2 bg-black/60 rounded px-2 py-1">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                </div>
-            )}
 
             {/* Hover overlay with actions */}
             <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
