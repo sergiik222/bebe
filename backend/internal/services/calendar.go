@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bebe-backend/internal/database"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -14,11 +15,37 @@ import (
 	"google.golang.org/api/option"
 )
 
+const googleCalendarTokenKey = "google_calendar"
+
 type CalendarService struct {
-	service    *calendar.Service
-	config     *oauth2.Config
-	calendarID string
-	tokenFile  string
+	service     *calendar.Service
+	config      *oauth2.Config
+	calendarID  string
+	tokenSource oauth2.TokenSource
+}
+
+// persistingTokenSource wraps a TokenSource and saves tokens when refreshed
+type persistingTokenSource struct {
+	base      oauth2.TokenSource
+	lastToken *oauth2.Token
+	cs        *CalendarService
+}
+
+// Token implements oauth2.TokenSource and persists refreshed tokens
+func (pts *persistingTokenSource) Token() (*oauth2.Token, error) {
+	token, err := pts.base.Token()
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if token was refreshed (different access token)
+	if pts.lastToken == nil || token.AccessToken != pts.lastToken.AccessToken {
+		log.Println("Token was refreshed, persisting new token...")
+		pts.cs.saveToken(token)
+		pts.lastToken = token
+	}
+
+	return token, nil
 }
 
 // NewCalendarService creates a new calendar service
@@ -47,16 +74,9 @@ func NewCalendarService() (*CalendarService, error) {
 		calendarID = "primary"
 	}
 
-	// Token file path - use /tmp for container environments
-	tokenFile := os.Getenv("TOKEN_FILE_PATH")
-	if tokenFile == "" {
-		tokenFile = "/tmp/token.json"
-	}
-
 	cs := &CalendarService{
 		config:     config,
 		calendarID: calendarID,
-		tokenFile:  tokenFile,
 	}
 
 	// Try to load existing token
@@ -66,9 +86,20 @@ func NewCalendarService() (*CalendarService, error) {
 		return cs, nil // Return service without calendar.Service - needs auth
 	}
 
-	// Create calendar service with token
+	// Create calendar service with persisting token source
 	ctx := context.Background()
-	client := config.Client(ctx, token)
+
+	// Create a token source that will auto-refresh and persist new tokens
+	baseTokenSource := config.TokenSource(ctx, token)
+	pts := &persistingTokenSource{
+		base:      baseTokenSource,
+		lastToken: token,
+		cs:        cs,
+	}
+	cs.tokenSource = pts
+
+	// Create HTTP client with our persisting token source
+	client := oauth2.NewClient(ctx, pts)
 	service, err := calendar.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create calendar service: %v", err)
@@ -96,8 +127,16 @@ func (cs *CalendarService) ExchangeCode(code string) error {
 		return fmt.Errorf("failed to save token: %v", err)
 	}
 
-	// Create calendar service
-	client := cs.config.Client(ctx, token)
+	// Create calendar service with persisting token source
+	baseTokenSource := cs.config.TokenSource(ctx, token)
+	pts := &persistingTokenSource{
+		base:      baseTokenSource,
+		lastToken: token,
+		cs:        cs,
+	}
+	cs.tokenSource = pts
+
+	client := oauth2.NewClient(ctx, pts)
 	service, err := calendar.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
 		return fmt.Errorf("failed to create calendar service: %v", err)
@@ -183,52 +222,67 @@ func (cs *CalendarService) DeleteEvent(eventID string) error {
 	return cs.service.Events.Delete(cs.calendarID, eventID).Do()
 }
 
-// loadToken reads the token from environment variable or file
+// loadToken reads the token from database first, then falls back to env var
 func (cs *CalendarService) loadToken() (*oauth2.Token, error) {
-	// First try to load from environment variable (for container deployments)
-	tokenJSON := os.Getenv("GOOGLE_OAUTH_TOKEN")
-	log.Println("Token: ", tokenJSON)
-	if tokenJSON != "" {
-		token := &oauth2.Token{}
-		if err := json.Unmarshal([]byte(tokenJSON), token); err != nil {
-			log.Printf("Failed to parse GOOGLE_OAUTH_TOKEN: %v", err)
-		} else {
-			log.Println("Loaded token from GOOGLE_OAUTH_TOKEN environment variable")
-			return token, nil
+	var dbToken, envToken *oauth2.Token
+
+	// Try to load from database first (contains auto-refreshed tokens)
+	if tokenJSON, err := database.GetOAuthToken(googleCalendarTokenKey); err == nil && tokenJSON != "" {
+		dbToken = &oauth2.Token{}
+		if err := json.Unmarshal([]byte(tokenJSON), dbToken); err != nil {
+			log.Printf("Failed to parse token from database: %v", err)
+			dbToken = nil
 		}
 	}
 
-	// Fall back to file
-	file, err := os.Open(cs.tokenFile)
-	if err != nil {
-		return nil, err
+	// Try to load from environment variable (initial token)
+	tokenJSON := os.Getenv("GOOGLE_OAUTH_TOKEN")
+	if tokenJSON != "" {
+		envToken = &oauth2.Token{}
+		if err := json.Unmarshal([]byte(tokenJSON), envToken); err != nil {
+			log.Printf("Failed to parse GOOGLE_OAUTH_TOKEN: %v", err)
+			envToken = nil
+		}
 	}
-	defer file.Close()
 
-	token := &oauth2.Token{}
-	err = json.NewDecoder(file).Decode(token)
-	if err == nil {
-		log.Printf("Loaded token from file: %s", cs.tokenFile)
+	// Prefer the token with the later expiry (database likely has refreshed token)
+	var token *oauth2.Token
+	if dbToken != nil && envToken != nil {
+		if dbToken.Expiry.After(envToken.Expiry) {
+			log.Printf("Using token from database (expires: %v, newer than env var: %v)", dbToken.Expiry, envToken.Expiry)
+			token = dbToken
+		} else {
+			log.Printf("Using token from env var (expires: %v)", envToken.Expiry)
+			token = envToken
+		}
+	} else if dbToken != nil {
+		log.Printf("Loaded token from database (expires: %v)", dbToken.Expiry)
+		token = dbToken
+	} else if envToken != nil {
+		log.Printf("Loaded token from GOOGLE_OAUTH_TOKEN env var (expires: %v)", envToken.Expiry)
+		token = envToken
 	}
-	return token, err
+
+	if token == nil {
+		return nil, fmt.Errorf("no token found")
+	}
+
+	return token, nil
 }
 
-// saveToken saves the token to file and logs it for env var setup
+// saveToken saves the token to the database
 func (cs *CalendarService) saveToken(token *oauth2.Token) error {
-	// Always log the token JSON so it can be set as env var
-	tokenJSON, _ := json.Marshal(token)
-	log.Printf("=== OAUTH TOKEN (save this as GOOGLE_OAUTH_TOKEN env var) ===")
-	log.Printf("%s", string(tokenJSON))
-	log.Printf("=== END OAUTH TOKEN ===")
-
-	// Try to save to file
-	file, err := os.Create(cs.tokenFile)
+	tokenJSON, err := json.Marshal(token)
 	if err != nil {
-		log.Printf("Could not save token to file (this is OK for container deployments): %v", err)
-		log.Println("Set the GOOGLE_OAUTH_TOKEN environment variable with the token JSON above")
-		return nil // Don't return error - token is still valid in memory
+		return fmt.Errorf("failed to marshal token: %v", err)
 	}
-	defer file.Close()
 
-	return json.NewEncoder(file).Encode(token)
+	// Save to database
+	if err := database.SaveOAuthToken(googleCalendarTokenKey, string(tokenJSON)); err != nil {
+		log.Printf("Failed to save token to database: %v", err)
+		return err
+	}
+
+	log.Printf("Token saved to database (expires: %v)", token.Expiry)
+	return nil
 }

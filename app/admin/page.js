@@ -399,9 +399,23 @@ const AdminPanel = () => {
 
                 {/* Create Gallery Modal */}
                 {showCreateForm && (
-                    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-                        <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-6">
-                            <h3 className="text-xl font-light mb-6">Create New Gallery</h3>
+                    <div
+                        className="fixed inset-0 bg-black/70 flex items-start sm:items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto"
+                        onClick={(e) => e.target === e.currentTarget && setShowCreateForm(false)}
+                    >
+                        <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-4 sm:p-6 mt-16 sm:mt-0 sm:my-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-light">Create New Gallery</h3>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCreateForm(false)}
+                                    className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
 
                             <form onSubmit={handleCreateGallery} className="space-y-4">
                                 <div>

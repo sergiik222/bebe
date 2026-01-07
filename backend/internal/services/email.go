@@ -111,6 +111,45 @@ func getTranslation(lang string) emailTranslations {
 	return translations["en"] // Default to English
 }
 
+// Owner email translations (always Russian)
+type ownerEmailTranslations struct {
+	newBookingSubject string
+	newBookingTitle   string
+	client            string
+	email             string
+	phone             string
+	date              string
+	time              string
+	language          string
+	message           string
+	confirmBooking    string
+	cancelBooking     string
+	contactSubject    string
+	contactTitle      string
+	from              string
+	subject           string
+	replyNote         string
+}
+
+var ownerTranslations = ownerEmailTranslations{
+	newBookingSubject: "Новая заявка на бронирование",
+	newBookingTitle:   "Новая заявка на бронирование",
+	client:            "Клиент",
+	email:             "Email",
+	phone:             "Телефон",
+	date:              "Дата",
+	time:              "Время",
+	language:          "Язык",
+	message:           "Сообщение",
+	confirmBooking:    "ПОДТВЕРДИТЬ",
+	cancelBooking:     "ОТМЕНИТЬ",
+	contactSubject:    "Контакт",
+	contactTitle:      "Новое сообщение",
+	from:              "От",
+	subject:           "Тема",
+	replyNote:         "Ответьте на это письмо, чтобы связаться с",
+}
+
 // NewEmailService creates a new email service
 func NewEmailService(apiKey, ownerEmail string) *EmailService {
 	return &EmailService{
@@ -120,10 +159,11 @@ func NewEmailService(apiKey, ownerEmail string) *EmailService {
 	}
 }
 
-// SendBookingRequestToOwner sends booking request email to the owner
+// SendBookingRequestToOwner sends booking request email to the owner (always in Russian)
 func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseURL string) error {
 	confirmURL := fmt.Sprintf("%s/api/booking/confirm/%s", baseURL, booking.Token)
 	cancelURL := fmt.Sprintf("%s/api/booking/cancel/%s", baseURL, booking.Token)
+	t := ownerTranslations
 
 	html := fmt.Sprintf(`
 <!DOCTYPE html>
@@ -146,41 +186,41 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
                     <!-- Content -->
                     <tr>
                         <td style="padding: 50px 40px;">
-                            <h2 style="color: #84cc16; margin: 0 0 25px; font-weight: 400; font-size: 24px;">New Booking Request</h2>
+                            <h2 style="color: #84cc16; margin: 0 0 25px; font-weight: 400; font-size: 24px;">%s</h2>
                             <table style="margin: 0 0 25px; background-color: #27272a; border-radius: 8px; width: 100%%;">
                                 <tr>
                                     <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Client</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #fafafa; margin: 5px 0 0; font-size: 16px; font-weight: 500;">%s</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Email</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #84cc16; margin: 5px 0 0; font-size: 16px;">%s</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Phone</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #fafafa; margin: 5px 0 0; font-size: 16px;">%s</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Date</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 20px; border-bottom: 1px solid #3f3f46;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Time</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #fafafa; margin: 5px 0 0; font-size: 18px; font-weight: 500;">%s - %s</p>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 20px;">
-                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Language</p>
+                                        <p style="color: #71717a; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                                         <p style="color: #a1a1aa; margin: 5px 0 0; font-size: 14px;">%s</p>
                                     </td>
                                 </tr>
@@ -189,12 +229,12 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
                             <table width="100%%" cellpadding="0" cellspacing="0" style="margin-top: 30px;">
                                 <tr>
                                     <td align="center" style="padding-bottom: 12px;">
-                                        <a href="%s" style="display: inline-block; background-color: #84cc16; color: #0a0a0a; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">CONFIRM BOOKING</a>
+                                        <a href="%s" style="display: inline-block; background-color: #84cc16; color: #0a0a0a; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">%s</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td align="center">
-                                        <a href="%s" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">CANCEL BOOKING</a>
+                                        <a href="%s" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: 600; letter-spacing: 1px; font-size: 14px;">%s</a>
                                     </td>
                                 </tr>
                             </table>
@@ -214,19 +254,25 @@ func (es *EmailService) SendBookingRequestToOwner(booking *models.Booking, baseU
     </table>
 </body>
 </html>
-	`, booking.Name, booking.Email, booking.Phone, booking.Date, booking.StartTime, booking.EndTime, booking.Language,
+	`, t.newBookingTitle,
+		t.client, booking.Name,
+		t.email, booking.Email,
+		t.phone, booking.Phone,
+		t.date, booking.Date,
+		t.time, booking.StartTime, booking.EndTime,
+		t.language, booking.Language,
 		func() string {
 			if booking.Message != "" {
 				return fmt.Sprintf(`<div style="margin-bottom: 25px; padding: 20px; background-color: #27272a; border-radius: 8px; border-left: 4px solid #84cc16;">
-                    <p style="color: #71717a; margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Message</p>
+                    <p style="color: #71717a; margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">%s</p>
                     <p style="color: #d4d4d8; margin: 0; font-size: 15px; line-height: 1.6;">%s</p>
-                </div>`, booking.Message)
+                </div>`, t.message, booking.Message)
 			}
 			return ""
 		}(),
-		confirmURL, cancelURL)
+		confirmURL, t.confirmBooking, cancelURL, t.cancelBooking)
 
-	return es.sendEmail(es.ownerEmail, "New Booking Request: "+booking.Name, html)
+	return es.sendEmail(es.ownerEmail, t.newBookingSubject+": "+booking.Name, html)
 }
 
 // SendConfirmationToUser sends confirmation email to the user in their preferred language
@@ -372,27 +418,28 @@ func (es *EmailService) SendCancellationToUser(booking *models.Booking) error {
 	return es.sendEmail(booking.Email, t.cancelSubject, html)
 }
 
-// SendContactMessage sends a contact form message to the owner
+// SendContactMessage sends a contact form message to the owner (always in Russian)
 func (es *EmailService) SendContactMessage(name, email, phone, subject, message string) error {
+	t := ownerTranslations
 	phoneInfo := ""
 	if phone != "" {
-		phoneInfo = fmt.Sprintf("<p><strong>Phone:</strong> %s</p>", phone)
+		phoneInfo = fmt.Sprintf("<p><strong>%s:</strong> %s</p>", t.phone, phone)
 	}
 
 	html := fmt.Sprintf(`
-		<h2>New Contact Message</h2>
-		<p><strong>From:</strong> %s</p>
-		<p><strong>Email:</strong> <a href="mailto:%s">%s</a></p>
+		<h2>%s</h2>
+		<p><strong>%s:</strong> %s</p>
+		<p><strong>%s:</strong> <a href="mailto:%s">%s</a></p>
 		%s
-		<p><strong>Subject:</strong> %s</p>
+		<p><strong>%s:</strong> %s</p>
 		<hr>
-		<h3>Message:</h3>
+		<h3>%s:</h3>
 		<p style="white-space: pre-wrap;">%s</p>
 		<hr>
-		<p style="color: #666; font-size: 12px;">Reply directly to this email to respond to %s</p>
-	`, name, email, email, phoneInfo, subject, message, name)
+		<p style="color: #666; font-size: 12px;">%s %s</p>
+	`, t.contactTitle, t.from, name, t.email, email, email, phoneInfo, t.subject, subject, t.message, message, t.replyNote, name)
 
-	return es.sendEmail(es.ownerEmail, "Contact: "+subject, html)
+	return es.sendEmail(es.ownerEmail, t.contactSubject+": "+subject, html)
 }
 
 // SendHTML sends an email with custom HTML (public method for gallery service)

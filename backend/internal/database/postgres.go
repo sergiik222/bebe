@@ -74,6 +74,14 @@ func InitSchema() error {
 
 	-- Create index on token for fast lookups
 	CREATE INDEX IF NOT EXISTS idx_galleries_token ON galleries(token);
+
+	-- OAuth tokens table for storing Google OAuth tokens
+	CREATE TABLE IF NOT EXISTS oauth_tokens (
+		id SERIAL PRIMARY KEY,
+		service_name VARCHAR(64) UNIQUE NOT NULL,
+		token_json TEXT NOT NULL,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
 	`
 
 	_, err := DB.Exec(schema)
@@ -83,4 +91,27 @@ func InitSchema() error {
 
 	log.Println("Database schema initialized")
 	return nil
+}
+
+// SaveOAuthToken saves an OAuth token to the database
+func SaveOAuthToken(serviceName, tokenJSON string) error {
+	query := `
+		INSERT INTO oauth_tokens (service_name, token_json, updated_at)
+		VALUES ($1, $2, CURRENT_TIMESTAMP)
+		ON CONFLICT (service_name)
+		DO UPDATE SET token_json = $2, updated_at = CURRENT_TIMESTAMP
+	`
+	_, err := DB.Exec(query, serviceName, tokenJSON)
+	return err
+}
+
+// GetOAuthToken retrieves an OAuth token from the database
+func GetOAuthToken(serviceName string) (string, error) {
+	var tokenJSON string
+	query := `SELECT token_json FROM oauth_tokens WHERE service_name = $1`
+	err := DB.QueryRow(query, serviceName).Scan(&tokenJSON)
+	if err != nil {
+		return "", err
+	}
+	return tokenJSON, nil
 }

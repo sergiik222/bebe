@@ -2,92 +2,102 @@
 
 const Loader = ({ size = 'md', text = '' }) => {
     const sizes = {
-        sm: { container: 'w-8 h-8', ring: 'w-8 h-8', inner: 'w-4 h-4' },
-        md: { container: 'w-16 h-16', ring: 'w-16 h-16', inner: 'w-8 h-8' },
-        lg: { container: 'w-24 h-24', ring: 'w-24 h-24', inner: 'w-12 h-12' },
+        sm: { container: 'w-10 h-10', frame: 'w-8 h-6' },
+        md: { container: 'w-16 h-16', frame: 'w-12 h-9' },
+        lg: { container: 'w-24 h-24', frame: 'w-18 h-14' },
     };
 
     const s = sizes[size] || sizes.md;
 
     return (
         <div className="flex flex-col items-center justify-center gap-4">
-            {/* Camera Lens Loader */}
-            <div className={`${s.container} relative`}>
-                {/* Outer ring - lens barrel */}
-                <div
-                    className={`${s.ring} absolute inset-0 rounded-full border-2 border-zinc-700`}
-                    style={{
-                        background: 'linear-gradient(145deg, rgba(39, 39, 42, 0.8), rgba(24, 24, 27, 0.9))',
-                    }}
-                />
-
-                {/* Focus ring - rotating */}
-                <div
-                    className={`${s.ring} absolute inset-0 rounded-full animate-spin`}
-                    style={{
-                        animationDuration: '3s',
-                        background: `conic-gradient(from 0deg, transparent 0deg, var(--accent-color) 60deg, transparent 120deg)`,
-                        mask: 'radial-gradient(transparent 60%, black 62%, black 100%)',
-                        WebkitMask: 'radial-gradient(transparent 60%, black 62%, black 100%)',
-                    }}
-                />
-
-                {/* Aperture blades effect */}
-                <div className="absolute inset-0 flex items-center justify-center">
+            {/* Film Frame Loader */}
+            <div className={`${s.container} relative flex items-center justify-center`}>
+                {/* Film strip container */}
+                <div className="relative">
+                    {/* Main frame */}
                     <div
-                        className={`${s.inner} rounded-full relative overflow-hidden`}
-                        style={{
-                            background: 'radial-gradient(circle, rgba(var(--accent-color-rgb), 0.3) 0%, rgba(0, 0, 0, 0.9) 70%)',
-                            boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(var(--accent-color-rgb), 0.2)',
-                        }}
+                        className={`${s.frame} relative border-2 border-zinc-600 rounded-sm bg-zinc-900 overflow-hidden`}
                     >
-                        {/* Aperture blade lines */}
-                        {[...Array(6)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute inset-0 animate-pulse"
-                                style={{
-                                    animationDelay: `${i * 0.15}s`,
-                                    animationDuration: '2s',
-                                }}
-                            >
-                                <div
-                                    className="absolute top-1/2 left-1/2 w-full h-px bg-zinc-600 origin-left"
-                                    style={{
-                                        transform: `rotate(${i * 60}deg) translateX(-50%)`,
-                                    }}
-                                />
-                            </div>
-                        ))}
-
-                        {/* Center lens reflection */}
+                        {/* Animated gradient fill - like photo developing */}
                         <div
-                            className="absolute top-1/4 left-1/4 w-1/4 h-1/4 rounded-full animate-pulse"
+                            className="absolute inset-0 animate-pulse"
                             style={{
-                                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)',
-                                animationDuration: '2s',
+                                background: `linear-gradient(180deg,
+                                    transparent 0%,
+                                    rgba(var(--accent-color-rgb), 0.1) 30%,
+                                    rgba(var(--accent-color-rgb), 0.3) 50%,
+                                    rgba(var(--accent-color-rgb), 0.1) 70%,
+                                    transparent 100%)`,
+                                animationDuration: '1.5s',
                             }}
                         />
+
+                        {/* Scan line effect */}
+                        <div
+                            className="absolute left-0 right-0 h-0.5 bg-[var(--accent-color)]"
+                            style={{
+                                animation: 'scanLine 1.5s ease-in-out infinite',
+                                boxShadow: '0 0 8px var(--accent-color), 0 0 16px var(--accent-color)',
+                            }}
+                        />
+
+                        {/* Corner brackets */}
+                        <div className="absolute top-0.5 left-0.5 w-2 h-2 border-l border-t border-[var(--accent-color)] opacity-60" />
+                        <div className="absolute top-0.5 right-0.5 w-2 h-2 border-r border-t border-[var(--accent-color)] opacity-60" />
+                        <div className="absolute bottom-0.5 left-0.5 w-2 h-2 border-l border-b border-[var(--accent-color)] opacity-60" />
+                        <div className="absolute bottom-0.5 right-0.5 w-2 h-2 border-r border-b border-[var(--accent-color)] opacity-60" />
+                    </div>
+
+                    {/* Film sprocket holes - left */}
+                    <div className="absolute -left-1.5 top-0 bottom-0 flex flex-col justify-around py-1">
+                        {[...Array(3)].map((_, i) => (
+                            <div
+                                key={`l-${i}`}
+                                className="w-1 h-1.5 bg-zinc-700 rounded-sm animate-pulse"
+                                style={{ animationDelay: `${i * 0.2}s` }}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Film sprocket holes - right */}
+                    <div className="absolute -right-1.5 top-0 bottom-0 flex flex-col justify-around py-1">
+                        {[...Array(3)].map((_, i) => (
+                            <div
+                                key={`r-${i}`}
+                                className="w-1 h-1.5 bg-zinc-700 rounded-sm animate-pulse"
+                                style={{ animationDelay: `${i * 0.2 + 0.1}s` }}
+                            />
+                        ))}
                     </div>
                 </div>
 
-                {/* Pulsing glow */}
+                {/* Rotating ring around */}
                 <div
-                    className="absolute inset-0 rounded-full animate-ping"
+                    className="absolute inset-0 rounded-full animate-spin"
                     style={{
-                        animationDuration: '2s',
-                        background: 'transparent',
-                        boxShadow: '0 0 0 2px rgba(var(--accent-color-rgb), 0.3)',
+                        animationDuration: '3s',
+                        background: `conic-gradient(from 0deg, transparent 0deg, var(--accent-color) 30deg, transparent 60deg)`,
+                        opacity: 0.3,
                     }}
                 />
             </div>
 
             {/* Optional loading text */}
             {text && (
-                <p className="text-sm text-secondary-text/70 font_regular animate-pulse">
+                <p className="text-sm text-gray-400 animate-pulse">
                     {text}
                 </p>
             )}
+
+            <style jsx>{`
+                @keyframes scanLine {
+                    0%, 100% { top: 0; opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { top: 100%; opacity: 0; }
+                }
+            `}</style>
         </div>
     );
 };
