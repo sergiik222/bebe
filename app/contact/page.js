@@ -67,7 +67,7 @@ const Contact = () => {
 
     if (success) {
         return (
-            <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
+            <div className="font-roboto flex flex-col w-full min-h-screen">
                 <div className="flex-1 flex items-center justify-center p-4">
                     <div className="max-w-md w-full text-center">
                         <div className="mb-6">
@@ -94,7 +94,7 @@ const Contact = () => {
     }
 
     return (
-        <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
+        <div className="font-roboto flex flex-col w-full min-h-screen">
             <div className="flex-1 p-4 pt-20 md:p-8 md:pt-8">
                 <div className="max-w-2xl mx-auto">
                     {/* Header */}

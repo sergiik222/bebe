@@ -81,9 +81,9 @@ export default function Navigation() {
 
     return (
         <>
-            {/* Mobile Header Bar - covers menu button with equal padding */}
+            {/* Header Bar - shows background on scroll */}
             <div
-                className={`md:hidden fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+                className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
                     isScrolled || isOpen
                         ? 'bg-zinc-900/90 backdrop-blur-md'
                         : 'bg-transparent'

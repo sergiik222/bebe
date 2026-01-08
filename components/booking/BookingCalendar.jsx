@@ -11,7 +11,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 }
 
 const getLocale = (language) => {
-    const locales = { en: 'en-US', de: 'de-DE', ru: 'ru-RU' };
+    const locales = { en: 'en-US', de: 'de-DE', ru: 'ru-RU', uk: 'uk-UA' };
     return locales[language] || 'en-US';
 };
 

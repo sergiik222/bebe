@@ -102,6 +102,25 @@ var translations = map[string]emailTranslations{
 		cancelApology:     "Приносим извинения за неудобства. Мы свяжемся с вами в ближайшее время, чтобы обсудить альтернативные варианты.",
 		cancelRegards:     "С уважением",
 	},
+	"uk": {
+		confirmSubject:    "Ваш запис підтверджено!",
+		confirmTitle:      "Запис підтверджено!",
+		confirmDear:       "Шановний(а)",
+		confirmBody:       "Ваш запис підтверджено:",
+		confirmDate:       "Дата",
+		confirmTime:       "Час",
+		confirmLookingFwd: "Чекаємо на вас!",
+		confirmQuestions:  "Якщо у вас є питання, будь ласка, зв'яжіться з нами.",
+		confirmRegards:    "З повагою",
+		cancelSubject:     "Оновлення запису",
+		cancelTitle:       "Оновлення запису",
+		cancelDear:        "Шановний(а)",
+		cancelBody:        "На жаль, ми не можемо підтвердити ваш запис на:",
+		cancelDate:        "Дата",
+		cancelTime:        "Час",
+		cancelApology:     "Перепрошуємо за незручності. Ми зв'яжемося з вами найближчим часом, щоб обговорити альтернативні варіанти.",
+		cancelRegards:     "З повагою",
+	},
 }
 
 func getTranslation(lang string) emailTranslations {

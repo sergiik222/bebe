@@ -36,7 +36,7 @@ const VideoGallery = () => {
 
     if (loading) {
         return (
-            <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
+            <div className="font-roboto flex flex-col w-full min-h-screen">
                 <div className="flex-1 flex items-center justify-center">
                     <Loader size="lg" />
                 </div>
@@ -45,11 +45,11 @@ const VideoGallery = () => {
     }
 
     return (
-        <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
-            <div className="flex-1 p-4 pt-20 md:p-8 md:pt-8">
+        <div className="font-roboto flex flex-col w-full min-h-screen">
+            <div className="flex-1 p-4 pt-20 md:p-8 md:pt-24">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
-                    <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4">
+                    <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4 pl-16 md:pl-0 relative z-40">
                         <button
                             onClick={() => router.push('/portfolio')}
                             className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"

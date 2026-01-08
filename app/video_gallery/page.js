@@ -29,7 +29,7 @@ const VideoGallery = () => {
 
     if (!isCategorySelected) {
         return (
-            <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen">
+            <div className="font-roboto flex flex-col w-full min-h-screen">
                 <div className="flex w-full mt-16">
                     No category selected
                 </div>
@@ -62,7 +62,7 @@ const VideoGallery = () => {
     }));
 
     return (
-        <div className="bg-background-gradient text-gray-200 font-roboto flex flex-col w-full min-h-screen p-4 pt-20 md:pt-4">
+        <div className="font-roboto flex flex-col w-full min-h-screen p-4 pt-20 md:pt-4">
             <div className="flex items-center justify-center mt-8 mb-16">
                 <button className="btn text-2xl" onClick={handleBack}>
                     Back to Portfolio

@@ -7,10 +7,10 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:808
 
 // Menu items configuration - easy to add new items in the future
 const menuItems = [
-    { id: 'galleries', label: 'Galleries' },
+    { id: 'galleries', label: 'Галереи' },
     // Future menu items can be added here:
-    // { id: 'bookings', label: 'Bookings' },
-    // { id: 'settings', label: 'Settings' },
+    // { id: 'bookings', label: 'Бронирования' },
+    // { id: 'settings', label: 'Настройки' },
 ];
 
 const AdminPanel = () => {
@@ -143,14 +143,14 @@ const AdminPanel = () => {
             });
             fetchGalleries();
         } catch (err) {
-            alert('Error: ' + err.message);
+            alert('Ошибка: ' + err.message);
         } finally {
             setCreateLoading(false);
         }
     };
 
     const handleDeleteGallery = async (id) => {
-        if (!confirm('Are you sure you want to delete this gallery?')) return;
+        if (!confirm('Вы уверены, что хотите удалить эту галерею?')) return;
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries/${id}`, {
@@ -165,7 +165,7 @@ const AdminPanel = () => {
 
             fetchGalleries();
         } catch (err) {
-            alert('Error: ' + err.message);
+            alert('Ошибка: ' + err.message);
         }
     };
 
@@ -179,9 +179,9 @@ const AdminPanel = () => {
             const data = await response.json();
             if (!response.ok) throw new Error(data.error);
 
-            alert('Email sent successfully!');
+            alert('Email успешно отправлен!');
         } catch (err) {
-            alert('Error: ' + err.message);
+            alert('Ошибка: ' + err.message);
         }
     };
 
@@ -203,7 +203,7 @@ const AdminPanel = () => {
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-light tracking-wider text-[var(--accent-color)]">BEBE MEDIA</h1>
-                        <p className="text-gray-400 mt-2">Admin Panel</p>
+                        <p className="text-gray-400 mt-2">Admin</p>
                     </div>
 
                     <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
@@ -215,7 +215,7 @@ const AdminPanel = () => {
 
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Username</label>
+                                <label className="block text-sm text-gray-400 mb-1">Имя пользователя</label>
                                 <input
                                     type="text"
                                     required
@@ -226,7 +226,7 @@ const AdminPanel = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Password</label>
+                                <label className="block text-sm text-gray-400 mb-1">Пароль</label>
                                 <input
                                     type="password"
                                     required
@@ -241,7 +241,7 @@ const AdminPanel = () => {
                                 disabled={loginLoading}
                                 className="w-full py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                             >
-                                {loginLoading ? 'Logging in...' : 'Login'}
+                                {loginLoading ? 'Вход...' : 'Войти'}
                             </button>
                         </form>
                     </div>
@@ -255,12 +255,10 @@ const AdminPanel = () => {
         <div className="min-h-screen pt-16 md:pt-0">
             {/* Header */}
             <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-6 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-row justify-between items-center">
-                        <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">
-                            Admin Panel
-                        </h1>
-                    </div>
+                <div className="w-full text-center md:mx-48">
+                    <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)] text-center md:text-left">
+                        Admin
+                    </h1>
                 </div>
             </header>
 
@@ -297,12 +295,12 @@ const AdminPanel = () => {
                     <>
                         {/* Title and Create Button */}
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-light">Client Galleries</h2>
+                            <h2 className="text-2xl font-light">Галереи</h2>
                             <button
                                 onClick={() => setShowCreateForm(true)}
                                 className="px-4 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90"
                             >
-                                + New Gallery
+                                + Новая галерея
                             </button>
                         </div>
 
@@ -323,7 +321,7 @@ const AdminPanel = () => {
                         {/* Galleries Table */}
                         {!loading && galleries.length === 0 && (
                             <div className="text-center py-12 text-gray-400">
-                                No galleries yet. Create one to get started.
+                                Галерей пока нет. Создайте первую галерею.
                             </div>
                         )}
 
@@ -332,13 +330,13 @@ const AdminPanel = () => {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-zinc-800">
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Client Email</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Folder</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Title</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Created</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Viewed</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Downloads</th>
-                                            <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Actions</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Email</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Папка</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Название</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Создано</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Просмотрено</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Скачивания</th>
+                                            <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Действия</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -352,7 +350,7 @@ const AdminPanel = () => {
                                                     {gallery.viewed_at ? (
                                                         <span className="text-green-400">{formatDate(gallery.viewed_at)}</span>
                                                     ) : (
-                                                        <span className="text-gray-500">Not viewed</span>
+                                                        <span className="text-gray-500">Не просмотрено</span>
                                                     )}
                                                 </td>
                                                 <td className="py-4 px-4 text-sm text-center">{gallery.download_count}</td>
@@ -364,19 +362,19 @@ const AdminPanel = () => {
                                                             rel="noopener noreferrer"
                                                             className="px-3 py-1 text-xs bg-zinc-700 rounded hover:bg-zinc-600"
                                                         >
-                                                            View
+                                                            Открыть
                                                         </a>
                                                         <button
                                                             onClick={() => handleResendEmail(gallery.id)}
                                                             className="px-3 py-1 text-xs bg-blue-600 rounded hover:bg-blue-500"
                                                         >
-                                                            Resend
+                                                            Отправить
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteGallery(gallery.id)}
                                                             className="px-3 py-1 text-xs bg-red-600 rounded hover:bg-red-500"
                                                         >
-                                                            Delete
+                                                            Удалить
                                                         </button>
                                                     </div>
                                                 </td>
@@ -392,8 +390,8 @@ const AdminPanel = () => {
                 {/* Placeholder for future sections */}
                 {activeMenu !== 'galleries' && (
                     <div className="text-center py-12 text-gray-400">
-                        <p className="text-xl mb-2">Coming Soon</p>
-                        <p className="text-sm">This section is under development.</p>
+                        <p className="text-xl mb-2">Скоро будет</p>
+                        <p className="text-sm">Этот раздел находится в разработке.</p>
                     </div>
                 )}
 
@@ -405,7 +403,7 @@ const AdminPanel = () => {
                     >
                         <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-4 sm:p-6 mt-16 sm:mt-0 sm:my-auto">
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-light">Create New Gallery</h3>
+                                <h3 className="text-xl font-light">Создать новую галерею</h3>
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateForm(false)}
@@ -419,7 +417,7 @@ const AdminPanel = () => {
 
                             <form onSubmit={handleCreateGallery} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Client Email *</label>
+                                    <label className="block text-sm text-gray-400 mb-1">Email *</label>
                                     <input
                                         type="email"
                                         required
@@ -431,43 +429,43 @@ const AdminPanel = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Folder Name *</label>
+                                    <label className="block text-sm text-gray-400 mb-1">Название папки *</label>
                                     <input
                                         type="text"
                                         required
                                         value={createData.folder_name}
                                         onChange={(e) => setCreateData({ ...createData, folder_name: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
-                                        placeholder="e.g., wedding-john-jane"
+                                        placeholder="например, wedding-john-jane"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Folder name in Bunny CDN: clients/[folder_name]</p>
+                                    <p className="text-xs text-gray-500 mt-1">Путь в Bunny CDN: clients/[название_папки]</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Title (optional)</label>
+                                    <label className="block text-sm text-gray-400 mb-1">Заголовок (опционально)</label>
                                     <input
                                         type="text"
                                         value={createData.title}
                                         onChange={(e) => setCreateData({ ...createData, title: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
-                                        placeholder="e.g., Wedding Photos"
+                                        placeholder="например, Свадебные фото"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Message (optional)</label>
+                                    <label className="block text-sm text-gray-400 mb-1">Сообщение (опционально)</label>
                                     <textarea
                                         rows={3}
                                         value={createData.message}
                                         onChange={(e) => setCreateData({ ...createData, message: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)] resize-none"
-                                        placeholder="Personal message for the client..."
+                                        placeholder="Личное сообщение для клиента..."
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Email Language</label>
+                                        <label className="block text-sm text-gray-400 mb-1">Язык письма</label>
                                         <select
                                             value={createData.language}
                                             onChange={(e) => setCreateData({ ...createData, language: e.target.value })}
@@ -476,21 +474,22 @@ const AdminPanel = () => {
                                             <option value="en">English</option>
                                             <option value="de">Deutsch</option>
                                             <option value="ru">Русский</option>
+                                            <option value="uk">Українська</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Expires in (days)</label>
+                                        <label className="block text-sm text-gray-400 mb-1">Срок действия (дней)</label>
                                         <select
                                             value={createData.expires_in}
                                             onChange={(e) => setCreateData({ ...createData, expires_in: parseInt(e.target.value) })}
                                             className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         >
-                                            <option value={0}>Never expires</option>
-                                            <option value={7}>7 days</option>
-                                            <option value={14}>14 days</option>
-                                            <option value={30}>30 days</option>
-                                            <option value={60}>60 days</option>
-                                            <option value={90}>90 days</option>
+                                            <option value={0}>Бессрочно</option>
+                                            <option value={7}>7 дней</option>
+                                            <option value={14}>14 дней</option>
+                                            <option value={30}>30 дней</option>
+                                            <option value={60}>60 дней</option>
+                                            <option value={90}>90 дней</option>
                                         </select>
                                     </div>
                                 </div>
@@ -501,14 +500,14 @@ const AdminPanel = () => {
                                         onClick={() => setShowCreateForm(false)}
                                         className="flex-1 py-3 bg-zinc-700 rounded-lg hover:bg-zinc-600"
                                     >
-                                        Cancel
+                                        Отмена
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={createLoading}
                                         className="flex-1 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                                     >
-                                        {createLoading ? 'Creating...' : 'Create & Send Email'}
+                                        {createLoading ? 'Создание...' : 'Создать и отправить'}
                                     </button>
                                 </div>
                             </form>

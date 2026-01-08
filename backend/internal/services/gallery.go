@@ -300,6 +300,18 @@ var galleryTranslations = map[string]galleryEmailTranslations{
 		availableDay:     "дня",
 		noExpiration:     "",
 	},
+	"uk": {
+		subject:          "Ваші фото та відео готові!",
+		subjectWithTitle: "Ваші %s готові!",
+		greeting:         "Натисніть кнопку нижче, щоб переглянути та завантажити ваші фото та відео в повній якості.",
+		viewGallery:      "ВІДКРИТИ ГАЛЕРЕЮ",
+		fallbackLink:     "Якщо кнопка не працює, скопіюйте це посилання в браузер:",
+		thankYou:         "Дякуємо, що обрали Bebe Media!",
+		availableFor:     "Ця галерея буде доступна протягом",
+		availableDays:    "днів",
+		availableDay:     "дня",
+		noExpiration:     "",
+	},
 }
 
 func getGalleryTranslation(lang string) galleryEmailTranslations {

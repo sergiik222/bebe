@@ -225,9 +225,9 @@ const ClientGallery = () => {
     }
 
     return (
-        <div className="min-h-screen pt-16 md:pt-0">
+        <div className="min-h-screen pt-20 md:pt-24">
             {/* Header */}
-            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-4 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
+            <header className="bg-zinc-900/50 border-b border-zinc-800 pl-20 pr-4 md:pl-6 md:pr-6 py-4 sticky top-20 md:top-[88px] z-40 backdrop-blur-lg">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">
                         {gallery?.title || 'Your Gallery'}
