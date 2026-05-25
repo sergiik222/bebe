@@ -33,14 +33,14 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en" className={primaryFont.variable}>
         <body className="scroll-smooth bg-background text-primary-text">
-        {/* Verde Antico: a forest-green tinted near-black gradient with a
-            very faint bone-white wash at the top. Surface is the brand;
-            accents stay quiet. */}
+        {/* Apothecary: warm bone surface with a faint brass radial bleed
+            at the top-left. Forest-green type, brass accent. Aesop /
+            herbarium mood. */}
         <div
             className="fixed inset-0 w-full h-full z-0 pointer-events-none"
             style={{
                 backgroundImage:
-                    'radial-gradient(circle at 30% 0%, rgba(235, 231, 216, 0.02) 0%, transparent 50%), linear-gradient(180deg, rgba(14,22,18,0.6) 0%, rgba(12,19,16,0.85) 50%, rgba(9,16,9,0.95) 100%)',
+                    'radial-gradient(circle at 25% 0%, rgba(138, 106, 58, 0.05) 0%, transparent 55%), linear-gradient(180deg, rgba(247,242,233,0.6) 0%, rgba(244,239,229,0.85) 50%, rgba(237,231,216,0.95) 100%)',
                 backgroundAttachment: 'fixed'
             }}
         />

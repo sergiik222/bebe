@@ -3,33 +3,33 @@
 @tailwind utilities;
 
 /* ========================================
-   COLOR SCHEME — Verde Antico
-   Forest-green tinted near-black surface, bone-white accent.
-   The surface IS the brand; buttons stay quiet so they don't fight the wall.
+   COLOR SCHEME — Apothecary
+   Warm bone surface, deep forest-green type, burnished brass accent.
+   Aesop / herbarium / luxury skincare mood.
    ======================================== */
 :root {
-    /* Verde Antico — active */
-    --accent-color: #ebe7d8;
-    --accent-color-rgb: 235, 231, 216;
-    --accent-light: #ffffff;
-    --accent-dark: #b8b4a5;
-    --accent-glow: rgba(235, 231, 216, 0.35);
-    --accent-glow-strong: rgba(235, 231, 216, 0.55);
+    /* Apothecary — active */
+    --accent-color: #8a6a3a;
+    --accent-color-rgb: 138, 106, 58;
+    --accent-light: #b8945c;
+    --accent-dark: #5c4624;
+    --accent-glow: rgba(138, 106, 58, 0.4);
+    --accent-glow-strong: rgba(138, 106, 58, 0.6);
 
-    /* Surface + ink tokens (Verde Antico) */
-    --bg-base: #0c1310;
-    --bg-elev: #141d18;
-    --border-subtle: #1c2620;
-    --border-strong: #2c3a31;
-    --text-primary: #ebe7d8;
-    --text-muted: #8e928a;
-    --text-dim: #5a605b;
+    /* Surface + ink tokens (Apothecary) */
+    --bg-base: #f4efe5;
+    --bg-elev: #e8e2d3;
+    --border-subtle: #d8d2c2;
+    --border-strong: #c8c0ad;
+    --text-primary: #1f2a1f;
+    --text-muted: #5a665a;
+    --text-dim: #8a948a;
 
     /* --- previous schemes kept for quick rollback ---
+    Verde Antico:    accent #ebe7d8 / bg #0c1310
     Electric Violet: accent #9d4dff / bg #0c0d12
-    Electric Cyan:   accent #00e5ff / bg #0a0d11
-    Cobalt:          accent #2e5cff / bg #0e1015
     Galerie Noir:    accent #d97706 / bg #111110
+    Atelier Blanc:   accent #a07840 / bg #f7f4ef
     Lime:            accent #84cc16
     */
 }
@@ -95,8 +95,8 @@ html, body {
 html, body {
     background: var(--bg-base);
     background-image:
-        radial-gradient(circle at 30% 0%, rgba(235, 231, 216, 0.025) 0%, transparent 50%),
-        linear-gradient(180deg, #0e1612 0%, #0c1310 50%, #091009 100%);
+        radial-gradient(circle at 25% 0%, rgba(138, 106, 58, 0.06) 0%, transparent 55%),
+        linear-gradient(180deg, #f7f2e9 0%, #f4efe5 50%, #ede7d8 100%);
     background-attachment: fixed;
     color: var(--text-primary);
     height: 100%;
