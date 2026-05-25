@@ -6,6 +6,7 @@
 # Binary
 bebe
 bebe-api
+bebe-backend
 
 # IDE
 .idea/

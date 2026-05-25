@@ -82,6 +82,24 @@ func InitSchema() error {
 		token_json TEXT NOT NULL,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);
+
+	-- Bookings table — survives restarts (previously held in-memory map).
+	CREATE TABLE IF NOT EXISTS bookings (
+		id VARCHAR(32) PRIMARY KEY,
+		token VARCHAR(128) UNIQUE NOT NULL,
+		name VARCHAR(255) NOT NULL,
+		email VARCHAR(255) NOT NULL,
+		phone VARCHAR(64) NOT NULL,
+		date VARCHAR(16) NOT NULL,
+		start_time VARCHAR(8) NOT NULL,
+		end_time VARCHAR(8) NOT NULL,
+		message TEXT,
+		language VARCHAR(8) NOT NULL DEFAULT 'en',
+		status VARCHAR(16) NOT NULL DEFAULT 'pending',
+		calendar_event_id VARCHAR(255),
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);
+	CREATE INDEX IF NOT EXISTS idx_bookings_token ON bookings(token);
 	`
 
 	_, err := DB.Exec(schema)

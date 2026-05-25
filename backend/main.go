@@ -3,9 +3,12 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
+	"time"
 
 	"bebe-backend/internal/database"
 	"bebe-backend/internal/handlers"
+	"bebe-backend/internal/middleware"
 	"bebe-backend/internal/services"
 
 	"github.com/gin-contrib/cors"
@@ -55,12 +58,28 @@ func main() {
 	// Setup router
 	router := gin.Default()
 
-	// CORS configuration
+	// CORS configuration — explicit allowlist, no wildcard.
+	// CORS_ALLOWED_ORIGINS is a comma-separated list of origins (e.g.
+	// "https://bebemedia.at,https://www.bebemedia.at"). Local dev origins
+	// are always allowed.
+	allowedOrigins := []string{
+		"http://localhost:3000",
+		"http://127.0.0.1:3000",
+	}
+	if raw := os.Getenv("CORS_ALLOWED_ORIGINS"); raw != "" {
+		for _, o := range strings.Split(raw, ",") {
+			if o = strings.TrimSpace(o); o != "" {
+				allowedOrigins = append(allowedOrigins, o)
+			}
+		}
+	}
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
+	config.AllowOrigins = allowedOrigins
 	config.AllowHeaders = []string{"Content-Type", "Authorization"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	config.AllowCredentials = true
 	router.Use(cors.New(config))
+	log.Printf("CORS allowed origins: %v", allowedOrigins)
 
 	// API routes
 	api := router.Group("/api")
@@ -81,27 +100,31 @@ func main() {
 		api.GET("/booking/confirm/:token", bookingHandler.ConfirmBooking)
 		api.GET("/booking/cancel/:token", bookingHandler.CancelBooking)
 
-		// Contact route
-		api.POST("/contact", contactHandler.SendContactMessage)
+		// Contact route — rate-limited to deter spam relay.
+		api.POST("/contact", middleware.RateLimit(5, time.Minute), contactHandler.SendContactMessage)
 
-		// Admin authentication routes
-		api.POST("/admin/login", adminHandler.Login)
-		api.POST("/admin/setup", adminHandler.Setup) // Only works if no admin exists
+		// Admin authentication routes — rate-limited to slow brute-force.
+		loginLimiter := middleware.RateLimit(10, time.Minute)
+		api.POST("/admin/login", loginLimiter, adminHandler.Login)
+		api.POST("/admin/setup", loginLimiter, adminHandler.Setup) // Only works if no admin exists
 
 		// Protected admin routes
 		admin := api.Group("/admin")
 		admin.Use(adminHandler.AuthMiddleware())
 		{
 			admin.GET("/me", adminHandler.Me)
+			admin.POST("/logout", adminHandler.Logout)
 			admin.GET("/galleries", galleryHandler.ListGalleries)
 			admin.POST("/galleries", galleryHandler.CreateGallery)
 			admin.DELETE("/galleries/:id", galleryHandler.DeleteGallery)
 			admin.POST("/galleries/:id/resend", galleryHandler.ResendEmail)
 		}
 
-		// Public gallery routes (for clients)
-		api.GET("/gallery/:token", galleryHandler.GetGalleryByToken)
-		api.POST("/gallery/:token/download", galleryHandler.TrackDownload)
+		// Public gallery routes (for clients). Rate-limited to make token
+		// enumeration impractical and to cap ZIP-download abuse.
+		galleryLimiter := middleware.RateLimit(60, time.Minute)
+		api.GET("/gallery/:token", galleryLimiter, galleryHandler.GetGalleryByToken)
+		api.POST("/gallery/:token/download", galleryLimiter, galleryHandler.TrackDownload)
 	}
 
 	// Start server

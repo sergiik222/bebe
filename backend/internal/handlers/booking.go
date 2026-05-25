@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+	"html"
 	"net/http"
 	"os"
 	"strconv"
@@ -95,35 +97,39 @@ func (h *BookingHandler) ConfirmBooking(c *gin.Context) {
 
 	booking, err := h.bookingService.ConfirmBooking(token)
 	if err != nil {
-		errorHTML := `
+		errorHTML := fmt.Sprintf(`
 			<!DOCTYPE html>
 			<html>
 			<head><title>Error</title></head>
 			<body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
 				<h1 style="color: #ef4444;">Error</h1>
-				<p>` + err.Error() + `</p>
+				<p>%s</p>
 			</body>
 			</html>
-		`
+		`, html.EscapeString(err.Error()))
 		c.Data(http.StatusBadRequest, "text/html; charset=utf-8", []byte(errorHTML))
 		return
 	}
 
-	// Return HTML response for better UX when clicking email link
-	html := `
+	body := fmt.Sprintf(`
 		<!DOCTYPE html>
 		<html>
 		<head><title>Booking Confirmed</title></head>
 		<body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
 			<h1 style="color: #10b981;">✓ Booking Confirmed!</h1>
-			<p>The booking for <strong>` + booking.Name + `</strong> has been confirmed.</p>
-			<p>Date: ` + booking.Date + `</p>
-			<p>Time: ` + booking.StartTime + ` - ` + booking.EndTime + `</p>
+			<p>The booking for <strong>%s</strong> has been confirmed.</p>
+			<p>Date: %s</p>
+			<p>Time: %s - %s</p>
 			<p>A confirmation email has been sent to the customer.</p>
 		</body>
 		</html>
-	`
-	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(html))
+	`,
+		html.EscapeString(booking.Name),
+		html.EscapeString(booking.Date),
+		html.EscapeString(booking.StartTime),
+		html.EscapeString(booking.EndTime),
+	)
+	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(body))
 }
 
 // CancelBooking cancels a booking (called by owner via email link)
@@ -136,17 +142,16 @@ func (h *BookingHandler) CancelBooking(c *gin.Context) {
 		return
 	}
 
-	// Return HTML response for better UX when clicking email link
-	html := `
+	body := fmt.Sprintf(`
 		<!DOCTYPE html>
 		<html>
 		<head><title>Booking Cancelled</title></head>
 		<body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
 			<h1 style="color: #ef4444;">✗ Booking Cancelled</h1>
-			<p>The booking for <strong>` + booking.Name + `</strong> has been cancelled.</p>
+			<p>The booking for <strong>%s</strong> has been cancelled.</p>
 			<p>An email has been sent to the customer.</p>
 		</body>
 		</html>
-	`
-	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(html))
+	`, html.EscapeString(booking.Name))
+	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(body))
 }

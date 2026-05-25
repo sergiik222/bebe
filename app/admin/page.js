@@ -2,18 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Loader from '@/components/ui/Loader';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
-
-// Menu items configuration - easy to add new items in the future
-const menuItems = [
-    { id: 'galleries', label: 'Галереи' },
-    // Future menu items can be added here:
-    // { id: 'bookings', label: 'Бронирования' },
-    // { id: 'settings', label: 'Настройки' },
-];
+import { BACKEND_URL } from '@/lib/config';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const AdminPanel = () => {
+    const { t, language } = useLanguage();
+    const tAdmin = t.admin;
+    const menuItems = [
+        { id: 'galleries', label: tAdmin.menuGalleries },
+    ];
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [token, setToken] = useState('');
     const [galleries, setGalleries] = useState([]);
@@ -58,6 +55,7 @@ const AdminPanel = () => {
         try {
             setLoading(true);
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries`, {
+                credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -87,6 +85,7 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData)
             });
@@ -94,10 +93,14 @@ const AdminPanel = () => {
             const data = await response.json();
             if (!response.ok) throw new Error(data.error);
 
+            // Token is also held in localStorage as a UI fallback — the
+            // authoritative auth is now the httpOnly cookie set by the API.
             localStorage.setItem('adminToken', data.token);
+            // Non-httpOnly marker cookie so Next.js middleware can gate the
+            // admin shell at the edge without reading the JWT itself.
+            document.cookie = 'admin_session_active=1; path=/; max-age=86400; samesite=lax';
             setToken(data.token);
             setIsLoggedIn(true);
-            // Dispatch event to notify Navigation component
             window.dispatchEvent(new Event('adminAuthChanged'));
         } catch (err) {
             setLoginError(err.message);
@@ -106,12 +109,21 @@ const AdminPanel = () => {
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await fetch(`${BACKEND_URL}/api/admin/logout`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+        } catch (_) {
+            // best-effort — the cookie clear below still resets local state
+        }
         localStorage.removeItem('adminToken');
+        document.cookie = 'admin_session_active=; path=/; max-age=0; samesite=lax';
         setToken('');
         setIsLoggedIn(false);
         setGalleries([]);
-        // Dispatch event to notify Navigation component
         window.dispatchEvent(new Event('adminAuthChanged'));
     };
 
@@ -122,6 +134,7 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -143,18 +156,19 @@ const AdminPanel = () => {
             });
             fetchGalleries();
         } catch (err) {
-            alert('Ошибка: ' + err.message);
+            alert(tAdmin.errorPrefix + err.message);
         } finally {
             setCreateLoading(false);
         }
     };
 
     const handleDeleteGallery = async (id) => {
-        if (!confirm('Вы уверены, что хотите удалить эту галерею?')) return;
+        if (!confirm(tAdmin.confirmDelete)) return;
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries/${id}`, {
                 method: 'DELETE',
+                credentials: 'include',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -165,7 +179,7 @@ const AdminPanel = () => {
 
             fetchGalleries();
         } catch (err) {
-            alert('Ошибка: ' + err.message);
+            alert(tAdmin.errorPrefix + err.message);
         }
     };
 
@@ -173,21 +187,25 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries/${id}/resend`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.error);
 
-            alert('Email успешно отправлен!');
+            alert(tAdmin.emailSent);
         } catch (err) {
-            alert('Ошибка: ' + err.message);
+            alert(tAdmin.errorPrefix + err.message);
         }
     };
 
+    // Locale matches the active UI language so the admin date format follows
+    // the rest of the site.
     const formatDate = (dateString) => {
         if (!dateString) return '-';
-        return new Date(dateString).toLocaleDateString('de-AT', {
+        const localeByLang = { en: 'en-GB', de: 'de-AT', ru: 'ru-RU', uk: 'uk-UA' };
+        return new Date(dateString).toLocaleDateString(localeByLang[language] || 'en-GB', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -215,7 +233,7 @@ const AdminPanel = () => {
 
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Имя пользователя</label>
+                                <label className="block text-sm text-gray-400 mb-1">{tAdmin.username}</label>
                                 <input
                                     type="text"
                                     required
@@ -226,7 +244,7 @@ const AdminPanel = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Пароль</label>
+                                <label className="block text-sm text-gray-400 mb-1">{tAdmin.password}</label>
                                 <input
                                     type="password"
                                     required
@@ -241,7 +259,7 @@ const AdminPanel = () => {
                                 disabled={loginLoading}
                                 className="w-full py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                             >
-                                {loginLoading ? 'Вход...' : 'Войти'}
+                                {loginLoading ? tAdmin.signingIn : tAdmin.signIn}
                             </button>
                         </form>
                     </div>
@@ -257,7 +275,7 @@ const AdminPanel = () => {
             <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-6 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
                 <div className="w-full text-center md:mx-48">
                     <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)] text-center md:text-left">
-                        Admin
+                        {tAdmin.title}
                     </h1>
                 </div>
             </header>
@@ -295,12 +313,12 @@ const AdminPanel = () => {
                     <>
                         {/* Title and Create Button */}
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-light">Галереи</h2>
+                            <h2 className="text-2xl font-light">{tAdmin.menuGalleries}</h2>
                             <button
                                 onClick={() => setShowCreateForm(true)}
                                 className="px-4 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90"
                             >
-                                + Новая галерея
+                                {tAdmin.newGallery}
                             </button>
                         </div>
 
@@ -321,7 +339,7 @@ const AdminPanel = () => {
                         {/* Galleries Table */}
                         {!loading && galleries.length === 0 && (
                             <div className="text-center py-12 text-gray-400">
-                                Галерей пока нет. Создайте первую галерею.
+                                {tAdmin.noGalleries}
                             </div>
                         )}
 
@@ -330,13 +348,13 @@ const AdminPanel = () => {
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b border-zinc-800">
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Email</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Папка</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Название</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Создано</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Просмотрено</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Скачивания</th>
-                                            <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Действия</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableEmail}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableFolder}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableTitle}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableCreated}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableViewed}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableDownloads}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableActions}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -350,7 +368,7 @@ const AdminPanel = () => {
                                                     {gallery.viewed_at ? (
                                                         <span className="text-green-400">{formatDate(gallery.viewed_at)}</span>
                                                     ) : (
-                                                        <span className="text-gray-500">Не просмотрено</span>
+                                                        <span className="text-gray-500">{tAdmin.notViewed}</span>
                                                     )}
                                                 </td>
                                                 <td className="py-4 px-4 text-sm text-center">{gallery.download_count}</td>
@@ -362,19 +380,19 @@ const AdminPanel = () => {
                                                             rel="noopener noreferrer"
                                                             className="px-3 py-1 text-xs bg-zinc-700 rounded hover:bg-zinc-600"
                                                         >
-                                                            Открыть
+                                                            {tAdmin.buttonOpen}
                                                         </a>
                                                         <button
                                                             onClick={() => handleResendEmail(gallery.id)}
                                                             className="px-3 py-1 text-xs bg-blue-600 rounded hover:bg-blue-500"
                                                         >
-                                                            Отправить
+                                                            {tAdmin.buttonResend}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteGallery(gallery.id)}
                                                             className="px-3 py-1 text-xs bg-red-600 rounded hover:bg-red-500"
                                                         >
-                                                            Удалить
+                                                            {tAdmin.buttonDelete}
                                                         </button>
                                                     </div>
                                                 </td>
@@ -390,8 +408,8 @@ const AdminPanel = () => {
                 {/* Placeholder for future sections */}
                 {activeMenu !== 'galleries' && (
                     <div className="text-center py-12 text-gray-400">
-                        <p className="text-xl mb-2">Скоро будет</p>
-                        <p className="text-sm">Этот раздел находится в разработке.</p>
+                        <p className="text-xl mb-2">{tAdmin.comingSoon}</p>
+                        <p className="text-sm">{tAdmin.comingSoonDescription}</p>
                     </div>
                 )}
 
@@ -403,7 +421,7 @@ const AdminPanel = () => {
                     >
                         <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-4 sm:p-6 mt-16 sm:mt-0 sm:my-auto">
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-xl font-light">Создать новую галерею</h3>
+                                <h3 className="text-xl font-light">{tAdmin.createGalleryTitle}</h3>
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateForm(false)}
@@ -417,7 +435,7 @@ const AdminPanel = () => {
 
                             <form onSubmit={handleCreateGallery} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Email *</label>
+                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formClientEmail} *</label>
                                     <input
                                         type="email"
                                         required
@@ -429,43 +447,43 @@ const AdminPanel = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Название папки *</label>
+                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formFolderName} *</label>
                                     <input
                                         type="text"
                                         required
                                         value={createData.folder_name}
                                         onChange={(e) => setCreateData({ ...createData, folder_name: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
-                                        placeholder="например, wedding-john-jane"
+                                        placeholder={tAdmin.placeholderFolder}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Путь в Bunny CDN: clients/[название_папки]</p>
+                                    <p className="text-xs text-gray-500 mt-1">{tAdmin.formFolderHint}</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Заголовок (опционально)</label>
+                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formGalleryTitle}</label>
                                     <input
                                         type="text"
                                         value={createData.title}
                                         onChange={(e) => setCreateData({ ...createData, title: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
-                                        placeholder="например, Свадебные фото"
+                                        placeholder={tAdmin.placeholderTitle}
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Сообщение (опционально)</label>
+                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formMessage}</label>
                                     <textarea
                                         rows={3}
                                         value={createData.message}
                                         onChange={(e) => setCreateData({ ...createData, message: e.target.value })}
                                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)] resize-none"
-                                        placeholder="Личное сообщение для клиента..."
+                                        placeholder={tAdmin.placeholderMessage}
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Язык письма</label>
+                                        <label className="block text-sm text-gray-400 mb-1">{tAdmin.formLanguage}</label>
                                         <select
                                             value={createData.language}
                                             onChange={(e) => setCreateData({ ...createData, language: e.target.value })}
@@ -478,18 +496,18 @@ const AdminPanel = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Срок действия (дней)</label>
+                                        <label className="block text-sm text-gray-400 mb-1">{tAdmin.formExpiresIn}</label>
                                         <select
                                             value={createData.expires_in}
                                             onChange={(e) => setCreateData({ ...createData, expires_in: parseInt(e.target.value) })}
                                             className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         >
-                                            <option value={0}>Бессрочно</option>
-                                            <option value={7}>7 дней</option>
-                                            <option value={14}>14 дней</option>
-                                            <option value={30}>30 дней</option>
-                                            <option value={60}>60 дней</option>
-                                            <option value={90}>90 дней</option>
+                                            <option value={0}>{tAdmin.expiresNever}</option>
+                                            <option value={7}>{tAdmin.expiresDays.replace('{days}', '7')}</option>
+                                            <option value={14}>{tAdmin.expiresDays.replace('{days}', '14')}</option>
+                                            <option value={30}>{tAdmin.expiresDays.replace('{days}', '30')}</option>
+                                            <option value={60}>{tAdmin.expiresDays.replace('{days}', '60')}</option>
+                                            <option value={90}>{tAdmin.expiresDays.replace('{days}', '90')}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -500,14 +518,14 @@ const AdminPanel = () => {
                                         onClick={() => setShowCreateForm(false)}
                                         className="flex-1 py-3 bg-zinc-700 rounded-lg hover:bg-zinc-600"
                                     >
-                                        Отмена
+                                        {t.common.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={createLoading}
                                         className="flex-1 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                                     >
-                                        {createLoading ? 'Создание...' : 'Создать и отправить'}
+                                        {createLoading ? tAdmin.creating : tAdmin.create}
                                     </button>
                                 </div>
                             </form>

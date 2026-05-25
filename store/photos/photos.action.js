@@ -40,7 +40,6 @@ export const setCategoryPhotos = ({category}) => async (dispatch) => {
   dispatch(fetchCategoryPhotosStart())
   dispatch(setCategorySelected(true))
   try {
-    console.log("Here category: ", category)
     const photosData = await getCategoryPhotos(category)
     dispatch(fetchCategoryPhotosSuccess(photosData))
   } catch (error) {

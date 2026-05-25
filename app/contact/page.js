@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import { InlineLoader } from '@/components/ui/Loader';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+import { BACKEND_URL } from '@/lib/config';
 
 const Contact = () => {
     const { t } = useLanguage();

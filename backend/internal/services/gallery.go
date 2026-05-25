@@ -6,12 +6,26 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"bebe-backend/internal/database"
 	"bebe-backend/internal/models"
 )
+
+// prettyHost returns the host portion of a URL for display in emails
+// (e.g. "https://bebemedia.at" → "bebemedia.at"). Falls back to the raw
+// input if parsing fails.
+func prettyHost(rawURL string) string {
+	u, err := url.Parse(rawURL)
+	if err != nil || u.Host == "" {
+		return strings.TrimPrefix(strings.TrimPrefix(rawURL, "https://"), "http://")
+	}
+	return u.Host
+}
 
 type GalleryService struct {
 	emailService *EmailService
@@ -84,8 +98,9 @@ func (s *GalleryService) CreateGallery(req models.CreateGalleryRequest) (*models
 		language = "en"
 	}
 	if err := s.sendGalleryEmail(req.ClientEmail, token, req.Title, req.Message, language, req.ExpiresIn); err != nil {
-		// Log error but don't fail - gallery is created
-		fmt.Printf("Failed to send gallery email: %v\n", err)
+		// Log error but don't fail - the gallery row is already in the DB
+		// and the admin can resend the email from the UI.
+		log.Println("Error in function CreateGallery", err)
 	}
 
 	response := &models.GalleryResponse{
@@ -132,7 +147,9 @@ func (s *GalleryService) GetGalleryByToken(token string) (*models.Gallery, error
 
 	// Update viewed_at if first view
 	if !gallery.ViewedAt.Valid {
-		database.DB.Exec("UPDATE galleries SET viewed_at = $1 WHERE id = $2", time.Now(), gallery.ID)
+		if _, err := database.DB.Exec("UPDATE galleries SET viewed_at = $1 WHERE id = $2", time.Now(), gallery.ID); err != nil {
+			log.Println("Error in function GetGalleryByToken", err)
+		}
 	}
 
 	return &gallery, nil
@@ -326,7 +343,7 @@ func (s *GalleryService) sendGalleryEmail(email, token, title, message, language
 	galleryURL := fmt.Sprintf("%s/gallery/%s", s.frontendURL, token)
 	t := getGalleryTranslation(language)
 
-	fmt.Printf("Sending gallery email: language=%s, frontendURL=%s, expiresIn=%d\n", language, s.frontendURL, expiresIn)
+	log.Printf("sendGalleryEmail: language=%s, frontendURL=%s, expiresIn=%d", language, s.frontendURL, expiresIn)
 
 	subject := t.subject
 	if title != "" {
@@ -399,7 +416,7 @@ func (s *GalleryService) sendGalleryEmail(email, token, title, message, language
                         <td style="background-color: #0a0a0a; padding: 25px 30px; text-align: center; border-top: 1px solid #27272a;">
                             <p style="color: #71717a; font-size: 13px; margin: 0;">
                                 %s<br>
-                                <a href="https://bebemedia.at" style="color: #84cc16; text-decoration: none;">bebemedia.at</a>
+                                <a href="%s" style="color: #84cc16; text-decoration: none;">%s</a>
                             </p>
                         </td>
                     </tr>
@@ -414,7 +431,7 @@ func (s *GalleryService) sendGalleryEmail(email, token, title, message, language
 			return fmt.Sprintf(`<p style="color: #d4d4d8; line-height: 1.7; margin-bottom: 25px; padding: 20px; background-color: #27272a; border-radius: 8px; border-left: 4px solid #84cc16; font-size: 15px;">%s</p>`, message)
 		}
 		return ""
-	}(), t.greeting, galleryURL, t.viewGallery, expirationText, t.fallbackLink, galleryURL, galleryURL, t.thankYou)
+	}(), t.greeting, galleryURL, t.viewGallery, expirationText, t.fallbackLink, galleryURL, galleryURL, t.thankYou, s.frontendURL, prettyHost(s.frontendURL))
 
 	return s.emailService.SendHTML(email, subject, htmlBody)
 }

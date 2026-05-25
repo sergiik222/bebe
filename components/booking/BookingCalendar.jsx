@@ -2,18 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Loader from '@/components/ui/Loader';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
-
-// Debug: Log backend URL in development
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log('Backend URL:', BACKEND_URL);
-}
-
-const getLocale = (language) => {
-    const locales = { en: 'en-US', de: 'de-DE', ru: 'ru-RU', uk: 'uk-UA' };
-    return locales[language] || 'en-US';
-};
+import { BACKEND_URL, getLocale } from '@/lib/config';
 
 const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
     const locale = getLocale(language);

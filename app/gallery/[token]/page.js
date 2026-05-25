@@ -11,10 +11,7 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import JSZip from 'jszip';
 import Loader from '@/components/ui/Loader';
 import CustomVideoPlayer from '@/components/home/CustomVideoPlayer';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
-const CDN_HOSTNAME = process.env.NEXT_PUBLIC_BUNNY_CDN_HOSTNAME;
-const CDN_URL = `https://${CDN_HOSTNAME}`;
+import { BACKEND_URL } from '@/lib/config';
 
 // Bunny CDN optimization
 const getOptimizedUrl = (url, width, quality = 60) => {
@@ -339,7 +336,7 @@ const MediaCard = ({ item, isSelected, onToggle, onView, onDownload }) => {
                         src={item.url}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         muted
-                        preload="metadata"
+                        preload="none"
                     />
                 ) : (
                     <Image

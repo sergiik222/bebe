@@ -6,11 +6,12 @@ import {selectMainPhotosHome, selectMainPhotosIsLoading} from "@/store/photos/ph
 import {setMainPhotos} from "@/store/photos/photos.action";
 import {setMainVideos} from "@/store/videos/videos.action";
 import {selectMainVideosHome, selectMainVideosIsLoading} from "@/store/videos/videos.selector";
-import Header from "@/components/home/Header";
 import MediaContainerAnimated from "@/components/home/MediaContainerAnimated";
 import {setChosenMediaName} from "@/store/media/media.action";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { useMediaSize } from "@/hooks/useMediaSize";
+
+// Header import was removed: the stub component returned null and shipped no UI.
 
 const MediaComponent = () => {
     const dispatch = useDispatch()
@@ -65,7 +66,6 @@ const MediaComponent = () => {
 
     return (
         <div>
-            <Header  />
             <MediaContainerAnimated
                 medias={mergedMedia}
                 mediaSize={mediaSize}

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -18,11 +19,16 @@ type AdminService struct {
 	jwtSecret []byte
 }
 
-// NewAdminService creates a new admin service
+// NewAdminService creates a new admin service.
+// JWT_SECRET must be set — we fail fast rather than fall back to a known
+// default that would silently weaken auth in production.
 func NewAdminService() *AdminService {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "default-secret-change-me" // Fallback, should be set in production
+		log.Fatal("JWT_SECRET environment variable is required")
+	}
+	if len(secret) < 32 {
+		log.Fatal("JWT_SECRET must be at least 32 characters")
 	}
 	return &AdminService{
 		jwtSecret: []byte(secret),

@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { InlineLoader } from '@/components/ui/Loader';
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+import { BACKEND_URL, getLocale } from '@/lib/config';
 
 const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
+    const locale = getLocale(language);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -24,7 +24,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
 
     const formatTime = (isoString) => {
         const date = new Date(isoString);
-        return date.toLocaleTimeString('en-US', {
+        return date.toLocaleTimeString(locale, {
             hour: '2-digit',
             minute: '2-digit',
             hour12: false
