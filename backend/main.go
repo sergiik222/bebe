@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"bebe-backend/internal/database"
@@ -58,28 +57,15 @@ func main() {
 	// Setup router
 	router := gin.Default()
 
-	// CORS configuration — explicit allowlist, no wildcard.
-	// CORS_ALLOWED_ORIGINS is a comma-separated list of origins (e.g.
-	// "https://bebemedia.at,https://www.bebemedia.at"). Local dev origins
-	// are always allowed.
-	allowedOrigins := []string{
-		"http://localhost:3000",
-		"http://127.0.0.1:3000",
-	}
-	if raw := os.Getenv("CORS_ALLOWED_ORIGINS"); raw != "" {
-		for _, o := range strings.Split(raw, ",") {
-			if o = strings.TrimSpace(o); o != "" {
-				allowedOrigins = append(allowedOrigins, o)
-			}
-		}
-	}
+	// CORS configuration.
+	// TODO(prod): switch to an explicit allowlist via CORS_ALLOWED_ORIGINS
+	// before going live. Keeping AllowAllOrigins for dev so deploys don't
+	// need new env vars.
 	config := cors.DefaultConfig()
-	config.AllowOrigins = allowedOrigins
+	config.AllowAllOrigins = true
 	config.AllowHeaders = []string{"Content-Type", "Authorization"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowCredentials = true
 	router.Use(cors.New(config))
-	log.Printf("CORS allowed origins: %v", allowedOrigins)
 
 	// API routes
 	api := router.Group("/api")

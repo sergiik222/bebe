@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -20,15 +19,12 @@ type AdminService struct {
 }
 
 // NewAdminService creates a new admin service.
-// JWT_SECRET must be set — we fail fast rather than fall back to a known
-// default that would silently weaken auth in production.
+// TODO(prod): tighten this to fail-fast on missing/short JWT_SECRET once
+// Koyeb env vars are set. Keeping the fallback for dev convenience.
 func NewAdminService() *AdminService {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		log.Fatal("JWT_SECRET environment variable is required")
-	}
-	if len(secret) < 32 {
-		log.Fatal("JWT_SECRET must be at least 32 characters")
+		secret = "default-secret-change-me" // Fallback, should be set in production
 	}
 	return &AdminService{
 		jwtSecret: []byte(secret),
