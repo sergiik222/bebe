@@ -55,7 +55,6 @@ const AdminPanel = () => {
         try {
             setLoading(true);
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries`, {
-                credentials: 'include',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -85,7 +84,6 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/login`, {
                 method: 'POST',
-                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData)
             });
@@ -113,7 +111,6 @@ const AdminPanel = () => {
         try {
             await fetch(`${BACKEND_URL}/api/admin/logout`, {
                 method: 'POST',
-                credentials: 'include',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
         } catch (_) {
@@ -134,7 +131,6 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries`, {
                 method: 'POST',
-                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -168,7 +164,6 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries/${id}`, {
                 method: 'DELETE',
-                credentials: 'include',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -187,7 +182,6 @@ const AdminPanel = () => {
         try {
             const response = await fetch(`${BACKEND_URL}/api/admin/galleries/${id}/resend`, {
                 method: 'POST',
-                credentials: 'include',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
