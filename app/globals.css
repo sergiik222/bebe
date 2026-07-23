@@ -3,33 +3,34 @@
 @tailwind utilities;
 
 /* ========================================
-   COLOR SCHEME — Electric Cyan (Neon Ice)
-   Deep cool charcoal with neon-cyan accent. Blade Runner mood.
+   COLOR SCHEME — Verde Antico
+   Forest-green tinted near-black surface, bone-white accent.
+   The surface IS the brand; buttons stay quiet so they don't fight the wall.
    ======================================== */
 :root {
-    /* Electric Cyan — active */
-    --accent-color: #00e5ff;
-    --accent-color-rgb: 0, 229, 255;
-    --accent-light: #5cf2ff;
-    --accent-dark: #00a8bd;
-    --accent-glow: rgba(0, 229, 255, 0.6);
-    --accent-glow-strong: rgba(0, 229, 255, 0.8);
+    /* Verde Antico — active */
+    --accent-color: #ebe7d8;
+    --accent-color-rgb: 235, 231, 216;
+    --accent-light: #ffffff;
+    --accent-dark: #b8b4a5;
+    --accent-glow: rgba(235, 231, 216, 0.35);
+    --accent-glow-strong: rgba(235, 231, 216, 0.55);
 
-    /* Surface + ink tokens (Electric Cyan) */
-    --bg-base: #0a0d11;
-    --bg-elev: #141820;
-    --border-subtle: #1d2330;
-    --border-strong: #2e3645;
-    --text-primary: #e8ecf2;
-    --text-muted: #8a92a0;
-    --text-dim: #5a6170;
+    /* Surface + ink tokens (Verde Antico) */
+    --bg-base: #0c1310;
+    --bg-elev: #141d18;
+    --border-subtle: #1c2620;
+    --border-strong: #2c3a31;
+    --text-primary: #ebe7d8;
+    --text-muted: #8e928a;
+    --text-dim: #5a605b;
 
     /* --- previous schemes kept for quick rollback ---
-    Cobalt:         accent #2e5cff / bg #0e1015 / text #e8eaef
-    Chambre Froide: accent #c4788a / bg #13151a / text #e8e4dc
-    Atelier Blanc:  accent #a07840 / bg #f7f4ef / text #1a1714
-    Galerie Noir:   accent #d97706 / bg #111110 / text #f5f0e8
-    Lime:           accent #84cc16
+    Electric Violet: accent #9d4dff / bg #0c0d12
+    Electric Cyan:   accent #00e5ff / bg #0a0d11
+    Cobalt:          accent #2e5cff / bg #0e1015
+    Galerie Noir:    accent #d97706 / bg #111110
+    Lime:            accent #84cc16
     */
 }
 
@@ -94,9 +95,8 @@ html, body {
 html, body {
     background: var(--bg-base);
     background-image:
-        radial-gradient(circle at 75% 10%, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 20% 90%, rgba(0, 229, 255, 0.04) 0%, transparent 45%),
-        linear-gradient(180deg, #0c1015 0%, #0a0d11 50%, #07090c 100%);
+        radial-gradient(circle at 30% 0%, rgba(235, 231, 216, 0.025) 0%, transparent 50%),
+        linear-gradient(180deg, #0e1612 0%, #0c1310 50%, #091009 100%);
     background-attachment: fixed;
     color: var(--text-primary);
     height: 100%;

@@ -33,13 +33,14 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en" className={primaryFont.variable}>
         <body className="scroll-smooth bg-background text-primary-text">
-        {/* Electric Cyan: two cyan radial bleeds over a near-pure black
-            gradient. Blade-Runner neon-key-light atmosphere. */}
+        {/* Verde Antico: a forest-green tinted near-black gradient with a
+            very faint bone-white wash at the top. Surface is the brand;
+            accents stay quiet. */}
         <div
             className="fixed inset-0 w-full h-full z-0 pointer-events-none"
             style={{
                 backgroundImage:
-                    'radial-gradient(circle at 75% 10%, rgba(0, 229, 255, 0.07) 0%, transparent 50%), radial-gradient(circle at 20% 90%, rgba(0, 229, 255, 0.035) 0%, transparent 45%), linear-gradient(180deg, rgba(12,16,21,0.6) 0%, rgba(10,13,17,0.85) 50%, rgba(7,9,12,0.95) 100%)',
+                    'radial-gradient(circle at 30% 0%, rgba(235, 231, 216, 0.02) 0%, transparent 50%), linear-gradient(180deg, rgba(14,22,18,0.6) 0%, rgba(12,19,16,0.85) 50%, rgba(9,16,9,0.95) 100%)',
                 backgroundAttachment: 'fixed'
             }}
         />
