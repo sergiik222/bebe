@@ -54,9 +54,9 @@
     --accent-glow: rgba(143, 158, 99, 0.45);
     --accent-glow-strong: rgba(143, 158, 99, 0.65);
 
-    /* Written by the home carousel: slides the background surface under a
-       fixed key light. */
-    --bg-shift: 0px;
+    /* Written by the home carousel: tips the background surface toward the
+       drag. */
+    --bg-tilt: 0deg;
 }
 
 /* ========================================

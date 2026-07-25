@@ -1,25 +1,9 @@
 'use client'
 
-// Everything the carousel publishes is a single number, --bg-shift. Each layer
-// takes a different fraction of it, so the surface has internal depth instead
-// of sliding as one flat sheet. Lighting is deliberately absent from this list:
-// the mat moves, the lamp does not.
-const DRIFT = {
-    base: 0.15,
-    mottle: 0.55,
-    grid: 1,
-    guides: 0.8,
-    ruler: 1,
-    cuts: 0.35,
-    sheen: -4
-}
-
-// Layers drift, so the surface has to overhang far enough that a shifted edge
+// The tilt stage rotates, so it has to overhang far enough that a swung edge
 // never enters frame. Anything positioned against an edge is offset by the
 // same amount to stay where it was.
 const OVERHANG = 140
-
-const drift = (rate) => `translate3d(calc(var(--bg-shift, 0px) * ${rate}), 0, 0)`
 
 export default function BackgroundSurface() {
     // grid geometry: 1cm squares at 28px, major square every 5 (140px)
@@ -55,42 +39,48 @@ export default function BackgroundSurface() {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" style={{ backgroundColor: '#101216' }}>
 
-            {/* Surface stage. Deliberately not rotated: tipping a full-screen
-                layer of hairline grid in 3D re-rasterises it every frame and
-                the 1px lines shimmer as they land on different subpixels. */}
-            <div style={{ position: 'absolute', inset: -OVERHANG }}>
-                <div style={{ position: 'absolute', inset: 0 }}>
+            {/* perspective host for the tilt stage */}
+            <div style={{ position: 'absolute', inset: -OVERHANG, perspective: '1400px' }}>
+
+                {/* tilt stage -- tips toward the drag. Easing back to flat is
+                    done frame by frame on --bg-tilt itself, so no CSS
+                    transition here: it would only add lag on top. */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        transformOrigin: '50% 50%',
+                        transform: 'rotateY(var(--bg-tilt, 0deg)) rotateX(calc(var(--bg-tilt, 0deg) * -0.3))'
+                    }}
+                >
                     {/* mat base -- deep green cutting-mat body */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.base), background: 'linear-gradient(135deg, #16211c 0%, #1e2b24 48%, #16211c 100%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #16211c 0%, #1e2b24 48%, #16211c 100%)' }} />
 
                     {/* mottling -- uneven, used surface, irregular soft patches */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.mottle), backgroundImage: 'radial-gradient(ellipse 620px 420px at 18% 28%, rgba(42,59,49,0.30), transparent 70%), radial-gradient(ellipse 520px 700px at 82% 58%, rgba(42,59,49,0.22), transparent 72%), radial-gradient(ellipse 760px 480px at 46% 88%, rgba(14,20,17,0.35), transparent 70%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(ellipse 620px 420px at 18% 28%, rgba(42,59,49,0.30), transparent 70%), radial-gradient(ellipse 520px 700px at 82% 58%, rgba(42,59,49,0.22), transparent 72%), radial-gradient(ellipse 760px 480px at 46% 88%, rgba(14,20,17,0.35), transparent 70%)' }} />
 
                     {/* minor grid -- 1cm squares */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.grid), backgroundImage: `repeating-linear-gradient(to right, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent ${minor}px), repeating-linear-gradient(to bottom, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent ${minor}px)` }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(to right, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent ${minor}px), repeating-linear-gradient(to bottom, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, transparent 1px, transparent ${minor}px)` }} />
 
                     {/* major grid -- every 5th square, heavier line */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.grid), backgroundImage: `repeating-linear-gradient(to right, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 1.5px, transparent 1.5px, transparent ${majorStep}px), repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 1.5px, transparent 1.5px, transparent ${majorStep}px)` }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(to right, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 1.5px, transparent 1.5px, transparent ${majorStep}px), repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0px, rgba(255,255,255,0.10) 1.5px, transparent 1.5px, transparent ${majorStep}px)` }} />
 
                     {/* angle guides -- 45deg / 60deg printed lines from lower-left origin */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.guides), backgroundImage: angleUrl, backgroundSize: '900px 900px', backgroundPosition: 'left bottom', backgroundRepeat: 'no-repeat' }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: angleUrl, backgroundSize: '900px 900px', backgroundPosition: 'left bottom', backgroundRepeat: 'no-repeat' }} />
 
                     {/* ruler -- bottom edge, held inboard so it never collides with the fixed UI measurement bar */}
-                    <div style={{ position: 'absolute', left: 24 + OVERHANG, right: 24 + OVERHANG, bottom: 148 + OVERHANG, height: 40, transform: drift(DRIFT.ruler), backgroundImage: rulerUrl, backgroundRepeat: 'repeat-x', backgroundPosition: 'left top' }} />
+                    <div style={{ position: 'absolute', left: 24 + OVERHANG, right: 24 + OVERHANG, bottom: 148 + OVERHANG, height: 40, backgroundImage: rulerUrl, backgroundRepeat: 'repeat-x', backgroundPosition: 'left top' }} />
 
                     {/* ruler -- left edge, rotated copy, also held inboard */}
                     <div style={{ position: 'absolute', top: 24 + OVERHANG, left: 108 + OVERHANG, width: rulerLen, height: 40, transform: 'rotate(-90deg)', transformOrigin: 'top left', backgroundImage: rulerUrl, backgroundRepeat: 'repeat-x', backgroundPosition: 'left top' }} />
 
                     {/* registration cross -- centred */}
-                    <div style={{ position: 'absolute', top: '50%', left: '50%', width: 36, height: 1, transform: `translate(-50%, -50%) ${drift(DRIFT.grid)}`, background: 'rgba(143,158,99,0.14)' }} />
-                    <div style={{ position: 'absolute', top: '50%', left: '50%', width: 1, height: 36, transform: `translate(-50%, -50%) ${drift(DRIFT.grid)}`, background: 'rgba(143,158,99,0.14)' }} />
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', width: 36, height: 1, transform: 'translate(-50%, -50%)', background: 'rgba(143,158,99,0.14)' }} />
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', width: 1, height: 36, transform: 'translate(-50%, -50%)', background: 'rgba(143,158,99,0.14)' }} />
 
                     {/* healed cuts -- faint scored lines proving this is a used, physical mat */}
-                    <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.cuts), backgroundImage: cutsUrl, backgroundSize: '1600px 900px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: cutsUrl, backgroundSize: '1600px 900px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
 
-                    {/* sheen -- broad soft highlight raking the vinyl, sliding against
-                        the surface so it reads as a reflection, not as print */}
-                    <div style={{ position: 'absolute', top: 0, bottom: 0, left: '-40%', right: '-40%', transform: drift(DRIFT.sheen), backgroundImage: 'linear-gradient(100deg, transparent 38%, rgba(198,214,168,0.045) 47%, rgba(198,214,168,0.075) 50%, rgba(198,214,168,0.045) 53%, transparent 62%)' }} />
                 </div>
             </div>
 
