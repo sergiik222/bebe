@@ -54,9 +54,10 @@
     --accent-glow: rgba(143, 158, 99, 0.45);
     --accent-glow-strong: rgba(143, 158, 99, 0.65);
 
-    /* Horizontal drift of the background texture, written by the home
-       carousel so the surface slides under a fixed key light. */
+    /* Written by the home carousel. --bg-shift slides the surface under a
+       fixed key light; --bg-tilt tips it toward the drag. */
     --bg-shift: 0px;
+    --bg-tilt: 0deg;
 }
 
 /* ========================================

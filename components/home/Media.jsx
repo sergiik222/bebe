@@ -43,6 +43,10 @@ const Media = memo(({media, isMiddle, isDragging, mediaSize, mediaMargin, index,
                 height: `${height}px`,
                 flexShrink: 0,
                 marginLeft: index === 0 ? 0 : `${mediaMargin}px`,
+                // Grounds the photo on the surface behind it. The key light
+                // sits upper-right, so the shadow falls down and to the left:
+                // a tight contact shadow plus a broad ambient one.
+                boxShadow: '-10px 16px 26px -10px rgba(0,0,0,0.62), -26px 42px 68px -18px rgba(0,0,0,0.5)',
             }}>
             {mediaType === "img" ?   <ImageComponent  src={media.url} alt={media.alt} isMiddle={isMiddle} isDragging={isDragging} date={media.date} onLoaded={onLoaded} /> : <VideoComponent videoUrl={media.url} alt={media.alt} draggable="false" isMiddle={isMiddle} isDragging={isDragging} onLoaded={onLoaded}/>}
         </div>
