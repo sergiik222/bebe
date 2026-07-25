@@ -12,16 +12,6 @@ import { useMediaSize } from "@/hooks/useMediaSize";
 // How far the background surface slides, either side of centre.
 const BACKGROUND_DRIFT_PX = 50;
 
-// Tilt is driven by drag speed, not position: the board tips toward the
-// direction you are throwing it and settles back once you stop.
-const MAX_TILT_DEG = 3;
-// An ordinary drag runs around 1 px/ms, which should already read as a tip;
-// the cap is then reached on a fast flick rather than never.
-const TILT_PER_PX_PER_MS = 1.8;
-const TILT_SMOOTHING = 0.2;
-// Below this the tilt is snapped to flat, so it stops writing every frame.
-const TILT_EPSILON_DEG = 0.005;
-
 const WHEEL_MULTIPLIER = 1.05;
 const DECAY = 0.95;
 const MIN_VELOCITY = 0.05;
@@ -169,50 +159,24 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
 
     const [{ mediaX }, api] = useSpring(() => ({ mediaX: 0, config: { mass: 0.9, tension: 220, friction: 26 } }));
 
-    // Publish drift and tilt for BackgroundSurface, written straight to the
-    // document so the background can live in the layout, outside this tree,
-    // without a context or a re-render per frame.
+    // Publish the drift for BackgroundSurface, written straight to the document
+    // so the background can live in the layout, outside this tree, without a
+    // context or a re-render per frame.
     //
     // Polled rather than pushed: the spring is driven imperatively through
-    // api.start(), and an onChange declared on it never fires once that
-    // happens. Reading the value per frame is the reliable route, and it also
-    // gives us the idle frames needed to ease the tilt back to flat.
+    // api.start(), and an onChange declared on it never fires once that happens.
     useEffect(() => {
         const root = document.documentElement;
         let frame = null;
         let lastX = null;
-        let lastTime = performance.now();
-        let degrees = 0;
-        let lastWritten = null;
 
         const tick = () => {
             const x = mediaX.get();
-            const now = performance.now();
-
             if (x !== lastX) {
                 const drift = BACKGROUND_DRIFT_PX * Math.sin((2 * Math.PI * x) / driftPeriodRef.current);
                 root.style.setProperty('--bg-shift', `${drift.toFixed(2)}px`);
-
-                const elapsed = now - lastTime;
-                if (lastX !== null && elapsed > 0) {
-                    const velocity = (x - lastX) / elapsed;
-                    const target = Math.max(-MAX_TILT_DEG, Math.min(MAX_TILT_DEG, velocity * TILT_PER_PX_PER_MS));
-                    degrees += (target - degrees) * TILT_SMOOTHING;
-                }
                 lastX = x;
-                lastTime = now;
-            } else if (degrees !== 0) {
-                // Carousel has stopped - settle the board back to flat
-                degrees += (0 - degrees) * TILT_SMOOTHING;
-                if (Math.abs(degrees) < TILT_EPSILON_DEG) degrees = 0;
             }
-
-            const tilt = degrees.toFixed(3);
-            if (tilt !== lastWritten) {
-                root.style.setProperty('--bg-tilt', `${tilt}deg`);
-                lastWritten = tilt;
-            }
-
             frame = requestAnimationFrame(tick);
         };
 
@@ -220,7 +184,6 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         return () => {
             cancelAnimationFrame(frame);
             root.style.setProperty('--bg-shift', '0px');
-            root.style.setProperty('--bg-tilt', '0deg');
         };
     }, [mediaX]);
 

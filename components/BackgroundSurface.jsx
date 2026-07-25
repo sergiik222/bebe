@@ -14,7 +14,7 @@ const DRIFT = {
     sheen: -4
 }
 
-// The tilt stage rotates, so it has to overhang far enough that a swung edge
+// Layers drift, so the surface has to overhang far enough that a shifted edge
 // never enters frame. Anything positioned against an edge is offset by the
 // same amount to stay where it was.
 const OVERHANG = 140
@@ -55,20 +55,11 @@ export default function BackgroundSurface() {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" style={{ backgroundColor: '#101216' }}>
 
-            {/* perspective host for the tilt stage */}
-            <div style={{ position: 'absolute', inset: -OVERHANG, perspective: '1400px' }}>
-
-                {/* tilt stage -- tips toward the drag. The easing back to flat
-                    is done frame by frame on the --bg-tilt value itself, so no
-                    CSS transition here: it would only add lag on top. */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        transformOrigin: '50% 50%',
-                        transform: 'rotateY(var(--bg-tilt, 0deg)) rotateX(calc(var(--bg-tilt, 0deg) * -0.3))'
-                    }}
-                >
+            {/* Surface stage. Deliberately not rotated: tipping a full-screen
+                layer of hairline grid in 3D re-rasterises it every frame and
+                the 1px lines shimmer as they land on different subpixels. */}
+            <div style={{ position: 'absolute', inset: -OVERHANG }}>
+                <div style={{ position: 'absolute', inset: 0 }}>
                     {/* mat base -- deep green cutting-mat body */}
                     <div style={{ position: 'absolute', inset: 0, transform: drift(DRIFT.base), background: 'linear-gradient(135deg, #16211c 0%, #1e2b24 48%, #16211c 100%)' }} />
 
