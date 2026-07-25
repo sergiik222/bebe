@@ -11,20 +11,20 @@ export default function BackgroundSurface() {
     for (let x = 0; x <= rulerLen; x += minor) {
         const isMajor = x % majorStep === 0
         ticks.push(
-            `<line x1="${x}" y1="6" x2="${x}" y2="${isMajor ? 20 : 12}" stroke="rgba(34,211,238,0.16)" stroke-width="${isMajor ? 1.2 : 0.7}"/>`
+            `<line x1="${x}" y1="6" x2="${x}" y2="${isMajor ? 20 : 12}" stroke="rgba(143,158,99,0.16)" stroke-width="${isMajor ? 1.2 : 0.7}"/>`
         )
     }
     const labels = []
     for (let x = majorStep; x <= rulerLen; x += majorStep) {
         labels.push(
-            `<text x="${x + 3}" y="33" font-size="10" font-family="monospace" fill="rgba(34,211,238,0.22)">${x / minor}</text>`
+            `<text x="${x + 3}" y="33" font-size="10" font-family="monospace" fill="rgba(143,158,99,0.22)">${x / minor}</text>`
         )
     }
-    const rulerSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='${rulerLen}' height='40'><line x1='0' y1='6' x2='${rulerLen}' y2='6' stroke='rgba(34,211,238,0.14)' stroke-width='1'/>${ticks.join('')}${labels.join('')}</svg>`
+    const rulerSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='${rulerLen}' height='40'><line x1='0' y1='6' x2='${rulerLen}' y2='6' stroke='rgba(143,158,99,0.14)' stroke-width='1'/>${ticks.join('')}${labels.join('')}</svg>`
     const rulerUrl = `url("data:image/svg+xml,${encodeURIComponent(rulerSvg)}")`
 
     // 45deg / 60deg angle guides radiating from the lower-left origin, faint cyan
-    const angleSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900'><line x1='0' y1='900' x2='900' y2='0' stroke='rgba(34,211,238,0.10)' stroke-width='1'/><line x1='0' y1='900' x2='450' y2='0' stroke='rgba(34,211,238,0.08)' stroke-width='1'/><line x1='0' y1='450' x2='900' y2='450' stroke='rgba(34,211,238,0.06)' stroke-width='1'/></svg>`
+    const angleSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900'><line x1='0' y1='900' x2='900' y2='0' stroke='rgba(143,158,99,0.10)' stroke-width='1'/><line x1='0' y1='900' x2='450' y2='0' stroke='rgba(143,158,99,0.08)' stroke-width='1'/><line x1='0' y1='450' x2='900' y2='450' stroke='rgba(143,158,99,0.06)' stroke-width='1'/></svg>`
     const angleUrl = `url("data:image/svg+xml,${encodeURIComponent(angleSvg)}")`
 
     // sparse, asymmetric healed knife cuts -- barely-there straight scores, random angles
@@ -59,8 +59,8 @@ export default function BackgroundSurface() {
             <div style={{ position: 'absolute', top: 24, left: 188, width: rulerLen, height: 40, transform: 'rotate(-90deg)', transformOrigin: 'top left', backgroundImage: rulerUrl, backgroundRepeat: 'repeat-x', backgroundPosition: 'left top' }} />
 
             {/* registration cross -- centred */}
-            <div style={{ position: 'absolute', top: '50%', left: '50%', width: 36, height: 1, transform: 'translate(-50%, -50%)', background: 'rgba(34,211,238,0.14)' }} />
-            <div style={{ position: 'absolute', top: '50%', left: '50%', width: 1, height: 36, transform: 'translate(-50%, -50%)', background: 'rgba(34,211,238,0.14)' }} />
+            <div style={{ position: 'absolute', top: '50%', left: '50%', width: 36, height: 1, transform: 'translate(-50%, -50%)', background: 'rgba(143,158,99,0.14)' }} />
+            <div style={{ position: 'absolute', top: '50%', left: '50%', width: 1, height: 36, transform: 'translate(-50%, -50%)', background: 'rgba(143,158,99,0.14)' }} />
 
             {/* healed cuts -- faint scored lines proving this is a used, physical mat */}
             <div style={{ position: 'absolute', inset: 0, backgroundImage: cutsUrl, backgroundSize: '1600px 900px', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />

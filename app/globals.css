@@ -35,13 +35,24 @@
     --accent-glow-strong: rgba(132, 204, 22, 0.8);
 */
 
-    /* Daylight cyan - 5600K, picks up the cyan already in the lens motif */
+    /* Daylight cyan - 5600K
     --accent-color: #22d3ee;
     --accent-color-rgb: 34, 211, 238;
     --accent-light: #67e8f9;
     --accent-dark: #0891b2;
     --accent-glow: rgba(34, 211, 238, 0.6);
     --accent-glow-strong: rgba(34, 211, 238, 0.8);
+*/
+
+    /* Olive - sits in the cutting mat's own family so the UI reads as
+       printed on the surface rather than laid over it. 6.5:1 on the page
+       background, so 12px labels still pass AA. */
+    --accent-color: #8f9e63;
+    --accent-color-rgb: 143, 158, 99;
+    --accent-light: #adba85;
+    --accent-dark: #6d7a48;
+    --accent-glow: rgba(143, 158, 99, 0.45);
+    --accent-glow-strong: rgba(143, 158, 99, 0.65);
 
     /* Horizontal drift of the background texture, written by the home
        carousel so the surface slides under a fixed key light. */
