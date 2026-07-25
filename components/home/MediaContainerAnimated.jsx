@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 import MediaContainer from './MediaContainer';
+import CustomScaleBar from './CustomScaleBar';
 import Loader from "@/components/ui/Loader";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { useMediaSize } from "@/hooks/useMediaSize";
@@ -15,6 +16,10 @@ const MIN_VELOCITY = 0.05;
 const FOCUS_MARKS = [0.7, 1, 1.4, 2, 2.8, 4, 5.6, 8, 11, 16]; // example f-stop-like values
 const FOCUS_MIN = FOCUS_MARKS[0];
 const FOCUS_MAX = FOCUS_MARKS[FOCUS_MARKS.length - 1];
+
+// Shutter speeds, one full stop apart - so they sit evenly across the bar
+// rather than being positioned by their numeric value like the f-stops.
+const SHUTTER_MARKS = ['1/1000', '1/500', '1/250', '1/125', '1/60', '1/30', '1/15', '1/8', '1/4', '1/2'];
 
 const rafThrottle = (fn) => {
   let raf = null;
@@ -302,6 +307,23 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
     // Show loader while API is loading OR while initial media items are loading
     const showLoader = mediasAreLoading || (!mediaLoaded && medias?.length > 0);
 
+    // Single source of position for both scale bars and the beam
+    const progress = mediaX.to(x => progressFromX(x));
+
+    // f-stops sit at their numeric value, so they bunch up like a real aperture ring
+    const focusScaleMarks = FOCUS_MARKS.map((v) => ({
+        key: `f-${v}`,
+        position: progressFromValue(v),
+        label: `f/${v}`
+    }));
+
+    // Shutter speeds are one stop apart, so they space evenly
+    const shutterScaleMarks = SHUTTER_MARKS.map((label, index) => ({
+        key: `t-${label}`,
+        position: index / (SHUTTER_MARKS.length - 1),
+        label
+    }));
+
     if (mediasAreLoading) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-bg">
@@ -321,6 +343,15 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                 </div>
             )}
             <div ref={containerRef} className="relative w-full h-screen overflow-hidden touch-none">
+                {/* Vertical beam rising from the progress arrow - behind the media, hidden on mobile */}
+                <animated.div
+                  className="pointer-events-none absolute top-0 bottom-6 w-px hidden md:block"
+                  style={{
+                    left: progress.to(p => `${p * 100}%`),
+                    transform: 'translateX(-50%)',
+                    background: 'linear-gradient(to top, var(--accent-color), transparent)'
+                  }}
+                />
                 <animated.div
                     ref={scrollRef}
                     {...bindMedias()}
@@ -338,73 +369,22 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
                         onMediaLoaded={handleMediaLoaded}
                     />
                 </animated.div>
-                {/* Progress bar (full-width) - hidden on mobile */}
-                <div className="pointer-events-none fixed bottom-6 left-0 right-0 w-full z-40 hidden md:block">
-                  <div className="relative mx-auto h-px bg-white/30" style={{ width: '100%' }}>
-                    {/* Fill to current position */}
-                    <animated.div
-                      className="absolute inset-y-0 left-0"
-                      style={{
-                        width: mediaX.to(x => `${progressFromX(x) * 100}%`),
-                        backgroundColor: 'var(--accent-color)',
-                        boxShadow: '0 0 8px var(--accent-glow)'
-                      }}
-                    />
-                    {FOCUS_MARKS.map((v) => {
-                      const markPosition = progressFromValue(v);
-                      return (
-                        <animated.div
-                          key={`tick-${v}`}
-                          className="absolute -top-4"
-                          style={{
-                            left: `${markPosition * 100}%`,
-                            transform: 'translateX(-50%)'
-                          }}
-                        >
-                          <animated.div
-                            className="w-px h-4"
-                            style={{
-                              backgroundColor: mediaX.to(x =>
-                                progressFromX(x) >= markPosition ? 'var(--accent-color)' : 'rgba(255,255,255,0.7)'
-                              )
-                            }}
-                          />
-                          {!isMobile && (
-                            <animated.div
-                              className="mt-1 text-xs leading-none select-none whitespace-nowrap font-medium"
-                              style={{
-                                color: mediaX.to(x =>
-                                  progressFromX(x) >= markPosition ? 'var(--accent-color)' : 'rgba(255,255,255,0.8)'
-                                ),
-                                textShadow: mediaX.to(x =>
-                                  progressFromX(x) >= markPosition ? '0 0 8px var(--accent-glow)' : 'none'
-                                )
-                              }}
-                            >
-                              {`f/${v}`}
-                            </animated.div>
-                          )}
-                        </animated.div>
-                      );
-                    })}
-                  </div>
-                </div>
+                {/* Shutter-speed scale, below the header - hidden on mobile */}
+                <CustomScaleBar
+                  marks={shutterScaleMarks}
+                  progress={progress}
+                  positionClassName="top-24"
+                  showLabels={!isMobile}
+                  isFlipped
+                />
 
-                {/* Navigation arrow - on the progress bar line - hidden on mobile */}
-                <animated.div
-                  className="pointer-events-none fixed bottom-6 z-40 hidden md:block"
-                  style={{ left: mediaX.to(x => `${progressFromX(x) * 100}%`), transform: 'translateX(-50%) translateY(30%)' }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="var(--accent-color)"
-                    style={{ filter: 'drop-shadow(0 0 8px var(--accent-glow))' }}
-                  >
-                    <path d="M12 4 L4 16 C4 16 6 16 8 16 L16 16 C16 16 18 16 20 16 Z" />
-                  </svg>
-                </animated.div>
+                {/* Aperture scale - hidden on mobile */}
+                <CustomScaleBar
+                  marks={focusScaleMarks}
+                  progress={progress}
+                  positionClassName="bottom-6"
+                  showLabels={!isMobile}
+                />
 
             </div>
             </>
