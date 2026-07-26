@@ -206,14 +206,14 @@ const ClientGallery = () => {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                 <div className="max-w-md w-full text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 bg-red-500/20 rounded-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-16 h-16 mx-auto mb-6 bg-danger/20 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
                     <h1 className="text-2xl font-light mb-4">Gallery Not Available</h1>
-                    <p className="text-gray-400">{error}</p>
-                    <p className="text-gray-500 text-sm mt-4">
+                    <p className="text-secondary-text">{error}</p>
+                    <p className="text-muted-text text-sm mt-4">
                         If you believe this is an error, please contact the photographer.
                     </p>
                 </div>
@@ -224,13 +224,13 @@ const ClientGallery = () => {
     return (
         <div className="min-h-screen pt-20 md:pt-24">
             {/* Header */}
-            <header className="bg-zinc-900/50 border-b border-zinc-800 pl-20 pr-4 md:pl-6 md:pr-6 py-4 sticky top-20 md:top-[88px] z-40 backdrop-blur-lg">
+            <header className="bg-surface/50 border-b border-line pl-20 pr-4 md:pl-6 md:pr-6 py-4 sticky top-20 md:top-[88px] z-40 backdrop-blur-lg">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)]">
                         {gallery?.title || 'Your Gallery'}
                     </h1>
                     {gallery?.message && (
-                        <p className="text-gray-400 text-sm mt-1">{gallery.message}</p>
+                        <p className="text-secondary-text text-sm mt-1">{gallery.message}</p>
                     )}
                 </div>
             </header>
@@ -240,14 +240,14 @@ const ClientGallery = () => {
                 <div className="flex items-center gap-2 flex-wrap mb-4">
                     <button
                         onClick={selectAll}
-                        className="px-3 py-2 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 text-sm"
+                        className="px-3 py-2 bg-surface-raised text-primary-text font-medium rounded-lg hover:bg-line-strong text-sm"
                     >
                         {selected.size === media.length ? 'Deselect All' : 'Select All'}
                     </button>
                     <button
                         onClick={downloadSelected}
                         disabled={selected.size === 0 || downloading || zipDownloading}
-                        className="px-3 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                        className="px-3 py-2 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
                         {downloading
                             ? `${downloadProgress.current}/${downloadProgress.total}...`
@@ -256,7 +256,7 @@ const ClientGallery = () => {
                     <button
                         onClick={downloadAsZip}
                         disabled={selected.size === 0 || downloading || zipDownloading}
-                        className="px-3 py-2 bg-zinc-700 text-white font-medium rounded-lg hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2"
+                        className="px-3 py-2 bg-surface-raised text-primary-text font-medium rounded-lg hover:bg-line-strong disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2"
                     >
                         {zipDownloading ? (
                             <>
@@ -275,14 +275,14 @@ const ClientGallery = () => {
                             </>
                         )}
                     </button>
-                    <span className="text-gray-400 text-sm ml-2">
+                    <span className="text-secondary-text text-sm ml-2">
                         {media.length} {media.length === 1 ? 'file' : 'files'}
                     </span>
                 </div>
 
                 {/* Media Grid */}
                 {media.length === 0 ? (
-                    <div className="text-center py-12 text-gray-400">
+                    <div className="text-center py-12 text-secondary-text">
                         No media files found in this gallery.
                     </div>
                 ) : (
@@ -367,7 +367,7 @@ const MediaCard = ({ item, isSelected, onToggle, onView, onDownload }) => {
                 }`}
             >
                 {isSelected && (
-                    <svg className="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-on-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                 )}
@@ -379,7 +379,7 @@ const MediaCard = ({ item, isSelected, onToggle, onView, onDownload }) => {
                 className="absolute bottom-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors active:scale-90 md:opacity-0 md:group-hover:opacity-100"
                 title="Download"
             >
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-primary-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
             </button>
@@ -388,7 +388,7 @@ const MediaCard = ({ item, isSelected, onToggle, onView, onDownload }) => {
             {isVideo && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-primary-text ml-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z" />
                         </svg>
                     </div>

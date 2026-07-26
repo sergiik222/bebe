@@ -3,50 +3,170 @@
 @tailwind utilities;
 
 /* ========================================
-   ACCENT COLOR CONFIGURATION
-   Change these values to update the accent color everywhere
+   THEME TOKENS
+
+   Every colour in the app resolves through the semantic names below, so a
+   theme is defined once here rather than per component.
+
+   Resolution order:
+     1. :root                              -> light, the baseline
+     2. @media (prefers-color-scheme: dark) -> dark when the OS asks for it
+     3. :root[data-theme="..."]             -> an explicit choice from the
+                                               toggle, which must win over
+                                               the media query in both
+                                               directions
    ======================================== */
-:root {
 
-    /* Grey
-     --accent-color: #71717a;
-    --accent-color-rgb: 113, 113, 122;
-    --accent-light: #a1a1aa;
-    --accent-dark: #52525b;
-    --accent-glow: rgba(113, 113, 122, 0.6);
-    --accent-glow-strong: rgba(113, 113, 122, 0.8);
+/* ---- light: warm paper ---- */
+:root, :root[data-theme="light"] {
+    color-scheme: light;
 
-*/
-    /* Emerald
-      --accent-color: #10b981;
-    --accent-color-rgb: 16, 185, 129;
-    --accent-light: #34d399;
-    --accent-dark: #059669;
-    --accent-glow: rgba(16, 185, 129, 0.6);
-    --accent-glow-strong: rgba(16, 185, 129, 0.8);
-*/
+    /* page + panels */
+    --page-bg: #f5f2ea;
+    --surface: #fffdf6;
+    --surface-raised: #ffffff;
+    --surface-sunken: #ece7db;
+    /* translucent panels that sit over content with a backdrop blur */
+    --surface-veil: rgba(255, 253, 246, 0.82);
+    --surface-veil-strong: rgba(245, 242, 234, 0.95);
+    --shadow-panel: 0 -4px 30px rgba(120, 110, 90, 0.18);
 
-    /* Lime
-    --accent-color: #84cc16;
-    --accent-color-rgb: 132, 204, 22;
-    --accent-light: #a3e635;
-    --accent-dark: #65a30d;
-    --accent-glow: rgba(132, 204, 22, 0.6);
-    --accent-glow-strong: rgba(132, 204, 22, 0.8);
-*/
+    /* type */
+    --text-primary: #23211c;
+    --text-secondary: #6b6558;
+    --text-muted: #938c7c;
+    --text-on-accent: #ffffff;
 
-    /* Daylight cyan - 5600K
-    --accent-color: #22d3ee;
-    --accent-color-rgb: 34, 211, 238;
-    --accent-light: #67e8f9;
-    --accent-dark: #0891b2;
-    --accent-glow: rgba(34, 211, 238, 0.6);
-    --accent-glow-strong: rgba(34, 211, 238, 0.8);
-*/
+    /* lines */
+    --border: #ded6c4;
+    --border-strong: #c4bba6;
 
-    /* Olive - sits in the cutting mat's own family so the UI reads as
-       printed on the surface rather than laid over it. 6.5:1 on the page
-       background, so 12px labels still pass AA. */
+    --danger: #b91c1c;
+    --danger-soft: rgba(185, 28, 28, 0.5);
+    --success: #15803d;
+
+    /* Text and icons sitting on a photograph. White in both themes, because
+       what is behind them is the image, not the page. */
+    --text-on-media: #ffffff;
+
+    /* accent: olive, darkened for AA on a light page */
+    --accent-color: #6b6a2f;
+    --accent-color-rgb: 107, 106, 47;
+    --accent-light: #8a8942;
+    --accent-dark: #4d4c1f;
+    --accent-glow: rgba(107, 106, 47, 0.35);
+    --accent-glow-strong: rgba(107, 106, 47, 0.5);
+
+    /* the paper surface behind the carousel */
+    --mat-deep: #ded6c4;
+    --mat-mid: #e7e0d0;
+    --mat-lit: #f0ebe0;
+    --mat-mottle: rgba(255, 253, 246, 0.55);
+    --mat-mottle-dark: rgba(150, 140, 118, 0.18);
+    --grid-minor: rgba(0, 0, 0, 0.055);
+    --grid-major: rgba(0, 0, 0, 0.10);
+    --mat-cut: rgba(0, 0, 0, 0.07);
+    --mat-guide: rgba(107, 106, 47, 0.22);
+    --mat-guide-soft: rgba(107, 106, 47, 0.14);
+    --mat-guide-faint: rgba(107, 106, 47, 0.10);
+
+    /* lighting. On light the key light brightens and the scrims lighten,
+       because the UI text sitting over them is dark. */
+    --keylight: rgba(255, 255, 255, 0.5);
+    --vignette: rgba(126, 116, 94, 0.26);
+    --scrim-strong: rgba(245, 242, 234, 0.9);
+    --scrim-soft: rgba(245, 242, 234, 0.62);
+
+    /* measurement bars */
+    --scale-track: rgba(0, 0, 0, 0.18);
+    --scale-tick-idle: rgba(35, 33, 28, 0.55);
+    --scale-label-idle: rgba(35, 33, 28, 0.7);
+}
+
+/* ---- dark: the original, when the OS asks for it ---- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        --page-bg: #101216;
+        --surface: #18181b;
+        --surface-raised: #27272a;
+        --surface-sunken: #121215;
+    --surface-veil: rgba(24, 27, 32, 0.8);
+    --surface-veil-strong: rgba(16, 18, 22, 0.95);
+    --shadow-panel: 0 -4px 30px rgba(0, 0, 0, 0.4);
+        --surface-veil: rgba(24, 27, 32, 0.8);
+        --surface-veil-strong: rgba(16, 18, 22, 0.95);
+        --shadow-panel: 0 -4px 30px rgba(0, 0, 0, 0.4);
+
+        --text-primary: #e5e7eb;
+        --text-secondary: #9ca3af;
+        --text-muted: #6b7280;
+        --text-on-accent: #14160f;
+
+        --border: #27272a;
+        --border-strong: #3f3f46;
+
+        --danger: #ef4444;
+        --danger-soft: rgba(239, 68, 68, 0.5);
+        --success: #4ade80;
+        --text-on-media: #ffffff;
+
+        --accent-color: #8f9e63;
+        --accent-color-rgb: 143, 158, 99;
+        --accent-light: #adba85;
+        --accent-dark: #6d7a48;
+        --accent-glow: rgba(143, 158, 99, 0.45);
+        --accent-glow-strong: rgba(143, 158, 99, 0.65);
+
+        --mat-deep: #16211c;
+        --mat-mid: #1e2b24;
+        --mat-lit: #2a3b31;
+        --mat-mottle: rgba(42, 59, 49, 0.3);
+        --mat-mottle-dark: rgba(14, 20, 17, 0.35);
+        --grid-minor: rgba(255, 255, 255, 0.055);
+        --grid-major: rgba(255, 255, 255, 0.10);
+        --mat-cut: rgba(255, 255, 255, 0.075);
+        --mat-guide: rgba(143, 158, 99, 0.22);
+        --mat-guide-soft: rgba(143, 158, 99, 0.14);
+        --mat-guide-faint: rgba(143, 158, 99, 0.10);
+
+        --keylight: rgba(255, 250, 240, 0.05);
+        --vignette: rgba(6, 9, 7, 0.62);
+        --scrim-strong: rgba(6, 8, 7, 0.9);
+        --scrim-soft: rgba(6, 8, 7, 0.62);
+
+        --scale-track: rgba(255, 255, 255, 0.3);
+        --scale-tick-idle: rgba(255, 255, 255, 0.7);
+        --scale-label-idle: rgba(255, 255, 255, 0.8);
+    }
+}
+
+/* ---- dark: chosen explicitly, so it also beats a light OS preference ---- */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --page-bg: #101216;
+    --surface: #18181b;
+    --surface-raised: #27272a;
+    --surface-sunken: #121215;
+    --surface-veil: rgba(24, 27, 32, 0.8);
+    --surface-veil-strong: rgba(16, 18, 22, 0.95);
+    --shadow-panel: 0 -4px 30px rgba(0, 0, 0, 0.4);
+
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    --text-on-accent: #14160f;
+
+    --border: #27272a;
+    --border-strong: #3f3f46;
+
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.5);
+    --success: #4ade80;
+    --text-on-media: #ffffff;
+
     --accent-color: #8f9e63;
     --accent-color-rgb: 143, 158, 99;
     --accent-light: #adba85;
@@ -54,8 +174,32 @@
     --accent-glow: rgba(143, 158, 99, 0.45);
     --accent-glow-strong: rgba(143, 158, 99, 0.65);
 
-    /* Written by the home carousel: --bg-shift slides the background surface
-       with the photos, --bg-tilt tips it toward the drag. */
+    --mat-deep: #16211c;
+    --mat-mid: #1e2b24;
+    --mat-lit: #2a3b31;
+    --mat-mottle: rgba(42, 59, 49, 0.3);
+    --mat-mottle-dark: rgba(14, 20, 17, 0.35);
+    --grid-minor: rgba(255, 255, 255, 0.055);
+    --grid-major: rgba(255, 255, 255, 0.10);
+    --mat-cut: rgba(255, 255, 255, 0.075);
+    --mat-guide: rgba(143, 158, 99, 0.22);
+    --mat-guide-soft: rgba(143, 158, 99, 0.14);
+    --mat-guide-faint: rgba(143, 158, 99, 0.10);
+
+    --keylight: rgba(255, 250, 240, 0.05);
+    --vignette: rgba(6, 9, 7, 0.62);
+    --scrim-strong: rgba(6, 8, 7, 0.9);
+    --scrim-soft: rgba(6, 8, 7, 0.62);
+
+    --scale-track: rgba(255, 255, 255, 0.3);
+    --scale-tick-idle: rgba(255, 255, 255, 0.7);
+    --scale-label-idle: rgba(255, 255, 255, 0.8);
+}
+
+/* ---- carousel-driven, theme independent ---- */
+:root {
+    /* --bg-shift slides the background surface with the photos,
+       --bg-tilt tips it toward the drag. */
     --bg-shift: 0px;
     --bg-tilt: 0deg;
 }
@@ -104,7 +248,8 @@ html, body {
 }
 
 .scroll-to-top {
-    @apply fixed bottom-4 right-4 text-white p-4 rounded-full shadow-lg cursor-pointer transition-all ease-in-out transform hover:scale-110;
+    @apply fixed bottom-4 right-4 p-4 rounded-full shadow-lg cursor-pointer transition-all ease-in-out transform hover:scale-110;
+    color: var(--text-on-accent);
     background-color: var(--accent-color);
 }
 .scroll-to-top:hover {
@@ -121,7 +266,8 @@ html, body {
 /* The surface itself lives in BackgroundSurface - keep this a flat base so
    nothing shows through from underneath it. */
 html, body {
-    background: rgb(16, 18, 22);
+    background: var(--page-bg);
+    color: var(--text-primary);
     height: 100%;
     margin: 0;
 }

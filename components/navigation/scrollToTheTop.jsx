@@ -29,17 +29,17 @@ const ScrollToTopButton = () => {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
             style={{
-                background: 'rgba(24, 27, 32, 0.8)',
+                background: 'var(--surface-veil)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
             }}
             aria-label="Scroll to top"
         >
             <div
-                className="absolute inset-0 rounded-lg border border-zinc-700 group-hover:border-[var(--accent-color)] transition-colors duration-300"
+                className="absolute inset-0 rounded-lg border border-line-strong group-hover:border-[var(--accent-color)] transition-colors duration-300"
             />
             <svg
-                className="w-5 h-5 text-gray-300 group-hover:text-[var(--accent-color)] transition-colors duration-300"
+                className="w-5 h-5 text-secondary-text group-hover:text-[var(--accent-color)] transition-colors duration-300"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

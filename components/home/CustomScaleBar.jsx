@@ -5,8 +5,8 @@ import { animated } from 'react-spring';
 
 const ARROW_PATH = 'M12 4 L4 16 C4 16 6 16 8 16 L16 16 C16 16 18 16 20 16 Z';
 
-const INACTIVE_TICK_COLOR = 'rgba(255,255,255,0.7)';
-const INACTIVE_LABEL_COLOR = 'rgba(255,255,255,0.8)';
+const INACTIVE_TICK_COLOR = 'var(--scale-tick-idle)';
+const INACTIVE_LABEL_COLOR = 'var(--scale-label-idle)';
 
 // A centred label at either extreme would hang half-way off the viewport, so
 // the first and last marks align their labels inward instead. The tick itself
@@ -30,7 +30,7 @@ function CustomScaleBar({ marks, progress, positionClassName, showLabels = true,
 
     return (
         <div className={`pointer-events-none fixed left-0 right-0 w-full z-40 hidden md:block ${positionClassName}`}>
-            <div className="relative mx-auto h-px w-full bg-white/30">
+            <div className="relative mx-auto h-px w-full bg-[color:var(--scale-track)]">
                 {/* Fill to current position */}
                 <animated.div
                     className="absolute inset-y-0 left-0"

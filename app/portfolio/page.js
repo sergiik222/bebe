@@ -112,7 +112,7 @@ const Portfolio = () => {
                                 {t.portfolio.photo}
                             </h2>
                             {photoCategories.length === 0 ? (
-                                <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-2xl">
+                                <div className="text-center py-12 text-secondary-text bg-surface/30 rounded-2xl">
                                     {t.portfolio.noCategories}
                                 </div>
                             ) : (
@@ -134,7 +134,7 @@ const Portfolio = () => {
                             style={{ left: `calc(${splitPosition}% - 12px)` }}
                             onMouseDown={handleMouseDown}
                         >
-                            <div className="w-0.5 h-full bg-zinc-700 group-hover:bg-[var(--accent-color)] transition-colors rounded-full"></div>
+                            <div className="w-0.5 h-full bg-surface-raised group-hover:bg-[var(--accent-color)] transition-colors rounded-full"></div>
                         </div>
 
                         {/* Video Column */}
@@ -146,7 +146,7 @@ const Portfolio = () => {
                                 {t.portfolio.video}
                             </h2>
                             {videoCategories.length === 0 ? (
-                                <div className="text-center py-12 text-gray-400 bg-zinc-900/30 rounded-2xl">
+                                <div className="text-center py-12 text-secondary-text bg-surface/30 rounded-2xl">
                                     {t.portfolio.noCategories}
                                 </div>
                             ) : (
@@ -174,7 +174,7 @@ const Portfolio = () => {
                                 {t.portfolio.photo}
                             </h2>
                             {photoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                <div className="text-center py-8 text-secondary-text bg-surface/30 rounded-xl">
                                     {t.portfolio.noCategories}
                                 </div>
                             ) : (
@@ -201,7 +201,7 @@ const Portfolio = () => {
                                 {t.portfolio.video}
                             </h2>
                             {videoCategories.length === 0 ? (
-                                <div className="text-center py-8 text-gray-400 bg-zinc-900/30 rounded-xl">
+                                <div className="text-center py-8 text-secondary-text bg-surface/30 rounded-xl">
                                     {t.portfolio.noCategories}
                                 </div>
                             ) : (
@@ -251,7 +251,7 @@ const PhotoCategoryCard = ({ category, onClick }) => {
             }`} />
             {/* Category name - bottom right */}
             <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 text-right">
-                <h3 className={`text-sm lg:text-base font-medium text-white transition-transform duration-300 ${
+                <h3 className={`text-sm lg:text-base font-medium text-on-media transition-transform duration-300 ${
                     isHovered ? 'translate-y-0' : 'translate-y-1'
                 }`}>
                     {categoryName}
@@ -319,8 +319,8 @@ const VideoCategoryCard = ({ category, onClick }) => {
         >
             {/* Loading placeholder */}
             {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                <div className="absolute inset-0 bg-surface-raised flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-surface-raised" />
                 </div>
             )}
             <video
@@ -342,7 +342,7 @@ const VideoCategoryCard = ({ category, onClick }) => {
             }`} />
             {/* Category name - bottom right */}
             <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4 text-right">
-                <h3 className={`text-sm lg:text-base font-medium text-white transition-transform duration-300 ${
+                <h3 className={`text-sm lg:text-base font-medium text-on-media transition-transform duration-300 ${
                     isHovered ? 'translate-y-0' : 'translate-y-1'
                 }`}>
                     {categoryName}
@@ -357,7 +357,7 @@ const VideoCategoryCard = ({ category, onClick }) => {
                 {isPlaying ? (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-on-media"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >
@@ -367,7 +367,7 @@ const VideoCategoryCard = ({ category, onClick }) => {
                 ) : (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-on-media"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >
@@ -405,13 +405,13 @@ const PhotoCategoryCardMasonry = ({ category, onClick, variant }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
             {/* Photo badge */}
             <div className="absolute top-2 left-2 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
-                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3 h-3 text-on-media" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
             </div>
             {/* Category name */}
             <div className="absolute bottom-0 left-0 right-0 p-3">
-                <h3 className="text-sm font-medium text-white">
+                <h3 className="text-sm font-medium text-on-media">
                     {categoryName}
                 </h3>
             </div>
@@ -446,8 +446,8 @@ const VideoCategoryCardMasonry = ({ category, onClick, variant }) => {
             onClick={onClick}
         >
             {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="animate-pulse w-8 h-8 rounded-full bg-zinc-700" />
+                <div className="absolute inset-0 bg-surface-raised flex items-center justify-center">
+                    <div className="animate-pulse w-8 h-8 rounded-full bg-surface-raised" />
                 </div>
             )}
             <video
@@ -465,13 +465,13 @@ const VideoCategoryCardMasonry = ({ category, onClick, variant }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
             {/* Video badge */}
             <div className="absolute top-2 left-2 bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
-                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 text-on-media" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z"/>
                 </svg>
             </div>
             {/* Category name */}
             <div className="absolute bottom-0 left-0 right-0 p-3">
-                <h3 className="text-sm font-medium text-white">
+                <h3 className="text-sm font-medium text-on-media">
                     {categoryName}
                 </h3>
             </div>
@@ -501,10 +501,10 @@ const PhotoCategoryCardLarge = ({ category, onClick, t }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             {/* Category name */}
             <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="text-lg font-medium text-white mb-1">
+                <h3 className="text-lg font-medium text-on-media mb-1">
                     {categoryName}
                 </h3>
-                <p className="text-xs text-gray-300 flex items-center gap-1">
+                <p className="text-xs text-on-media/80 flex items-center gap-1">
                     <span>{t.portfolio.tapToExplore}</span>
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -553,8 +553,8 @@ const VideoCategoryCardLarge = ({ category, onClick, t }) => {
             onClick={onClick}
         >
             {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                <div className="absolute inset-0 bg-surface-raised flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-surface-raised" />
                 </div>
             )}
             <video
@@ -577,22 +577,22 @@ const VideoCategoryCardLarge = ({ category, onClick, t }) => {
                 aria-label={isPlaying ? "Pause Video" : "Play Video"}
             >
                 {isPlaying ? (
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-on-media" fill="currentColor" viewBox="0 0 24 24">
                         <rect x="6" y="5" width="4" height="14"/>
                         <rect x="14" y="5" width="4" height="14"/>
                     </svg>
                 ) : (
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-on-media" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z"/>
                     </svg>
                 )}
             </button>
             {/* Category name - bottom right */}
             <div className="absolute bottom-0 right-0 p-4 text-right">
-                <h3 className="text-lg font-medium text-white mb-1">
+                <h3 className="text-lg font-medium text-on-media mb-1">
                     {categoryName}
                 </h3>
-                <p className="text-xs text-gray-300 flex items-center gap-1 justify-end">
+                <p className="text-xs text-on-media/80 flex items-center gap-1 justify-end">
                     <span>{t.portfolio.tapToExplore}</span>
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

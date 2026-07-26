@@ -32,15 +32,26 @@ const primaryFont = Montserrat({
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en" className={primaryFont.variable}>
-        <body className="scroll-smooth bg-[#101216] text-gray-200">
+        // suppressHydrationWarning: the inline script below sets data-theme on
+        // <html> before React hydrates, so the server markup legitimately lacks
+        // an attribute the client has.
+        <html lang="en" className={primaryFont.variable} suppressHydrationWarning>
+        <body className="scroll-smooth bg-page text-primary-text">
+        {/* Applies a stored theme choice before anything paints. Without this a
+            visitor whose saved choice differs from their OS setting would see
+            the other theme flash first. */}
+        <script
+            dangerouslySetInnerHTML={{
+                __html: `(function(){try{var t=localStorage.getItem('bebe_theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`
+            }}
+        />
         <BackgroundSurface />
         <Providers>
             <div className="relative z-10">
                 <Navigation />
                 {children}
-                <footer className="py-8 border-t border-zinc-800/50">
-                    <p className="text-center text-sm text-gray-500 font_regular">&copy; 2025 Bebe Media</p>
+                <footer className="py-8 border-t border-line/50">
+                    <p className="text-center text-sm text-muted-text font_regular">&copy; 2025 Bebe Media</p>
                 </footer>
                 <CookieBanner />
             </div>

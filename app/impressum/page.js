@@ -101,68 +101,68 @@ export default function ImpressumPage() {
             <div className="max-w-3xl mx-auto">
                 <h1 className="text-4xl font-light mb-12 text-center text-[var(--accent-color)]">{t.title}</h1>
 
-                <div className="space-y-8 text-gray-300">
+                <div className="space-y-8 text-secondary-text">
                     {/* Basic Info */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.infoTitle}</h2>
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.infoTitle}</h2>
                         <div className="space-y-3">
                             <div>
-                                <span className="text-gray-500">{t.company}:</span>
-                                <span className="ml-2 text-white">{t.companyValue}</span>
+                                <span className="text-muted-text">{t.company}:</span>
+                                <span className="ml-2 text-primary-text">{t.companyValue}</span>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.owner}:</span>
-                                <span className="ml-2 text-white">{t.ownerValue}</span>
+                                <span className="text-muted-text">{t.owner}:</span>
+                                <span className="ml-2 text-primary-text">{t.ownerValue}</span>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.address}:</span>
-                                <pre className="ml-2 text-white whitespace-pre-line inline">{t.addressValue}</pre>
+                                <span className="text-muted-text">{t.address}:</span>
+                                <pre className="ml-2 text-primary-text whitespace-pre-line inline">{t.addressValue}</pre>
                             </div>
                         </div>
                     </section>
 
                     {/* Contact */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.contact}</h2>
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.contact}</h2>
                         <div className="space-y-3">
                             <div>
-                                <span className="text-gray-500">{t.email}:</span>
+                                <span className="text-muted-text">{t.email}:</span>
                                 <a href="mailto:info@bebemedia.at" className="ml-2 text-[var(--accent-color)] hover:underline">info@bebemedia.at</a>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.phone}:</span>
-                                <span className="ml-2 text-white">[+43 XXX XXXXXXX]</span>
+                                <span className="text-muted-text">{t.phone}:</span>
+                                <span className="ml-2 text-primary-text">[+43 XXX XXXXXXX]</span>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.website}:</span>
+                                <span className="text-muted-text">{t.website}:</span>
                                 <a href="https://bebemedia.at" className="ml-2 text-[var(--accent-color)] hover:underline">bebemedia.at</a>
                             </div>
                         </div>
                     </section>
 
                     {/* Business Info */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.uid}</h2>
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.uid}</h2>
                         <div className="space-y-3">
                             <div>
-                                <span className="text-gray-500">{t.uid}:</span>
-                                <span className="ml-2 text-white">{t.uidValue}</span>
+                                <span className="text-muted-text">{t.uid}:</span>
+                                <span className="ml-2 text-primary-text">{t.uidValue}</span>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.businessRegister}:</span>
-                                <span className="ml-2 text-white">{t.businessRegisterValue}</span>
+                                <span className="text-muted-text">{t.businessRegister}:</span>
+                                <span className="ml-2 text-primary-text">{t.businessRegisterValue}</span>
                             </div>
                             <div>
-                                <span className="text-gray-500">{t.chamber}:</span>
-                                <span className="ml-2 text-white">{t.chamberValue}</span>
+                                <span className="text-muted-text">{t.chamber}:</span>
+                                <span className="ml-2 text-primary-text">{t.chamberValue}</span>
                             </div>
                         </div>
                     </section>
 
                     {/* EU Dispute Resolution */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.disputeResolution}</h2>
-                        <p className="text-gray-400 leading-relaxed">
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.disputeResolution}</h2>
+                        <p className="text-secondary-text leading-relaxed">
                             {t.disputeResolutionText}{' '}
                             <a href={t.disputeResolutionLink} target="_blank" rel="noopener noreferrer" className="text-[var(--accent-color)] hover:underline break-all">
                                 {t.disputeResolutionLink}
@@ -171,15 +171,15 @@ export default function ImpressumPage() {
                     </section>
 
                     {/* Liability */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.liability}</h2>
-                        <p className="text-gray-400 leading-relaxed">{t.liabilityText}</p>
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.liability}</h2>
+                        <p className="text-secondary-text leading-relaxed">{t.liabilityText}</p>
                     </section>
 
                     {/* Copyright */}
-                    <section className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                        <h2 className="text-xl font-medium text-white mb-4">{t.copyright}</h2>
-                        <p className="text-gray-400 leading-relaxed">{t.copyrightText}</p>
+                    <section className="bg-surface/50 border border-line rounded-xl p-6">
+                        <h2 className="text-xl font-medium text-primary-text mb-4">{t.copyright}</h2>
+                        <p className="text-secondary-text leading-relaxed">{t.copyrightText}</p>
                     </section>
                 </div>
             </div>

@@ -52,7 +52,7 @@ const VideoGallery = () => {
                     <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4 mt-2 md:pl-0 md:mt-0 relative z-40">
                         <button
                             onClick={() => router.push('/portfolio')}
-                            className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
+                            className="flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -63,7 +63,7 @@ const VideoGallery = () => {
 
                     {/* Video Grid */}
                     {videos.length === 0 ? (
-                        <div className="text-center py-12 text-gray-400">
+                        <div className="text-center py-12 text-secondary-text">
                             {t.portfolio.noVideos}
                         </div>
                     ) : (
@@ -146,8 +146,8 @@ const VideoCard = ({ video, onClick }) => {
         >
             {/* Loading placeholder */}
             {!isLoaded && (
-                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="animate-pulse w-12 h-12 rounded-full bg-zinc-700" />
+                <div className="absolute inset-0 bg-surface-raised flex items-center justify-center">
+                    <div className="animate-pulse w-12 h-12 rounded-full bg-surface-raised" />
                 </div>
             )}
             <video
@@ -169,10 +169,10 @@ const VideoCard = ({ video, onClick }) => {
 
             {/* Video name - top on mobile, bottom on desktop */}
             <div className="absolute top-0 lg:hidden left-0 right-0 p-3">
-                <h3 className="text-base font-medium text-white drop-shadow-lg">{videoName}</h3>
+                <h3 className="text-base font-medium text-on-media drop-shadow-lg">{videoName}</h3>
             </div>
             <div className="absolute bottom-0 hidden lg:block left-0 right-0 p-4">
-                <h3 className="text-lg font-medium text-white">{videoName}</h3>
+                <h3 className="text-lg font-medium text-on-media">{videoName}</h3>
             </div>
 
             {/* Play/Pause button - visible on mobile */}
@@ -184,7 +184,7 @@ const VideoCard = ({ video, onClick }) => {
                 {isPlaying ? (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-on-media"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >
@@ -194,7 +194,7 @@ const VideoCard = ({ video, onClick }) => {
                 ) : (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
+                        className="h-6 w-6 text-on-media"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >

@@ -25,7 +25,7 @@ const About = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                         {/* Image Placeholder */}
                         <div className="relative">
-                            <div className="aspect-[4/5] bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden">
+                            <div className="aspect-[4/5] bg-surface/50 border border-line rounded-2xl overflow-hidden">
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <div className="text-center p-8">
                                         <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-[var(--accent-color)]/20 flex items-center justify-center">
@@ -34,7 +34,7 @@ const About = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </div>
-                                        <p className="text-gray-500 text-sm">{t.about.photoPlaceholder}</p>
+                                        <p className="text-muted-text text-sm">{t.about.photoPlaceholder}</p>
                                     </div>
                                 </div>
                             </div>
@@ -45,7 +45,7 @@ const About = () => {
                             <h2 className="text-2xl md:text-3xl font-medium mb-6 text-[var(--accent-color)]">
                                 {t.about.greeting}
                             </h2>
-                            <div className="space-y-4 text-gray-300 leading-relaxed">
+                            <div className="space-y-4 text-secondary-text leading-relaxed">
                                 <p>{t.about.bio1}</p>
                                 <p>{t.about.bio2}</p>
                                 <p>{t.about.bio3}</p>
@@ -58,12 +58,12 @@ const About = () => {
                         {stats.map((stat, index) => (
                             <div
                                 key={index}
-                                className="bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 rounded-xl p-6 text-center"
+                                className="bg-surface/30 backdrop-blur-sm border border-line rounded-xl p-6 text-center"
                             >
                                 <div className="text-3xl md:text-4xl font-bold text-[var(--accent-color)] mb-2">
                                     {stat.number}
                                 </div>
-                                <div className="text-sm text-gray-400">
+                                <div className="text-sm text-secondary-text">
                                     {stat.label}
                                 </div>
                             </div>
@@ -71,13 +71,13 @@ const About = () => {
                     </div>
 
                     {/* Skills */}
-                    <div className="bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 rounded-2xl p-6 md:p-8 mb-12">
+                    <div className="bg-surface/30 backdrop-blur-sm border border-line rounded-2xl p-6 md:p-8 mb-12">
                         <h3 className="text-xl font-medium mb-6 text-center">{t.about.whatIDo}</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                             {t.about.skills.map((skill, index) => (
                                 <div
                                     key={index}
-                                    className="px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-lg text-center text-sm text-gray-300 hover:border-[var(--accent-color)] transition-colors"
+                                    className="px-4 py-3 bg-surface-raised/50 border border-line-strong rounded-lg text-center text-sm text-secondary-text hover:border-[var(--accent-color)] transition-colors"
                                 >
                                     {skill}
                                 </div>
@@ -87,19 +87,19 @@ const About = () => {
 
                     {/* CTA */}
                     <div className="text-center">
-                        <p className="text-gray-400 mb-6">
+                        <p className="text-secondary-text mb-6">
                             {t.about.cta}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <a
                                 href="/book"
-                                className="px-8 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity"
+                                className="px-8 py-3 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 transition-opacity"
                             >
                                 {t.about.bookSession}
                             </a>
                             <a
                                 href="/contact"
-                                className="px-8 py-3 border border-zinc-700 text-gray-300 rounded-lg hover:border-[var(--accent-color)] transition-colors"
+                                className="px-8 py-3 border border-line-strong text-secondary-text rounded-lg hover:border-[var(--accent-color)] transition-colors"
                             >
                                 {t.about.getInTouch}
                             </a>

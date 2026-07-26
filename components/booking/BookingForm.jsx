@@ -73,18 +73,18 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
     }
 
     return (
-        <div id="booking-form" className="mt-8 p-6 bg-zinc-900/50 border border-zinc-700 rounded-xl">
-            <h3 className="text-xl font-medium mb-6 text-gray-200">{t.book.yourDetails}</h3>
+        <div id="booking-form" className="mt-8 p-6 bg-surface/50 border border-line-strong rounded-xl">
+            <h3 className="text-xl font-medium mb-6 text-primary-text">{t.book.yourDetails}</h3>
 
             {error && (
-                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+                <div className="mb-4 p-3 bg-danger/10 border border-danger/30 rounded-lg text-danger">
                     {error}
                 </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label htmlFor="name" className="block text-sm font-medium text-secondary-text mb-1">
                         {t.common.name} *
                     </label>
                     <input
@@ -94,13 +94,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg text-primary-text focus:outline-none focus:border-[var(--accent-color)] transition-colors"
                         placeholder={t.book.namePlaceholder}
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-secondary-text mb-1">
                         {t.common.email} *
                     </label>
                     <input
@@ -110,13 +110,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg text-primary-text focus:outline-none focus:border-[var(--accent-color)] transition-colors"
                         placeholder={t.book.emailPlaceholder}
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label htmlFor="phone" className="block text-sm font-medium text-secondary-text mb-1">
                         {t.common.phone} *
                     </label>
                     <input
@@ -126,13 +126,13 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                         required
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg text-primary-text focus:outline-none focus:border-[var(--accent-color)] transition-colors"
                         placeholder={t.book.phonePlaceholder}
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label htmlFor="message" className="block text-sm font-medium text-secondary-text mb-1">
                         {t.common.message} ({t.common.optional})
                     </label>
                     <textarea
@@ -141,7 +141,7 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                         rows={3}
                         value={formData.message}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors resize-none"
+                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg text-primary-text focus:outline-none focus:border-[var(--accent-color)] transition-colors resize-none"
                         placeholder={t.book.messagePlaceholder}
                     />
                 </div>
@@ -150,14 +150,14 @@ const BookingForm = ({ selectedSlot, onSuccess, onCancel, t, language }) => {
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="w-full sm:flex-1 px-6 py-3 border border-zinc-700 rounded-lg text-gray-300 hover:bg-zinc-800 transition-colors"
+                        className="w-full sm:flex-1 px-6 py-3 border border-line-strong rounded-lg text-secondary-text hover:bg-surface-raised transition-colors"
                     >
                         {t.common.cancel}
                     </button>
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full sm:flex-1 px-6 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
+                        className="w-full sm:flex-1 px-6 py-3 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">

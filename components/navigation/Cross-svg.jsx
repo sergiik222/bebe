@@ -2,7 +2,7 @@ const Cross = (props) => {
     const { show, onClick } = props;
     return (
         <div
-            className={`cursor-pointer text-gray-300  items-center w-8 hover:scale-110 hover:text-accent ${
+            className={`cursor-pointer text-secondary-text  items-center w-8 hover:scale-110 hover:text-accent ${
                 show ? "block" : "hidden"
             } `}
             onClick={onClick}

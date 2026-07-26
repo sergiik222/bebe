@@ -329,15 +329,15 @@ export default function DatenschutzPage() {
             <div className="max-w-3xl mx-auto">
                 <h1 className="text-4xl font-light mb-8 text-center text-[var(--accent-color)]">{t.title}</h1>
 
-                <p className="text-gray-400 mb-12 text-center leading-relaxed">{t.intro}</p>
+                <p className="text-secondary-text mb-12 text-center leading-relaxed">{t.intro}</p>
 
                 <div className="space-y-8">
                     {t.sections.map((section, index) => (
-                        <section key={index} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
-                            <h2 className="text-xl font-medium text-white mb-4">{section.title}</h2>
-                            <div className="text-gray-400 leading-relaxed whitespace-pre-line">
+                        <section key={index} className="bg-surface/50 border border-line rounded-xl p-6">
+                            <h2 className="text-xl font-medium text-primary-text mb-4">{section.title}</h2>
+                            <div className="text-secondary-text leading-relaxed whitespace-pre-line">
                                 {section.content.split('**').map((part, i) =>
-                                    i % 2 === 1 ? <strong key={i} className="text-white">{part}</strong> : part
+                                    i % 2 === 1 ? <strong key={i} className="text-primary-text">{part}</strong> : part
                                 )}
                             </div>
                         </section>

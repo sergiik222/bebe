@@ -59,7 +59,7 @@ const PhotoGallery = () => {
                     <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4 mt-2 md:pl-0 md:mt-0 relative z-40">
                         <button
                             onClick={() => router.push('/portfolio')}
-                            className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
+                            className="flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -70,7 +70,7 @@ const PhotoGallery = () => {
 
                     {/* Photo Grid */}
                     {photos.length === 0 ? (
-                        <div className="text-center py-12 text-gray-400">
+                        <div className="text-center py-12 text-secondary-text">
                             {t.portfolio.noPhotos}
                         </div>
                     ) : (

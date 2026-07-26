@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import NavLink from "@/components/navigation/NavLink";
 import { useLanguage } from "@/lib/LanguageContext";
 import { useMenu } from "@/lib/MenuContext";
+import CustomThemeToggle from "@/components/CustomThemeToggle";
 
 export default function Navigation() {
     const { isMenuOpen: isOpen, setIsMenuOpen: setIsOpen } = useMenu();
@@ -85,7 +86,7 @@ export default function Navigation() {
             <div
                 className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
                     isScrolled || isOpen
-                        ? 'bg-zinc-900/90 backdrop-blur-md'
+                        ? 'bg-surface/90 backdrop-blur-md'
                         : 'bg-transparent'
                 }`}
                 style={{ height: 'calc(1.5rem + 2.5rem + 1.5rem)' }} // top-6 (24px) + h-10 (40px) + 24px bottom padding
@@ -97,7 +98,7 @@ export default function Navigation() {
                 {isAdminLoggedIn && !isGalleryPage && !isAdminPage && (
                     <a
                         href="/admin"
-                        className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900 backdrop-blur-sm border border-[var(--accent-color)]/50 rounded-lg text-[var(--accent-color)] hover:border-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 transition-colors text-xs md:text-sm font-medium"
+                        className="flex items-center justify-center px-3 md:px-4 h-10 bg-surface backdrop-blur-sm border border-[var(--accent-color)]/50 rounded-lg text-[var(--accent-color)] hover:border-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 transition-colors text-xs md:text-sm font-medium"
                     >
                         Admin
                     </a>
@@ -111,7 +112,7 @@ export default function Navigation() {
                             window.dispatchEvent(new Event('adminAuthChanged'));
                             window.location.href = '/admin';
                         }}
-                        className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900 border border-red-500/50 rounded-lg text-red-500 hover:border-red-500 hover:bg-red-500/10 transition-colors text-xs md:text-sm font-medium"
+                        className="flex items-center justify-center px-3 md:px-4 h-10 bg-surface border border-danger/50 rounded-lg text-danger hover:border-danger hover:bg-danger/10 transition-colors text-xs md:text-sm font-medium"
                     >
                         Logout
                     </button>
@@ -120,7 +121,7 @@ export default function Navigation() {
                 {/* Portfolio Button */}
                 <a
                     href="/portfolio"
-                    className="flex items-center justify-center px-3 md:px-4 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-xs md:text-sm font-medium"
+                    className="flex items-center justify-center px-3 md:px-4 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-xs md:text-sm font-medium"
                 >
                     {t.nav.portfolio}
                 </a>
@@ -130,7 +131,7 @@ export default function Navigation() {
                     href="https://www.instagram.com/b_spurs_photo?igsh=a2h3MjRiMGNjN3F4"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
+                    className="flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors"
                     aria-label="Instagram"
                 >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -138,16 +139,19 @@ export default function Navigation() {
                     </svg>
                 </a>
 
+                {/* Theme Toggle */}
+                <CustomThemeToggle />
+
                 {/* Language Selector */}
                 <div className="relative" ref={langRef}>
                     <button
                         onClick={() => setIsLangOpen(!isLangOpen)}
-                        className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-sm font-medium"
+                        className="flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-sm font-medium"
                     >
                         {language?.toUpperCase() || 'EN'}
                     </button>
                     {isLangOpen && languages && (
-                        <div className="absolute right-0 mt-2 py-1 w-24 bg-zinc-900/95 backdrop-blur-sm border border-zinc-700 rounded-lg shadow-xl z-50">
+                        <div className="absolute right-0 mt-2 py-1 w-24 bg-surface/95 backdrop-blur-sm border border-line-strong rounded-lg shadow-xl z-50">
                             {languages.map((lang) => (
                                 <button
                                     key={lang.code}
@@ -155,10 +159,10 @@ export default function Navigation() {
                                         changeLanguage(lang.code);
                                         setIsLangOpen(false);
                                     }}
-                                    className={`w-full px-3 py-2 text-center text-sm hover:bg-zinc-800 transition-colors ${
+                                    className={`w-full px-3 py-2 text-center text-sm hover:bg-surface-raised transition-colors ${
                                         language === lang.code
                                             ? 'text-[var(--accent-color)] font-medium'
-                                            : 'text-gray-300'
+                                            : 'text-secondary-text'
                                     }`}
                                 >
                                     {lang.code.toUpperCase()}
@@ -179,7 +183,7 @@ export default function Navigation() {
             <nav
                 className={`h-full fixed top-0 left-0 z-50 transition-transform duration-500 ease-out w-[90vw] max-w-[360px] md:w-80 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
                 style={{
-                    background: 'rgba(16, 18, 22, 0.85)',
+                    background: 'var(--surface-veil-strong)',
                     backdropFilter: 'blur(24px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(24px) saturate(180%)',
                     borderRight: '1px solid rgba(var(--accent-color-rgb), 0.15)',
@@ -210,7 +214,7 @@ export default function Navigation() {
                     {/* Close Button */}
                     <button
                         onClick={toggleIsOpened}
-                        className="w-10 h-10 flex items-center justify-center rounded-lg border border-zinc-700 hover:border-[var(--accent-color)] transition-colors"
+                        className="w-10 h-10 flex items-center justify-center rounded-lg border border-line-strong hover:border-[var(--accent-color)] transition-colors"
                         aria-label="Close menu"
                     >
                         <svg className="w-5 h-5 text-[var(--accent-color)]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" viewBox="0 0 24 24">
@@ -304,16 +308,16 @@ export default function Navigation() {
                     onClick={toggleIsOpened}
                     className="h-10 w-10 flex items-center justify-center rounded-lg group"
                     style={{
-                        background: 'rgba(24, 27, 32, 0.8)',
+                        background: 'var(--surface-veil)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
                     }}
                     aria-label="Open menu"
                     aria-expanded={isOpen}
                 >
-                    <div className="absolute inset-0 rounded-lg border border-zinc-700 group-hover:border-[var(--accent-color)] transition-colors duration-300" />
+                    <div className="absolute inset-0 rounded-lg border border-line-strong group-hover:border-[var(--accent-color)] transition-colors duration-300" />
                     <svg
-                        className="w-5 h-5 text-gray-300 group-hover:text-[var(--accent-color)] transition-colors"
+                        className="w-5 h-5 text-secondary-text group-hover:text-[var(--accent-color)] transition-colors"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"

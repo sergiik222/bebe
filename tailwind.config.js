@@ -18,26 +18,38 @@ module.exports = {
         'open-sans': ['var(--font-primary)', 'sans-serif'],
       },
       colors: {
-        'gold-500': '#FFD700',
-        'green-500': '#1DB954',
-        'orange-600': '#FF4500',
-        'secondary': '#0f0f0f',
-        'background': 'rgb(18, 20, 24)',
-        'background-light': 'rgb(24, 26, 30)',
-        'top-grad': 'rgb(28, 30, 34)',
-        'bottom-grad': 'rgb(16, 18, 22)',
-        'primary-text': 'rgb(255, 255, 255)',
-        'secondary-text': 'rgb(156, 163, 175)',
-        'accent': 'rgb(45, 45, 50)',
-        'accent-cyan': '#06b6d4',
-        'accent-cyan-light': '#22d3ee',
-        'accent-amber': '#f59e0b',
-        'accent-purple': '#8b5cf6',
-        'accent-teal': '#14b8a6',
-        // Centralized accent color - uses CSS variable from globals.css
+        // Every colour resolves through a theme token in globals.css, so both
+        // themes are defined in one place. Nothing here may be a literal.
+        'page': 'var(--page-bg)',
+        'surface': 'var(--surface)',
+        'surface-raised': 'var(--surface-raised)',
+        'surface-sunken': 'var(--surface-sunken)',
+
+        'primary-text': 'var(--text-primary)',
+        'secondary-text': 'var(--text-secondary)',
+        'muted-text': 'var(--text-muted)',
+        'on-accent': 'var(--text-on-accent)',
+
+        'line': 'var(--border)',
+        'line-strong': 'var(--border-strong)',
+
+        'danger': 'var(--danger)',
+        'danger-soft': 'var(--danger-soft)',
+        'success': 'var(--success)',
+        'on-media': 'var(--text-on-media)',
+
         'accent-main': 'var(--accent-color)',
         'accent-main-light': 'var(--accent-light)',
         'accent-main-dark': 'var(--accent-dark)',
+
+        // Legacy aliases kept so older markup keeps resolving; all of these
+        // now follow the active theme rather than being baked dark.
+        'background': 'var(--page-bg)',
+        'background-light': 'var(--surface)',
+        'top-grad': 'var(--surface-raised)',
+        'bottom-grad': 'var(--page-bg)',
+        'secondary': 'var(--surface-sunken)',
+        'accent': 'var(--surface-raised)',
       },
       backgroundImage: {
         'lines-overlay-old': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='199' viewBox='0 0 100 199'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.05'%3E%3Cpath d='M0 199V0h1v1.99L100 199h-1.12L1 4.22V199H0zM100 2h-.12l-1-2H100v2z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E\")",

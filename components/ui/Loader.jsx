@@ -59,7 +59,7 @@ const Loader = ({ size = 'md', text = '' }) => {
 
             {/* Optional loading text */}
             {text && (
-                <p className="text-sm text-gray-400 tracking-wider loader-text">
+                <p className="text-sm text-secondary-text tracking-wider loader-text">
                     {text}
                 </p>
             )}

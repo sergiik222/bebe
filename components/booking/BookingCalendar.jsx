@@ -169,11 +169,11 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
 
     if (error) {
         return (
-            <div className="text-center py-8 text-red-400">
+            <div className="text-center py-8 text-danger">
                 <p>{t.common.error}: {error}</p>
                 <button
                     onClick={() => fetchAvailabilityForMonth(currentYear, currentMonth)}
-                    className="mt-4 px-4 py-2 bg-[var(--accent-color)] text-black rounded-lg hover:opacity-80 transition-opacity"
+                    className="mt-4 px-4 py-2 bg-[var(--accent-color)] text-on-accent rounded-lg hover:opacity-80 transition-opacity"
                 >
                     {t.common.tryAgain}
                 </button>
@@ -185,7 +185,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
         <div className="space-y-6">
             {/* Duration Selection */}
             <div>
-                <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.duration}</h3>
+                <h3 className="text-lg font-medium mb-3 text-primary-text">{t.book.duration}</h3>
                 {/* Mobile: Select dropdown */}
                 <div className="sm:hidden">
                     <select
@@ -194,7 +194,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                             setDuration(Number(e.target.value));
                             onSlotSelect(null);
                         }}
-                        className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-lg text-gray-200 focus:outline-none focus:border-[var(--accent-color)] transition-colors"
+                        className="w-full px-4 py-3 bg-surface/50 border border-line-strong rounded-lg text-primary-text focus:outline-none focus:border-[var(--accent-color)] transition-colors"
                     >
                         {durationOptions.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -214,8 +214,8 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                             }}
                             className={`px-4 py-2 rounded-lg border transition-all duration-200 ${
                                 duration === option.value
-                                    ? 'bg-[var(--accent-color)] text-black border-[var(--accent-color)]'
-                                    : 'bg-zinc-900/50 text-gray-300 border-zinc-700 hover:border-[var(--accent-color)]'
+                                    ? 'bg-[var(--accent-color)] text-on-accent border-[var(--accent-color)]'
+                                    : 'bg-surface/50 text-secondary-text border-line-strong hover:border-[var(--accent-color)]'
                             }`}
                         >
                             {option.label}
@@ -231,8 +231,8 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                     disabled={!canGoPrev()}
                     className={`p-2 rounded-lg transition-all duration-200 ${
                         canGoPrev()
-                            ? 'text-gray-300 hover:bg-zinc-800 hover:text-[var(--accent-color)]'
-                            : 'text-zinc-700 cursor-not-allowed'
+                            ? 'text-secondary-text hover:bg-surface-raised hover:text-[var(--accent-color)]'
+                            : 'text-muted-text cursor-not-allowed'
                     }`}
                 >
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -240,13 +240,13 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                     </svg>
                 </button>
 
-                <h2 className="text-xl font-medium text-gray-200">
+                <h2 className="text-xl font-medium text-primary-text">
                     {formatMonthYear(currentMonth, currentYear)}
                 </h2>
 
                 <button
                     onClick={goToNextMonth}
-                    className="p-2 rounded-lg transition-all duration-200 text-gray-300 hover:bg-zinc-800 hover:text-[var(--accent-color)]"
+                    className="p-2 rounded-lg transition-all duration-200 text-secondary-text hover:bg-surface-raised hover:text-[var(--accent-color)]"
                 >
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -256,9 +256,9 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
 
             {/* Date Selection */}
             <div>
-                <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.selectDate}</h3>
+                <h3 className="text-lg font-medium mb-3 text-primary-text">{t.book.selectDate}</h3>
                 {availability.length === 0 ? (
-                    <p className="text-gray-400 text-center py-4">{t.book.noDatesInMonth}</p>
+                    <p className="text-secondary-text text-center py-4">{t.book.noDatesInMonth}</p>
                 ) : (
                     <div className="flex items-center gap-2">
                         <button
@@ -268,7 +268,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                                     container.scrollBy({ left: -200, behavior: 'smooth' });
                                 }
                             }}
-                            className="hidden sm:block flex-shrink-0 p-2 rounded-lg transition-all duration-200 text-gray-300 hover:bg-zinc-800 hover:text-[var(--accent-color)]"
+                            className="hidden sm:block flex-shrink-0 p-2 rounded-lg transition-all duration-200 text-secondary-text hover:bg-surface-raised hover:text-[var(--accent-color)]"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -282,8 +282,8 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                                     onClick={() => setSelectedDate(day.date)}
                                     className={`flex-shrink-0 px-4 py-3 rounded-lg border transition-all duration-200 ${
                                         selectedDate === day.date
-                                            ? 'bg-[var(--accent-color)] text-black border-[var(--accent-color)]'
-                                            : 'bg-zinc-900/50 text-gray-300 border-zinc-700 hover:border-[var(--accent-color)]'
+                                            ? 'bg-[var(--accent-color)] text-on-accent border-[var(--accent-color)]'
+                                            : 'bg-surface/50 text-secondary-text border-line-strong hover:border-[var(--accent-color)]'
                                     }`}
                                 >
                                     <div className="text-sm font-medium">{formatDate(day.date)}</div>
@@ -299,7 +299,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                                     container.scrollBy({ left: 200, behavior: 'smooth' });
                                 }
                             }}
-                            className="hidden sm:block flex-shrink-0 p-2 rounded-lg transition-all duration-200 text-gray-300 hover:bg-zinc-800 hover:text-[var(--accent-color)]"
+                            className="hidden sm:block flex-shrink-0 p-2 rounded-lg transition-all duration-200 text-secondary-text hover:bg-surface-raised hover:text-[var(--accent-color)]"
                         >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -312,9 +312,9 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
             {/* Time Slots */}
             {selectedDate && (
                 <div>
-                    <h3 className="text-lg font-medium mb-3 text-gray-200">{t.book.selectTime}</h3>
+                    <h3 className="text-lg font-medium mb-3 text-primary-text">{t.book.selectTime}</h3>
                     {availableStartSlots.length === 0 ? (
-                        <p className="text-gray-400 text-center py-4">
+                        <p className="text-secondary-text text-center py-4">
                             {t.book.noSlotsForDuration.replace('{duration}', duration)}
                         </p>
                     ) : (
@@ -325,8 +325,8 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
                                     onClick={() => handleSlotClick(slot, selectedDate)}
                                     className={`px-3 py-2 rounded-lg border text-sm transition-all duration-200 ${
                                         isSlotSelected(slot)
-                                            ? 'bg-[var(--accent-color)] text-black border-[var(--accent-color)]'
-                                            : 'bg-zinc-900/50 text-gray-300 border-zinc-700 hover:border-[var(--accent-color)]'
+                                            ? 'bg-[var(--accent-color)] text-on-accent border-[var(--accent-color)]'
+                                            : 'bg-surface/50 text-secondary-text border-line-strong hover:border-[var(--accent-color)]'
                                     }`}
                                 >
                                     {formatTime(slot.start)}
@@ -339,7 +339,7 @@ const BookingCalendar = ({ onSlotSelect, selectedSlot, t, language }) => {
 
             {/* Selected Slot Display */}
             {selectedSlot && (
-                <div className="mt-4 p-4 bg-zinc-900/50 border border-[var(--accent-color)]/30 rounded-lg">
+                <div className="mt-4 p-4 bg-surface/50 border border-[var(--accent-color)]/30 rounded-lg">
                     <p className="text-[var(--accent-color)]">
                         {t.book.selected}: {new Date(selectedSlot.date).toLocaleDateString(locale, {
                             weekday: 'long',

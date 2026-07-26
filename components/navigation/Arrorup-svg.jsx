@@ -3,7 +3,7 @@ const Burger = (props) => {
     const { onClick } = props;
     return (
         <div
-            className="cursor-pointer text-gray-300 items-center w-8 hover:scale-110 transition-all duration-300"
+            className="cursor-pointer text-secondary-text items-center w-8 hover:scale-110 transition-all duration-300"
             onClick={onClick}
         >
             <svg

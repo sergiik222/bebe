@@ -30,13 +30,13 @@ const LanguageSelector = () => {
         <div className={`fixed top-6 right-4 md:right-6 z-40 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto' : 'opacity-100'}`} ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-center w-10 h-10 bg-zinc-900/80 backdrop-blur-sm border border-zinc-700 rounded-lg text-gray-300 hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-sm font-medium"
+                className="flex items-center justify-center w-10 h-10 bg-surface/80 backdrop-blur-sm border border-line-strong rounded-lg text-secondary-text hover:border-[var(--accent-color)] hover:text-[var(--accent-color)] transition-colors text-sm font-medium"
             >
                 {language.toUpperCase()}
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 py-1 w-24 bg-zinc-900/95 backdrop-blur-sm border border-zinc-700 rounded-lg shadow-xl">
+                <div className="absolute right-0 mt-2 py-1 w-24 bg-surface/95 backdrop-blur-sm border border-line-strong rounded-lg shadow-xl">
                     {languages.map((lang) => (
                         <button
                             key={lang.code}
@@ -44,10 +44,10 @@ const LanguageSelector = () => {
                                 changeLanguage(lang.code);
                                 setIsOpen(false);
                             }}
-                            className={`w-full px-3 py-2 text-center text-sm hover:bg-zinc-800 transition-colors ${
+                            className={`w-full px-3 py-2 text-center text-sm hover:bg-surface-raised transition-colors ${
                                 language === lang.code
                                     ? 'text-[var(--accent-color)] font-medium'
-                                    : 'text-gray-300'
+                                    : 'text-secondary-text'
                             }`}
                         >
                             {lang.code.toUpperCase()}

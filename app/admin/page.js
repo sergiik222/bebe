@@ -215,43 +215,43 @@ const AdminPanel = () => {
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-light tracking-wider text-[var(--accent-color)]">BEBE MEDIA</h1>
-                        <p className="text-gray-400 mt-2">Admin</p>
+                        <p className="text-secondary-text mt-2">Admin</p>
                     </div>
 
-                    <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
+                    <div className="bg-surface/50 border border-line rounded-xl p-6">
                         {loginError && (
-                            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                            <div className="mb-4 p-3 bg-danger/10 border border-danger/30 rounded-lg text-danger text-sm">
                                 {loginError}
                             </div>
                         )}
 
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">{tAdmin.username}</label>
+                                <label className="block text-sm text-secondary-text mb-1">{tAdmin.username}</label>
                                 <input
                                     type="text"
                                     required
                                     value={loginData.username}
                                     onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                    className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">{tAdmin.password}</label>
+                                <label className="block text-sm text-secondary-text mb-1">{tAdmin.password}</label>
                                 <input
                                     type="password"
                                     required
                                     value={loginData.password}
                                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                    className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                 />
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={loginLoading}
-                                className="w-full py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
+                                className="w-full py-3 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                             >
                                 {loginLoading ? tAdmin.signingIn : tAdmin.signIn}
                             </button>
@@ -266,7 +266,7 @@ const AdminPanel = () => {
     return (
         <div className="min-h-screen pt-16 md:pt-0">
             {/* Header */}
-            <header className="bg-zinc-900/50 border-b border-zinc-800 px-4 md:px-6 py-6 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
+            <header className="bg-surface/50 border-b border-line px-4 md:px-6 py-6 sticky top-16 md:top-0 z-30 backdrop-blur-lg">
                 <div className="w-full text-center md:mx-48">
                     <h1 className="text-xl md:text-2xl font-light tracking-wider text-[var(--accent-color)] text-center md:text-left">
                         {tAdmin.title}
@@ -275,7 +275,7 @@ const AdminPanel = () => {
             </header>
 
             {/* Sub-navigation menu */}
-            <nav className="bg-zinc-900/30 border-b border-zinc-800">
+            <nav className="bg-surface/30 border-b border-line">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <ul className="flex gap-1">
                         {menuItems.map((item) => (
@@ -286,7 +286,7 @@ const AdminPanel = () => {
                                         px-4 py-3 text-sm font-medium transition-colors relative
                                         ${activeMenu === item.id
                                             ? 'text-[var(--accent-color)]'
-                                            : 'text-gray-400 hover:text-white'
+                                            : 'text-secondary-text hover:text-primary-text'
                                         }
                                     `}
                                 >
@@ -310,7 +310,7 @@ const AdminPanel = () => {
                             <h2 className="text-2xl font-light">{tAdmin.menuGalleries}</h2>
                             <button
                                 onClick={() => setShowCreateForm(true)}
-                                className="px-4 py-2 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90"
+                                className="px-4 py-2 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90"
                             >
                                 {tAdmin.newGallery}
                             </button>
@@ -318,7 +318,7 @@ const AdminPanel = () => {
 
                         {/* Error */}
                         {error && (
-                            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+                            <div className="mb-6 p-4 bg-danger/10 border border-danger/30 rounded-lg text-danger">
                                 {error}
                             </div>
                         )}
@@ -332,7 +332,7 @@ const AdminPanel = () => {
 
                         {/* Galleries Table */}
                         {!loading && galleries.length === 0 && (
-                            <div className="text-center py-12 text-gray-400">
+                            <div className="text-center py-12 text-secondary-text">
                                 {tAdmin.noGalleries}
                             </div>
                         )}
@@ -341,28 +341,28 @@ const AdminPanel = () => {
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <thead>
-                                        <tr className="border-b border-zinc-800">
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableEmail}</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableFolder}</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableTitle}</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableCreated}</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableViewed}</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableDownloads}</th>
-                                            <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">{tAdmin.tableActions}</th>
+                                        <tr className="border-b border-line">
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableEmail}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableFolder}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableTitle}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableCreated}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableViewed}</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableDownloads}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-medium text-secondary-text">{tAdmin.tableActions}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {galleries.map((gallery) => (
-                                            <tr key={gallery.id} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
+                                            <tr key={gallery.id} className="border-b border-line/50 hover:bg-surface-raised/30">
                                                 <td className="py-4 px-4 text-sm">{gallery.client_email}</td>
-                                                <td className="py-4 px-4 text-sm text-gray-400">{gallery.folder_name}</td>
-                                                <td className="py-4 px-4 text-sm text-gray-400">{gallery.title || '-'}</td>
-                                                <td className="py-4 px-4 text-sm text-gray-400">{formatDate(gallery.created_at)}</td>
+                                                <td className="py-4 px-4 text-sm text-secondary-text">{gallery.folder_name}</td>
+                                                <td className="py-4 px-4 text-sm text-secondary-text">{gallery.title || '-'}</td>
+                                                <td className="py-4 px-4 text-sm text-secondary-text">{formatDate(gallery.created_at)}</td>
                                                 <td className="py-4 px-4 text-sm">
                                                     {gallery.viewed_at ? (
-                                                        <span className="text-green-400">{formatDate(gallery.viewed_at)}</span>
+                                                        <span className="text-success">{formatDate(gallery.viewed_at)}</span>
                                                     ) : (
-                                                        <span className="text-gray-500">{tAdmin.notViewed}</span>
+                                                        <span className="text-muted-text">{tAdmin.notViewed}</span>
                                                     )}
                                                 </td>
                                                 <td className="py-4 px-4 text-sm text-center">{gallery.download_count}</td>
@@ -372,19 +372,19 @@ const AdminPanel = () => {
                                                             href={`/gallery/${gallery.token}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="px-3 py-1 text-xs bg-zinc-700 rounded hover:bg-zinc-600"
+                                                            className="px-3 py-1 text-xs bg-surface-raised rounded hover:bg-line-strong"
                                                         >
                                                             {tAdmin.buttonOpen}
                                                         </a>
                                                         <button
                                                             onClick={() => handleResendEmail(gallery.id)}
-                                                            className="px-3 py-1 text-xs bg-blue-600 rounded hover:bg-blue-500"
+                                                            className="px-3 py-1 text-xs bg-accent-main-dark rounded hover:bg-accent-main"
                                                         >
                                                             {tAdmin.buttonResend}
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteGallery(gallery.id)}
-                                                            className="px-3 py-1 text-xs bg-red-600 rounded hover:bg-red-500"
+                                                            className="px-3 py-1 text-xs bg-danger rounded hover:bg-danger"
                                                         >
                                                             {tAdmin.buttonDelete}
                                                         </button>
@@ -401,7 +401,7 @@ const AdminPanel = () => {
 
                 {/* Placeholder for future sections */}
                 {activeMenu !== 'galleries' && (
-                    <div className="text-center py-12 text-gray-400">
+                    <div className="text-center py-12 text-secondary-text">
                         <p className="text-xl mb-2">{tAdmin.comingSoon}</p>
                         <p className="text-sm">{tAdmin.comingSoonDescription}</p>
                     </div>
@@ -413,15 +413,15 @@ const AdminPanel = () => {
                         className="fixed inset-0 bg-black/70 flex items-start sm:items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto"
                         onClick={(e) => e.target === e.currentTarget && setShowCreateForm(false)}
                     >
-                        <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-4 sm:p-6 mt-16 sm:mt-0 sm:my-auto">
+                        <div className="bg-surface border border-line-strong rounded-xl w-full max-w-lg p-4 sm:p-6 mt-16 sm:mt-0 sm:my-auto">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-light">{tAdmin.createGalleryTitle}</h3>
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateForm(false)}
-                                    className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                                    className="p-2 hover:bg-surface-raised rounded-lg transition-colors"
                                 >
-                                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg className="w-5 h-5 text-secondary-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
@@ -429,59 +429,59 @@ const AdminPanel = () => {
 
                             <form onSubmit={handleCreateGallery} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formClientEmail} *</label>
+                                    <label className="block text-sm text-secondary-text mb-1">{tAdmin.formClientEmail} *</label>
                                     <input
                                         type="email"
                                         required
                                         value={createData.client_email}
                                         onChange={(e) => setCreateData({ ...createData, client_email: e.target.value })}
-                                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         placeholder="client@email.com"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formFolderName} *</label>
+                                    <label className="block text-sm text-secondary-text mb-1">{tAdmin.formFolderName} *</label>
                                     <input
                                         type="text"
                                         required
                                         value={createData.folder_name}
                                         onChange={(e) => setCreateData({ ...createData, folder_name: e.target.value })}
-                                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         placeholder={tAdmin.placeholderFolder}
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">{tAdmin.formFolderHint}</p>
+                                    <p className="text-xs text-muted-text mt-1">{tAdmin.formFolderHint}</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formGalleryTitle}</label>
+                                    <label className="block text-sm text-secondary-text mb-1">{tAdmin.formGalleryTitle}</label>
                                     <input
                                         type="text"
                                         value={createData.title}
                                         onChange={(e) => setCreateData({ ...createData, title: e.target.value })}
-                                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         placeholder={tAdmin.placeholderTitle}
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">{tAdmin.formMessage}</label>
+                                    <label className="block text-sm text-secondary-text mb-1">{tAdmin.formMessage}</label>
                                     <textarea
                                         rows={3}
                                         value={createData.message}
                                         onChange={(e) => setCreateData({ ...createData, message: e.target.value })}
-                                        className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)] resize-none"
+                                        className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)] resize-none"
                                         placeholder={tAdmin.placeholderMessage}
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">{tAdmin.formLanguage}</label>
+                                        <label className="block text-sm text-secondary-text mb-1">{tAdmin.formLanguage}</label>
                                         <select
                                             value={createData.language}
                                             onChange={(e) => setCreateData({ ...createData, language: e.target.value })}
-                                            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                            className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         >
                                             <option value="en">English</option>
                                             <option value="de">Deutsch</option>
@@ -490,11 +490,11 @@ const AdminPanel = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">{tAdmin.formExpiresIn}</label>
+                                        <label className="block text-sm text-secondary-text mb-1">{tAdmin.formExpiresIn}</label>
                                         <select
                                             value={createData.expires_in}
                                             onChange={(e) => setCreateData({ ...createData, expires_in: parseInt(e.target.value) })}
-                                            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
+                                            className="w-full px-4 py-3 bg-surface-raised border border-line-strong rounded-lg focus:outline-none focus:border-[var(--accent-color)]"
                                         >
                                             <option value={0}>{tAdmin.expiresNever}</option>
                                             <option value={7}>{tAdmin.expiresDays.replace('{days}', '7')}</option>
@@ -510,14 +510,14 @@ const AdminPanel = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowCreateForm(false)}
-                                        className="flex-1 py-3 bg-zinc-700 rounded-lg hover:bg-zinc-600"
+                                        className="flex-1 py-3 bg-surface-raised rounded-lg hover:bg-line-strong"
                                     >
                                         {t.common.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={createLoading}
-                                        className="flex-1 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
+                                        className="flex-1 py-3 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 disabled:opacity-50"
                                     >
                                         {createLoading ? tAdmin.creating : tAdmin.create}
                                     </button>

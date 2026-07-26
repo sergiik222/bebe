@@ -75,11 +75,11 @@ export default function CookieBanner() {
             <div
                 className="mx-4 mb-4 md:mx-8 md:mb-6 p-4 md:p-6 rounded-xl"
                 style={{
-                    background: 'rgba(16, 18, 22, 0.95)',
+                    background: 'var(--surface-veil-strong)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
                     border: '1px solid rgba(var(--accent-color-rgb), 0.2)',
-                    boxShadow: '0 -4px 30px rgba(0, 0, 0, 0.4)'
+                    boxShadow: 'var(--shadow-panel)'
                 }}
             >
                 <div className="max-w-4xl mx-auto">
@@ -96,10 +96,10 @@ export default function CookieBanner() {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="text-white font-medium text-sm md:text-base mb-1">
+                                    <h3 className="text-primary-text font-medium text-sm md:text-base mb-1">
                                         {cookieT.title}
                                     </h3>
-                                    <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
+                                    <p className="text-secondary-text text-xs md:text-sm leading-relaxed">
                                         {cookieT.description}{' '}
                                         <a
                                             href="/datenschutz"
@@ -116,7 +116,7 @@ export default function CookieBanner() {
                         <div className="flex flex-col sm:flex-row gap-2 md:flex-shrink-0">
                             <button
                                 onClick={handleAcceptEssential}
-                                className="px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-300 hover:text-white border border-zinc-700 hover:border-zinc-500"
+                                className="px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-secondary-text hover:text-primary-text border border-line-strong hover:border-line-strong"
                             >
                                 {cookieT.acceptEssential}
                             </button>
@@ -125,7 +125,7 @@ export default function CookieBanner() {
                                 className="px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
                                 style={{
                                     backgroundColor: 'var(--accent-color)',
-                                    color: '#0a0a0a'
+                                    color: 'var(--text-on-accent)'
                                 }}
                             >
                                 {cookieT.acceptAll}

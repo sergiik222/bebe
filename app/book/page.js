@@ -41,12 +41,12 @@ const Book = () => {
                             </div>
                         </div>
                         <h1 className="text-2xl font-medium mb-4">{t.book.successTitle}</h1>
-                        <p className="text-gray-400 mb-8">
+                        <p className="text-secondary-text mb-8">
                             {t.book.successMessage}
                         </p>
                         <button
                             onClick={handleBookAnother}
-                            className="px-6 py-3 bg-[var(--accent-color)] text-black font-medium rounded-lg hover:opacity-90 transition-opacity"
+                            className="px-6 py-3 bg-[var(--accent-color)] text-on-accent font-medium rounded-lg hover:opacity-90 transition-opacity"
                         >
                             {t.book.bookAnother}
                         </button>
@@ -66,7 +66,7 @@ const Book = () => {
                     </div>
 
                     {/* Calendar */}
-                    <div className="bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 rounded-2xl p-6">
+                    <div className="bg-surface/30 backdrop-blur-sm border border-line rounded-2xl p-6">
                         <BookingCalendar
                             onSlotSelect={handleSlotSelect}
                             selectedSlot={selectedSlot}
