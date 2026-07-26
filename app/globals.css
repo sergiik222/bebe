@@ -54,8 +54,9 @@
     --accent-glow: rgba(143, 158, 99, 0.45);
     --accent-glow-strong: rgba(143, 158, 99, 0.65);
 
-    /* Written by the home carousel: tips the background surface toward the
-       drag. */
+    /* Written by the home carousel: --bg-shift slides the background surface
+       with the photos, --bg-tilt tips it toward the drag. */
+    --bg-shift: 0px;
     --bg-tilt: 0deg;
 }
 

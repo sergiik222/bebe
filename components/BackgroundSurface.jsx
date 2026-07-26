@@ -42,15 +42,19 @@ export default function BackgroundSurface() {
             {/* perspective host for the tilt stage */}
             <div style={{ position: 'absolute', inset: -OVERHANG, perspective: '1400px' }}>
 
-                {/* tilt stage -- tips toward the drag. Easing back to flat is
-                    done frame by frame on --bg-tilt itself, so no CSS
-                    transition here: it would only add lag on top. */}
+                {/* tilt stage -- tips toward the drag and slides with it. Easing
+                    back to flat is done frame by frame on --bg-tilt itself, so
+                    no CSS transition here: it would only add lag on top.
+                    Slide and rotation share one transform, so the whole board
+                    stays a single composited layer. The translate is listed
+                    first, which applies it last - a screen-space slide of the
+                    already-rotated board rather than a slide along its plane. */}
                 <div
                     style={{
                         position: 'absolute',
                         inset: 0,
                         transformOrigin: '50% 50%',
-                        transform: 'rotateY(var(--bg-tilt, 0deg)) rotateX(calc(var(--bg-tilt, 0deg) * -0.3))'
+                        transform: 'translate3d(var(--bg-shift, 0px), 0, 0) rotateY(var(--bg-tilt, 0deg)) rotateX(calc(var(--bg-tilt, 0deg) * -0.3))'
                     }}
                 >
                     {/* mat base -- deep green cutting-mat body */}

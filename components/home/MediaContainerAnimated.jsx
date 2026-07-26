@@ -17,6 +17,9 @@ const TILT_SMOOTHING = 0.2;
 // Below this the tilt is snapped to flat, so it stops writing every frame.
 const TILT_EPSILON_DEG = 0.005;
 
+// How far the board slides, either side of centre.
+const BACKGROUND_DRIFT_PX = 50;
+
 const WHEEL_MULTIPLIER = 1.05;
 const DECAY = 0.95;
 const MIN_VELOCITY = 0.05;
@@ -155,9 +158,18 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
 
     const [{ mediaX }, api] = useSpring(() => ({ mediaX: 0, config: { mass: 0.9, tension: 220, friction: 26 } }));
 
-    // Publish the tilt for BackgroundSurface, written straight to the document
-    // so the background can live in the layout, outside this tree, without a
-    // context or a re-render per frame.
+    // One full sine cycle per trip around the carousel. wrapX moves mediaX by
+    // exactly one set width when it loops, so a period of one set width leaves
+    // the drift continuous across the wrap instead of snapping. Held in a ref
+    // so the animation frame below always reads the current width.
+    const driftPeriodRef = useRef(1);
+    useEffect(() => {
+        driftPeriodRef.current = Math.max(1, realMediaCount * (mediaSize + mediaMargin));
+    }, [realMediaCount, mediaSize, mediaMargin]);
+
+    // Publish the drift and tilt for BackgroundSurface, written straight to the
+    // document so the background can live in the layout, outside this tree,
+    // without a context or a re-render per frame.
     //
     // Polled rather than pushed: the spring is driven imperatively through
     // api.start(), and an onChange declared on it never fires once that
@@ -175,6 +187,9 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
             const now = performance.now();
 
             if (x !== lastX) {
+                const drift = BACKGROUND_DRIFT_PX * Math.sin((2 * Math.PI * x) / driftPeriodRef.current);
+                root.style.setProperty('--bg-shift', `${drift.toFixed(2)}px`);
+
                 const elapsed = now - lastTime;
                 if (lastX !== null && elapsed > 0) {
                     const velocity = (x - lastX) / elapsed;
@@ -201,6 +216,7 @@ const MediaContainerAnimated = ({ medias, mediasAreLoading, mediaSize }) => {
         frame = requestAnimationFrame(tick);
         return () => {
             cancelAnimationFrame(frame);
+            root.style.setProperty('--bg-shift', '0px');
             root.style.setProperty('--bg-tilt', '0deg');
         };
     }, [mediaX]);
