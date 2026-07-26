@@ -54,8 +54,13 @@
     --accent-color-rgb: 107, 106, 47;
     --accent-light: #8a8942;
     --accent-dark: #4d4c1f;
-    --accent-glow: rgba(107, 106, 47, 0.35);
-    --accent-glow-strong: rgba(107, 106, 47, 0.5);
+    /* No glow on paper. Every use of these is a pure `0 0 Npx` halo with no
+       offset, which reads as emitted light on the dark theme but as a smudge
+       around dark ink on a light page. Transparent here switches all of them
+       off at once - scale fill, marker, active labels, button hovers - without
+       touching a component. */
+    --accent-glow: transparent;
+    --accent-glow-strong: transparent;
 
     /* the paper surface behind the carousel */
     --mat-deep: #ded6c4;
